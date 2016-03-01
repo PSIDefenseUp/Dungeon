@@ -55,8 +55,18 @@ public class Unit : MonoBehaviour
             other.currentHealth = 0;
     }
 
+    public int[,] getReachable()
+    {
+        return this.reachable;
+    }
+
     public void setReachable(int[,] newReachable)
     {
         this.reachable = newReachable;
+    }
+
+    public Point getPosition()
+    {
+        return this.position;
     }
 }

@@ -88,4 +88,21 @@ public class Map : MonoBehaviour
     {
         return tiles[x, y];
     }
+
+    // Returns the unit at (p.x, p.y)
+    public Unit getUnit(Point p)
+    {
+        return units[p.x, p.y];
+    }
+
+    // Returns the unit at (x, y)
+    public Unit getUnit(int x, int y)
+    {
+        return units[x, y];
+    }
+
+    public Rect getBounds()
+    {
+        return this.bounds;
+    }
 }
