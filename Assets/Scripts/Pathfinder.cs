@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public abstract class Pathfinder
 {
-    // TODO: Add reference to map to obtain size
+    // TODO: Add reference to map
 
     // Updates the reachable array with the costs of movement to each space on the map for the last unit to request it
     public void updateReachable(Unit u)

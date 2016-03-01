@@ -6,9 +6,9 @@ public class Unit : MonoBehaviour
     private bool canMove;           // Does this unit still have its move action?
     private bool canAct;            // Does this unit still have its turn action?
     private int[,] reachable;       // Array containing the cost of movement to each tile on the map
+    private Point position;         // The current position of this unit on the map
 
-    public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map
-    public Point position;          // The current position of this unit on the map
+    public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map   
     public int team;                // The 'team' this unit is on -- 0: heroes, 1: dungeon master
     public int maxHealth;           // The maximum health of this unit
     public int currentHealth;       // The current health of this unit
@@ -23,6 +23,7 @@ public class Unit : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        // TODO: DELETE THIS?
         this.canMove = false;
         this.canAct = false;
 	}
@@ -30,7 +31,7 @@ public class Unit : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-	    
+	    // TODO: Implement
 	}
 
     public bool canAttack(Unit other)
