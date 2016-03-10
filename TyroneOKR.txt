@@ -1,0 +1,5 @@
+Tyrone Del
+- Add turn mechanism                                                           Wed   3/9  1hr
+- Add build feature allowing the dungeon master to place units and obstacles   Wed   3/9  2hr
+- Add interactable tiles for obstacles that are interactable(Door, Chest,etc)  Thurs 3/10 1Hr
+- allow the players to enter combat once they are next to each other	       Thurs 3/10 1Hr
