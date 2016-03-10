@@ -158,6 +158,8 @@ public class Map : MonoBehaviour
 
         units[dest.x, dest.y].gameObject.transform.position = tiles[dest.x, dest.y].transform.position + new Vector3(0, 1, 0);
         units[dest.x, dest.y].setPosition(dest);
+        units[dest.x, dest.y].unHighlightReachable();
+        units[dest.x, dest.y].canMove = false;
     }
 
     public Rect getBounds()

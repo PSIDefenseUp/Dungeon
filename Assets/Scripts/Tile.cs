@@ -29,16 +29,15 @@ public class Tile : MonoBehaviour
         game.cursor.setCurrentTile(transform);
     }
 
-    void select()
+    // Highlights this tile in the color provided
+    public void highlight(Color c)
     {
-        
+        if(gameObject.GetComponent<Renderer>() != null)
+        {
+            GetComponent<Renderer>().material.SetColor("_Color", c);
+        }
     }
-
-    void deselect()
-    {
-
-    }
-
+   
     public Point getPosition()
     {
         return this.position;

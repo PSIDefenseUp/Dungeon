@@ -30,26 +30,16 @@ public class Cursor : MonoBehaviour
     {
         // On mouse left click, select the unit at the current location
         if(Input.GetMouseButtonDown(0))
-        {   
-            selectedUnit = game.map.getUnit(position);
-
-
-            // PRINT DEBUG INFO ON SELECTION -- TODO: DELETE THIS
-            if (selectedUnit != null)
-            {
-                Debug.Log("Selected " + selectedUnit.name);
-            }
-            else
-            {
-                Debug.Log("Selected Null");
-            }
+        {
+            selectUnit(position);
         }
 
         // On mouse right click, if we have a unit selected, move the unit to the cursor's location
-        // TODO: DON'T ALLOW UNITS TO JUST TELEPORT ANYWHERE LIKE THIS
+        // TODO: Make units move rather than teleport
         if(Input.GetMouseButtonDown(1) && selectedUnit != null)
         {
-            selectedUnit.moveTo(position);
+            if(selectedUnit.canReach(position) && selectedUnit.canMove)
+                selectedUnit.moveTo(position);
         }
 
         animate();
@@ -84,6 +74,26 @@ public class Cursor : MonoBehaviour
                 spinWaitProgress = 0;
                 spinning = true;
             }
+        }
+    }
+    
+    public void selectUnit(Point p)
+    {
+        if (selectedUnit != null)
+            selectedUnit.unHighlightReachable();
+
+        selectedUnit = game.map.getUnit(position);
+
+        // PRINT DEBUG INFO ON SELECTION -- TODO: DELETE THIS
+        if (selectedUnit != null)
+        {
+            Debug.Log("Selected " + selectedUnit.name);
+            selectedUnit.pathfinder.updateReachable(selectedUnit);
+            selectedUnit.highlightReachable();
+        }
+        else
+        {
+            Debug.Log("Selected Null");
         }
     }
 
