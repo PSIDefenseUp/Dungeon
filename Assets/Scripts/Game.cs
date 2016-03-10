@@ -24,9 +24,9 @@ public class Game : MonoBehaviour
     map = GameObject.Find("Map").GetComponent<Map>();
     cursor = GameObject.Find("Cursor").GetComponent<Cursor>();
     gameCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-    uiCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
-    playerTurnText = GameObject.Find("playerTurn").GetComponent<Text>();
-    unitSelect = GameObject.Find("dmUnitSelect").GetComponent<Dropdown>();
+    //uiCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+    //playerTurnText = GameObject.Find("playerTurn").GetComponent<Text>();
+    //unitSelect = GameObject.Find("dmUnitSelect").GetComponent<Dropdown>();
 
     currentPlayerIndex = 0;
 
@@ -36,9 +36,9 @@ public class Game : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-    currentPlayer = playerList[currentPlayerIndex];
-    playerTurnText.text = setupPlayerTurnUI(currentPlayer.playerName);
-    ui();
+    //currentPlayer = playerList[currentPlayerIndex];
+    //playerTurnText.text = setupPlayerTurnUI(currentPlayer.playerName);
+    ///ui();
   }
 
 
@@ -54,7 +54,6 @@ public class Game : MonoBehaviour
     playerList.Add(DM);
 
   }
-
 
   public int getPlayerListSize()
   {

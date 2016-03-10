@@ -26,7 +26,7 @@ public class Tile : MonoBehaviour
     void OnMouseEnter()
     {
         // When this tile is moused over, put the cursor on it (we take the cursor off the last tile in this call also)
-        game.cursor.selectTile(transform);
+        game.cursor.setCurrentTile(transform);
     }
 
     void select()

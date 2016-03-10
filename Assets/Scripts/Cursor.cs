@@ -3,9 +3,14 @@ using System.Collections;
 
 public class Cursor : MonoBehaviour
 {
-    // Current selections
-    private Transform selectedTile;
-    private Transform selectedUnit;
+    private Point position; // The current position of the cursor
+    private Game game;      // Reference to the current Game object
+
+    // The Tile under our cursor
+    private Transform currentTile;
+
+    // The selected unit (if we have made a selection)
+    private Unit selectedUnit;
 
     // Animation variables
     private float spinSpeed = 360; // Degrees per second to spin around
@@ -16,12 +21,37 @@ public class Cursor : MonoBehaviour
     // Use this for initialization
 	void Start ()
     {
-	
-	}
+        // Grab Game object from scene
+        game = GameObject.Find("GameManager").GetComponent<Game>();
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        // On mouse left click, select the unit at the current location
+        if(Input.GetMouseButtonDown(0))
+        {   
+            selectedUnit = game.map.getUnit(position);
+
+
+            // PRINT DEBUG INFO ON SELECTION -- TODO: DELETE THIS
+            if (selectedUnit != null)
+            {
+                Debug.Log("Selected " + selectedUnit.name);
+            }
+            else
+            {
+                Debug.Log("Selected Null");
+            }
+        }
+
+        // On mouse right click, if we have a unit selected, move the unit to the cursor's location
+        // TODO: DON'T ALLOW UNITS TO JUST TELEPORT ANYWHERE LIKE THIS
+        if(Input.GetMouseButtonDown(1) && selectedUnit != null)
+        {
+            selectedUnit.moveTo(position);
+        }
+
         animate();
 	}
 
@@ -57,25 +87,18 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    public void selectTile(Transform t)
+    public void setCurrentTile(Transform t)
     {
-        this.selectedTile = t;
+        this.currentTile = t;
+
+        // Set our grid position
+        this.position = t.GetComponent<Tile>().getPosition();
 
         // Float our cursor above the selected tile
         transform.position = t.transform.position + new Vector3(0, 1, 0); 
     }
 
-    public void selectTile(Point loc)
-    {
-        // TODO: IMPLEMENT
-    }
-
-    public void selectUnit(Transform t)
-    {
-        this.selectedUnit = t;
-    }
-
-    public void selectUnit(Point loc)
+    public void setCurrentUnit(Point loc)
     {
         // TODO: IMPLEMENT
     }

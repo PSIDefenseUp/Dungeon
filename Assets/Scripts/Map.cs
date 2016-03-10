@@ -148,6 +148,18 @@ public class Map : MonoBehaviour
         return units[x, y];
     }
 
+    public void moveUnit(Point start, Point dest)
+    {
+        if (start.x == dest.x && start.y == dest.y)
+            return;
+
+        units[dest.x, dest.y] = units[start.x, start.y];
+        units[start.x, start.y] = null;
+
+        units[dest.x, dest.y].gameObject.transform.position = tiles[dest.x, dest.y].transform.position + new Vector3(0, 1, 0);
+        units[dest.x, dest.y].setPosition(dest);
+    }
+
     public Rect getBounds()
     {
         return this.bounds;

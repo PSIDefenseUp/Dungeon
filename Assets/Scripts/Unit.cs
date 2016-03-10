@@ -10,6 +10,8 @@ public class Unit : MonoBehaviour
     private int[,] reachable;       // Array containing the cost of movement to each tile on the map
     private Point position;         // The current position of this unit on the map
 
+    private bool moving;            // Are we currently moving? -- For animation purposes
+
     public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map   
     public int team;                // The 'team' this unit is on -- 0: heroes, 1: dungeon master
     public int maxHealth;           // The maximum health of this unit
@@ -23,7 +25,7 @@ public class Unit : MonoBehaviour
     public int cost;                // The cost of purchasing this unit -- only applies to the DM when building the map
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         // Grab current Game object
         game = GameObject.Find("GameManager").GetComponent<Game>();
@@ -31,18 +33,18 @@ public class Unit : MonoBehaviour
         // TODO: DELETE THIS?
         this.canMove = false;
         this.canAct = false;
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
-	    // TODO: Implement
-	}
+        // TODO: Implement
+    }
 
     void OnMouseEnter()
     {
         // Our units block the tiles off for their OnEnter call, so we want to make the cursor select this unit's tile when the unit is hovered over
-        game.cursor.selectTile(game.map.getTile(position).transform);
+        game.cursor.setCurrentTile(game.map.getTile(position).transform);
     }
 
     public bool canAttack(Unit other)
@@ -64,6 +66,21 @@ public class Unit : MonoBehaviour
         // Don't let HP go to crazy, negative values
         if (other.currentHealth < 0)
             other.currentHealth = 0;
+    }
+
+    public void moveTo(Point p)
+    {
+        // TODO: Replace with setDestination so we don't just teleport everywhere
+        if(game.map.getUnit(p) == null)
+        {
+            game.map.moveUnit(this.position, p);
+        }
+    }
+
+    // Returns true if we the input location has no other unit, and is reachable by this unit
+    private bool canAccess(Point p)
+    {
+        return true; // TODO: IMPLEMENT
     }
 
     public int[,] getReachable()
@@ -88,6 +105,6 @@ public class Unit : MonoBehaviour
 
     public void setPosition(int x, int y)
     {
-        this.position = new Point(x, y);
+        this.position = new Point(x, y);        
     }
 }
