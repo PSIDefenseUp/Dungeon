@@ -12,7 +12,7 @@ public class Map : MonoBehaviour
     {
         // Initialize bounds to 0 all around
         bounds = new Rect();
-
+        
         // Grab the 'object' under which all map tiles are stored
         Transform tileGroup = this.gameObject.transform.FindChild("Tiles");
 
@@ -23,17 +23,23 @@ public class Map : MonoBehaviour
             Vector3 pos = tileGroup.GetChild(i).gameObject.transform.position;
 
             // Set min and max x-coordinates
-            if (pos.x < bounds.x)
-                bounds.x = pos.x;
-            else if (pos.x > bounds.width)
-                bounds.width = pos.x;
+            if (pos.x < bounds.xMin)
+                bounds.xMin = pos.x;
+            else if (pos.x > bounds.xMax)
+                bounds.xMax = pos.x;
 
             // Set min and max y-coordinates (get pos.z because y is UP in Unity)
-            if (pos.z < bounds.y)
-                bounds.y = pos.z;
-            else if (pos.z > bounds.height)
-                bounds.height = pos.z;
+            if (pos.z < bounds.yMin)
+                bounds.yMin = pos.z;
+            else if (pos.z > bounds.yMax)
+                bounds.yMax = pos.z;
         }
+
+        bounds.width++;
+        bounds.height++;
+
+        Debug.Log("Width: " + bounds.width);
+        Debug.Log("Height: " + bounds.height);
 
         // Initialize arrays to empty
         tiles = new Tile[(int)bounds.width, (int)bounds.height];
@@ -50,8 +56,26 @@ public class Map : MonoBehaviour
             Vector3 pos = tileGroup.GetChild(i).gameObject.transform.position;
 
             // Put the tiles in the right place in the tile array
-            tiles[(int)pos.x, (int)pos.z] = tileGroup.GetChild(i).gameObject.GetComponent<Tile>();
+            tiles[Mathf.RoundToInt(pos.x - bounds.xMin), Mathf.RoundToInt(pos.z - bounds.yMin)] = tileGroup.GetChild(i).gameObject.GetComponent<Tile>();
         }
+
+        /* TODO: REMOVE THIS */
+        // DEBUG CODE: PRINT MAP ARRAY
+        string row = "";
+
+        for(int y = 0; y < (int)bounds.height; y++)
+        {
+            for(int x = 0; x < (int)bounds.width; x++)
+            {
+                if (tiles[x, y] != null)
+                    row += tiles[x, y].type + " ";
+                else
+                    row += "-1 ";
+            }
+            Debug.Log(row);
+            row = "";
+        }
+        /* END TODO */
 
         // Grab the 'object' under which all units are stored
         Transform unitGroup = this.gameObject.transform.FindChild("Units");

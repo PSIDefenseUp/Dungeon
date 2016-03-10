@@ -16,7 +16,7 @@ public class Camera : MonoBehaviour
         if(Input.GetMouseButton(2))
         {
             // TODO: Improve
-            transform.Translate(new Vector3(-1 * Input.GetAxis("Mouse X") * 50 * Time.deltaTime, -1 * Input.GetAxis("Mouse Y") * 50 * Time.deltaTime, 0));
+            transform.Translate(new Vector3(-1 * Input.GetAxis("Mouse X") * 50 * Time.deltaTime, 0, -1 * Input.GetAxis("Mouse Y") * 50 * Time.deltaTime), Space.World);            
         }
         else
         {

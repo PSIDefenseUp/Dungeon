@@ -46,7 +46,7 @@ public class GroundPathfinder : Pathfinder
             // Fetch current distance
             distance = current[2];
 
-            // TODO: Below, check to see if the locations are within the bounds of the map -- THIS WILL NOT WORK OTHERWISE (LIKE IT WORKS ANYWAY HAHAHA KILL ME)
+            // TODO: Below, check to see if the locations are within the bounds of the map -- THIS WILL NOT WORK OTHERWISE
    
             // NORTH
             currentTile = map.getTile(new Point(current[0], current[1] - 1));
