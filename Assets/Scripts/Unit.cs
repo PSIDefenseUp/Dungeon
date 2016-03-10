@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class Unit : MonoBehaviour
-{    
+{
+    private Game game;              // The game object
+
     private bool canMove;           // Does this unit still have its move action?
     private bool canAct;            // Does this unit still have its turn action?
     private int[,] reachable;       // Array containing the cost of movement to each tile on the map
@@ -23,6 +25,9 @@ public class Unit : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        // Grab current Game object
+        game = GameObject.Find("GameManager").GetComponent<Game>();
+
         // TODO: DELETE THIS?
         this.canMove = false;
         this.canAct = false;
@@ -33,6 +38,12 @@ public class Unit : MonoBehaviour
     {
 	    // TODO: Implement
 	}
+
+    void OnMouseEnter()
+    {
+        // Our units block the tiles off for their OnEnter call, so we want to make the cursor select this unit's tile when the unit is hovered over
+        game.cursor.selectTile(game.map.getTile(position).transform);
+    }
 
     public bool canAttack(Unit other)
     {
@@ -63,10 +74,20 @@ public class Unit : MonoBehaviour
     public void setReachable(int[,] newReachable)
     {
         this.reachable = newReachable;
-    }
+    }    
 
     public Point getPosition()
     {
         return this.position;
+    }
+
+    public void setPosition(Point p)
+    {
+        this.position = p;
+    }
+
+    public void setPosition(int x, int y)
+    {
+        this.position = new Point(x, y);
     }
 }

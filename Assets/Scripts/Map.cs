@@ -38,8 +38,10 @@ public class Map : MonoBehaviour
         bounds.width++;
         bounds.height++;
 
+        /* DEBUG INFO ON MAP DIMENSIONS, TODO: REMOVE?
         Debug.Log("Width: " + bounds.width);
         Debug.Log("Height: " + bounds.height);
+        */
 
         // Initialize arrays to empty
         tiles = new Tile[(int)bounds.width, (int)bounds.height];
@@ -56,11 +58,10 @@ public class Map : MonoBehaviour
             Vector3 pos = tileGroup.GetChild(i).gameObject.transform.position;
 
             // Put the tiles in the right place in the tile array
-            tiles[Mathf.RoundToInt(pos.x - bounds.xMin), Mathf.RoundToInt(pos.z - bounds.yMin)] = tileGroup.GetChild(i).gameObject.GetComponent<Tile>();
+            addTile(Mathf.RoundToInt(pos.x - bounds.xMin), Mathf.RoundToInt(pos.z - bounds.yMin), tileGroup.GetChild(i).gameObject.GetComponent<Tile>());
         }
 
-        /* TODO: REMOVE THIS */
-        // DEBUG CODE: PRINT MAP ARRAY
+        /* DEBUG CODE: PRINT MAP ARRAY, TODO: REMOVE?
         string row = "";
 
         for(int y = 0; y < (int)bounds.height; y++)
@@ -75,7 +76,7 @@ public class Map : MonoBehaviour
             Debug.Log(row);
             row = "";
         }
-        /* END TODO */
+        */
 
         // Grab the 'object' under which all units are stored
         Transform unitGroup = this.gameObject.transform.FindChild("Units");
@@ -91,7 +92,7 @@ public class Map : MonoBehaviour
             Vector3 pos = unitGroup.GetChild(i).gameObject.transform.position;
 
             // Put the units in the right place in the unit array
-            units[(int)pos.x, (int)pos.y] = unitGroup.GetChild(i).gameObject.GetComponent<Unit>();
+            addUnit(Mathf.RoundToInt(pos.x - bounds.xMin), Mathf.RoundToInt(pos.z - bounds.yMin), unitGroup.GetChild(i).gameObject.GetComponent<Unit>());
         }
 	}
 	
@@ -100,6 +101,28 @@ public class Map : MonoBehaviour
     {
 	    
 	}
+
+    public void addTile(Point p, Tile t)
+    {
+        addTile(p.x, p.y, t);
+    }
+
+    public void addTile(int x, int y, Tile t)
+    {
+        t.setPosition(x, y);
+        tiles[x, y] = t;
+    }
+
+    public void addUnit(Point p, Unit u)
+    {
+        addUnit(p.x, p.y, u);
+    }
+
+    public void addUnit(int x, int y, Unit u)
+    {
+        u.setPosition(x, y);
+        units[x, y] = u;
+    }
 
     // Returns the tile at (p.x, p.y)
     public Tile getTile(Point p)
