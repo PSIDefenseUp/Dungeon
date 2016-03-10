@@ -1,1 +1,7 @@
-t
+Schedule and deliverables:
+
+Implement read-from-scene map with support for different tiles + units (1 hr)
+Add basic pathfinding to units (1 hr)
+Allow players to control their units (2 hrs)
+Add simple UI - turn indicator, on-hover or on-selection unit info, etc. (2 hrs)
+Give units actual paths to walk on rather than teleporting to destinations if in reach (2 hrs)
