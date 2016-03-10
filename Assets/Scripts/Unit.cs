@@ -11,8 +11,9 @@ public class Unit : MonoBehaviour
     private bool moving;            // Are we currently moving? -- For animation purposes
 
     public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map   
-    public bool canMove;           // Does this unit still have its move action?
-    public bool canAct;            // Does this unit still have its turn action?
+    public bool canMove;            // Does this unit still have its move action?
+    public bool canAct;             // Does this unit still have its turn action?
+    public int owner;               // The player that owns this unit
     public int team;                // The 'team' this unit is on -- 0: heroes, 1: dungeon master
     public int maxHealth;           // The maximum health of this unit
     public int currentHealth;       // The current health of this unit

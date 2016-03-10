@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Map : MonoBehaviour
 {
-    private Rect bounds;    // The boundaries of the map (top left and bottom right)
-    private Tile[,] tiles;  // Array containing all the tiles on the map
-    private Unit[,] units;  // Array containing all the units on the map
+    private Rect bounds;        // The boundaries of the map (top left and bottom right)
+    private Tile[,] tiles;      // Array containing all the tiles on the map
+    private Unit[,] units;      // Array containing all the units on the map
+    private List<Unit> unitList;   // List of all units on the map
 
 	// Use this for initialization
 	void Start ()
     {
+        // Initialize unit list
+        unitList = new List<Unit>();
+
         // Initialize bounds to 0 all around
         bounds = new Rect();
         
@@ -122,6 +126,13 @@ public class Map : MonoBehaviour
     {
         u.setPosition(x, y);
         units[x, y] = u;
+        unitList.Add(u);
+    }
+
+    public void remvoeUnit(Unit u)
+    {
+        unitList.Remove(u);
+        units[u.getPosition().x, u.getPosition().y] = null;
     }
 
     // Returns the tile at (p.x, p.y)
@@ -165,5 +176,10 @@ public class Map : MonoBehaviour
     public Rect getBounds()
     {
         return this.bounds;
+    }
+
+    public List<Unit> getUnitList()
+    {
+        return unitList;
     }
 }

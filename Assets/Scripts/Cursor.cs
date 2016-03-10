@@ -42,6 +42,12 @@ public class Cursor : MonoBehaviour
                 selectedUnit.moveTo(position);
         }
 
+        // When space is pressed, go to the next turn (for testing purposes) -- TODO: DELETE THIS
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            game.advanceTurn();
+        }
+
         animate();
 	}
 
@@ -89,7 +95,9 @@ public class Cursor : MonoBehaviour
         {
             Debug.Log("Selected " + selectedUnit.name);
             selectedUnit.pathfinder.updateReachable(selectedUnit);
-            selectedUnit.highlightReachable();
+
+            if(selectedUnit.canMove)
+                selectedUnit.highlightReachable();
         }
         else
         {
@@ -111,5 +119,10 @@ public class Cursor : MonoBehaviour
     public void setCurrentUnit(Point loc)
     {
         // TODO: IMPLEMENT
+    }
+
+    public void setSelectedUnit(Unit u)
+    {
+        this.selectedUnit = u;
     }
 }
