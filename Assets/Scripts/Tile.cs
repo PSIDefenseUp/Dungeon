@@ -12,14 +12,14 @@ public class Tile : MonoBehaviour
 
 	// Use this for initialization
 	void Start ()
-    {
+  {
         // Grab the current game object from the scene
         game = GameObject.Find("GameManager").GetComponent<Game>();
 	}
 	
 	// Update is called once per frame
 	void Update ()
-    {
+  {
 	    
 	}
 
