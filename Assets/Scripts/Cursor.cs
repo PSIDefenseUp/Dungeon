@@ -9,7 +9,7 @@ public class Cursor : MonoBehaviour
 
     // Animation variables
     private float spinSpeed = 360; // Degrees per second to spin around
-    private float spinWait = 1; // Seconds to wait between spins
+    private float spinWait = .5f; // Seconds to wait between spins
     private float spinWaitProgress = 0; // How far we are in our current wait
     private bool spinning = false; // Are we spinning or waiting?
 
