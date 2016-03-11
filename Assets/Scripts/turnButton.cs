@@ -33,6 +33,7 @@ public class turnButton : MonoBehaviour
   {
     List<Unit> x = managerRef.attackList;
     x[0].Attack(x[1]);
+    x = null;
   }
 
 }

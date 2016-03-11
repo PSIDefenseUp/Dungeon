@@ -12,8 +12,7 @@ public class Game : MonoBehaviour
     public GameObject unitsObj;     //
     public Unit buildObj;           //
     public List<Unit> attackList;   //
-    public Toggle attackT;          // 
-    public Button attackB;          // 
+    public Toggle attackT;          //  
 
   public List<Player> playerList; // List of players in the game
     public Player currentPlayer;    // simple instance of current player for easy manipulation
@@ -45,8 +44,6 @@ public class Game : MonoBehaviour
         Warrior = GameObject.Find("unitForClone").GetComponent<Unit>();
         unitsObj = GameObject.Find("Units").GetComponent<GameObject>();
         attackT = GameObject.Find("AttackToggle").GetComponent<Toggle>();
-        attackB = GameObject.Find("AttackButton").GetComponent<Button>();
-
 
         playerList = new List<Player>();
         attackList = new List<Unit>();
@@ -143,6 +140,7 @@ public class Game : MonoBehaviour
   }
   //TODO: Needs revamp but it works
   // press B to add current mouse over unit the hit attack to attack first unit specified 
+  // press V to attack
   public void setupAttack()
   {
     if (attackT.isOn != true)
@@ -150,9 +148,37 @@ public class Game : MonoBehaviour
       attackList.Clear();
       return;
     }
+
+    Unit x = map.getUnit(cursor.getPosition());
+
     if (Input.GetKeyDown(KeyCode.B))
     {
-      attackList.Add(map.getUnit(cursor.getPosition()));
+      if (attackList.Count >= 1 && x != null)
+      {
+        attackList.Add(x);
+      }
+      else if (x.owner == currentPlayerIndex && x != null)
+      {
+        attackList.Add(x);
+      }
+      else
+      {
+        //do nothing
+      }
+    }
+    if (Input.GetKeyDown(KeyCode.V))
+    {
+      AttackUnit();
+    }
+  }
+  private void AttackUnit()
+  {
+    List<Unit> x = attackList;
+
+    if (x.Count >= 2)
+    {
+      x[0].Attack(x[1]);
+      x = null;
     }
   }
 
