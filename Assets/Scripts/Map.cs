@@ -162,19 +162,20 @@ public class Map : MonoBehaviour
 
     public void moveUnit(Point start, Point dest)
     {
-        // Don't move anything if the unit isn't trying to go anywhere
-        if (start.x == dest.x && start.y == dest.y)
-            return;
+        // Don't move anywhere if the unit isn't trying to go anywhere
+        if (!(start.x == dest.x && start.y == dest.y))
+        {
 
-        // Move the unit
-        units[dest.x, dest.y] = units[start.x, start.y];
-        units[start.x, start.y] = null;
+            // Move the unit
+            units[dest.x, dest.y] = units[start.x, start.y];
+            units[start.x, start.y] = null;
 
-        // Update the unit's visual position (WE DON'T DO THIS BECAUSE WE DON'T TELEPORT ANYMORE)
-        // units[dest.x, dest.y].gameObject.transform.position = tiles[dest.x, dest.y].transform.position + new Vector3(0, 1, 0);
+            // Update the unit's visual position (WE DON'T DO THIS BECAUSE WE DON'T TELEPORT ANYMORE)
+            // units[dest.x, dest.y].gameObject.transform.position = tiles[dest.x, dest.y].transform.position + new Vector3(0, 1, 0);
 
-        // set unit's movement path
-        units[dest.x, dest.y].pathfinder.getPath(units[dest.x, dest.y], dest);
+            // set unit's movement path
+            units[dest.x, dest.y].pathfinder.getPath(units[dest.x, dest.y], dest);
+        }
 
         // update unit's position, take away its ability to move for the turn, and stop highlighting tiles it could have moved to
         units[dest.x, dest.y].setPosition(dest);

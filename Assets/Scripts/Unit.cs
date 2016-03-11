@@ -103,7 +103,7 @@ public class Unit : MonoBehaviour
     public void moveTo(Point p)
     {
         // TODO: Replace with setDestination so we don't just teleport everywhere
-        if (game.map.getUnit(p) == null)
+        if (game.map.getUnit(p) == null || game.map.getUnit(p) == this)
         {
             game.map.moveUnit(this.position, p);
         }
