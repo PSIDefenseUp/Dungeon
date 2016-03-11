@@ -100,6 +100,10 @@ public class Game : MonoBehaviour
   {
     currentPlayer.isTurn = false;
     currentPlayerIndex++;
+    if ( currentPlayerIndex >= playerList.Count)
+    {
+      currentPlayerIndex = 0;
+    }
   }
 
   //UI function: setup to display player turn text 
