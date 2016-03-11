@@ -16,7 +16,7 @@ public class nextButton : MonoBehaviour {
 
   public void nextPhase()
   {
-    managerRef.currentPlayer.curPhase.nextPhase();
+    //managerRef.currentPlayer.curPhase.nextPhase();
   }
 
 }

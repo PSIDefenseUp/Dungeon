@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Unit : MonoBehaviour
 {
-    private Game game;              // The game object
-        
-    private int[,] reachable;       // Array containing the cost of movement to each tile on the map
-    private Point position;         // The current position of this unit on the map
+    private Game game;                       // The game object        
+    private float animationMoveSpeed = 10;   // Speed at which we move from tile to tile (in units / second)
 
-    private bool moving;            // Are we currently moving? -- For animation purposes
-
+    public int[,] reachable;        // Array containing the cost of movement to each tile on the map    
+    public Point position;          // The current position of this unit on the map
+    public Queue<Tile> path;        // The path for our unit to travel
     public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map   
     public bool canMove;            // Does this unit still have its move action?
     public bool canAct;             // Does this unit still have its turn action?
@@ -30,7 +29,8 @@ public class Unit : MonoBehaviour
     {
         // Grab current Game object
         game = GameObject.Find("GameManager").GetComponent<Game>();
-        
+
+        path = new Queue<Tile>();
         this.canMove = true;
         this.canAct = true;
     }
@@ -38,13 +38,21 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // TODO: Implement
+        // Move towards destination if we have one
+        if(path.Count > 0)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
+
+            if (transform.position.Equals(path.Peek().gameObject.transform.position))
+                path.Dequeue();
+        }
     }
 
     void OnMouseEnter()
     {
+        // NO LONGER TRUE:
         // Our units block the tiles off for their OnEnter call, so we want to make the cursor select this unit's tile when the unit is hovered over
-        game.cursor.setCurrentTile(game.map.getTile(position).transform);
+        // game.cursor.setCurrentTile(game.map.getTile(position).transform);
     }
 
     public bool canAttack(Unit other)
@@ -71,7 +79,7 @@ public class Unit : MonoBehaviour
     public void moveTo(Point p)
     {
         // TODO: Replace with setDestination so we don't just teleport everywhere
-        if(game.map.getUnit(p) == null)
+        if (game.map.getUnit(p) == null)
         {
             game.map.moveUnit(this.position, p);
         }
@@ -83,30 +91,20 @@ public class Unit : MonoBehaviour
         return true; // TODO: IMPLEMENT
     }
 
-    public int[,] getReachable()
-    {
-        return this.reachable;
-    }
-
-    public void setReachable(int[,] newReachable)
-    {
-        this.reachable = newReachable;
-    }    
-
     // Highlight tiles that this unit can travel to
     public void highlightReachable()
     {
         Rect mapBounds = game.map.getBounds();
-        
+
         // Loop only over tiles that could be in move range of this unit
-        for(int y = Mathf.Max(position.y - moveSpeed, 0); y < Mathf.Max(position.y + moveSpeed, mapBounds.height); y++)
+        for (int y = Mathf.Max(position.y - moveSpeed, 0); y < Mathf.Max(position.y + moveSpeed, mapBounds.height); y++)
         {
             for (int x = Mathf.Max(position.x - moveSpeed, 0); x < Mathf.Max(position.x + moveSpeed, mapBounds.width); x++)
             {
-                if(canReach(new Point(x, y)))
+                if (canReach(new Point(x, y)))
                     game.map.getTile(x, y).highlight(Color.cyan);
             }
-        }        
+        }
     }
 
     // Remove highlights from reachable tiles
@@ -119,7 +117,7 @@ public class Unit : MonoBehaviour
         {
             for (int x = 0; x < mapBounds.width; x++)
             {
-                if(game.map.getTile(x, y) != null)
+                if (game.map.getTile(x, y) != null)
                     game.map.getTile(x, y).highlight(Color.white);
             }
         }
@@ -142,6 +140,6 @@ public class Unit : MonoBehaviour
 
     public void setPosition(int x, int y)
     {
-        this.position = new Point(x, y);        
+        this.position = new Point(x, y);
     }
 }

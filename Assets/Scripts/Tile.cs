@@ -10,18 +10,18 @@ public class Tile : MonoBehaviour
     public int type;            // What type of tile is this? (0 =normal, 1 = wall, 2 = door, etc.)
     public int moveCost = 1;    // The cost of moving through a tile of this type -- Does not apply if the tile is solid
 
-	// Use this for initialization
-	void Start ()
-  {
+    // Use this for initialization
+    void Start()
+    {
         // Grab the current game object from the scene
         game = GameObject.Find("GameManager").GetComponent<Game>();
-	}
-	
-	// Update is called once per frame
-	void Update ()
-  {
-	    
-	}
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 
     void OnMouseEnter()
     {
@@ -32,12 +32,12 @@ public class Tile : MonoBehaviour
     // Highlights this tile in the color provided
     public void highlight(Color c)
     {
-        if(gameObject.GetComponent<Renderer>() != null)
+        if (gameObject.GetComponent<Renderer>() != null)
         {
             GetComponent<Renderer>().material.SetColor("_Color", c);
         }
     }
-   
+
     public Point getPosition()
     {
         return this.position;

@@ -29,8 +29,8 @@ public class GroundPathfinder : Pathfinder
         Queue<int[]> field = new Queue<int[]>();
 
         // Add current position to queue with a distance of 0
-        field.Enqueue(new int[] { u.getPosition().x, u.getPosition().y, 0});
-        reachable[u.getPosition().x, u.getPosition().y] = 0;
+        field.Enqueue(new int[] { u.getPosition().x, u.getPosition().y, 0 });
+        //reachable[u.getPosition().x, u.getPosition().y] = 0;
 
         // Create trackers for current position and distance
         int[] current;
@@ -39,9 +39,9 @@ public class GroundPathfinder : Pathfinder
         // Create variables to store the tile and unit on the surrounding spaces
         Tile currentTile;
         Unit otherUnit;
-        
+
         // Process queue until empty
-        while(field.Count > 0)
+        while (field.Count > 0)
         {
             // Get tile from queue
             current = field.Dequeue();
@@ -49,53 +49,60 @@ public class GroundPathfinder : Pathfinder
             // Fetch current distance
             distance = current[2];
 
-            // TODO: Below, check to see if the locations are within the bounds of the map -- THIS WILL NOT WORK OTHERWISE
-   
+            // Add the current space to reachable
+            reachable[current[0], current[1]] = distance;
+            
             // NORTH
             currentTile = map.getTile(new Point(current[0], current[1] - 1));
             otherUnit = map.getUnit(new Point(current[0], current[1] - 1));
-            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed)
+            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0], current[1] - 1] == -1)
             {
                 if (otherUnit == null || otherUnit.team == u.team)
                     field.Enqueue(new int[] { current[0], current[1] - 1, distance + currentTile.moveCost });
-
-                reachable[current[0], current[1] - 1] = distance;
             }
 
             // SOUTH
             currentTile = map.getTile(new Point(current[0], current[1] + 1));
             otherUnit = map.getUnit(new Point(current[0], current[1] + 1));
-            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed)
+            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0], current[1] + 1] == -1)
             {
                 if (otherUnit == null || otherUnit.team == u.team)
                     field.Enqueue(new int[] { current[0], current[1] + 1, distance + currentTile.moveCost });
-
-                reachable[current[0], current[1] + 1] = distance;
             }
 
             // EAST
             currentTile = map.getTile(new Point(current[0] + 1, current[1]));
             otherUnit = map.getUnit(new Point(current[0] + 1, current[1]));
-            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed)
+            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0] + 1, current[1]] == -1)
             {
                 if (otherUnit == null || otherUnit.team == u.team)
                     field.Enqueue(new int[] { current[0] + 1, current[1], distance + currentTile.moveCost });
-
-                reachable[current[0] + 1, current[1]] = distance;
             }
 
             // WEST
             currentTile = map.getTile(new Point(current[0] - 1, current[1]));
             otherUnit = map.getUnit(new Point(current[0] - 1, current[1]));
-            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed)
+            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0] - 1, current[1]] == -1)
             {
                 if (otherUnit == null || otherUnit.team == u.team)
                     field.Enqueue(new int[] { current[0] - 1, current[1], distance + currentTile.moveCost });
-
-                reachable[current[0] - 1, current[1]] = distance;
-            }                        
+            }
         }
 
-        u.setReachable(reachable);
-    }    
+        u.reachable = reachable;
+
+        // DEBUG PRINT REACHABLE
+        /*
+        string s = "";
+        for(int y = 0; y < map.getBounds().height; y++)
+        {
+            for(int x = 0; x < map.getBounds().width; x++)
+            {
+                s += Mathf.Abs(reachable[x, y]) + " ";
+            }
+            s += "\n";
+        }
+        Debug.Log(s);
+        */
+    }       
 }

@@ -5,10 +5,16 @@ public abstract class Pathfinder : MonoBehaviour
 {
     // Updates the reachable array with the costs of movement to each space on the map for the last unit to request it
     public abstract void updateReachable(Unit u);
-    
+
     // Finds a valid path from point a to point b for the given Unit
-    List<Point> getPath(Unit u, Point a, Point b)
+    public void getPath(Unit u, Point p)
     {
-        return null; // TODO: Implement (Move using reachable from the destination back to origin by looking for adjacent tiles with lower values and choosing whichever)
+        Map map = GameObject.Find("GameManager").GetComponent<Game>().map;
+        u.path = new Queue<Tile>();
+
+        // Add destination as last point in path
+        u.path.Enqueue(map.getTile(p));
+
+        // TODO: Until we are back at u's current location, move back from the dest        
     }
 }

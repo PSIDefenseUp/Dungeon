@@ -16,9 +16,11 @@ public class turnButton : MonoBehaviour
 
   public void nextPlayerTurn()
   {
+        /*
     managerRef.currentPlayer.curPhase = managerRef.currentPlayer.WaitPhase;
     managerRef.currentPlayer.isTurn = false;
     managerRef.nextPlayer();
+    */
   }
 	
 /*

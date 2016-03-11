@@ -8,20 +8,20 @@ public class Map : MonoBehaviour
     private Unit[,] units;      // Array containing all the units on the map
     private List<Unit> unitList;   // List of all units on the map
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
         // Initialize unit list
         unitList = new List<Unit>();
 
         // Initialize bounds to 0 all around
         bounds = new Rect();
-        
+
         // Grab the 'object' under which all map tiles are stored
         Transform tileGroup = this.gameObject.transform.FindChild("Tiles");
 
         // Get boundaries of the map
-        for(int i = 0; i < tileGroup.childCount; i++)
+        for (int i = 0; i < tileGroup.childCount; i++)
         {
             // Grab the tile 'object'
             Vector3 pos = tileGroup.GetChild(i).gameObject.transform.position;
@@ -84,9 +84,9 @@ public class Map : MonoBehaviour
 
         // Grab the 'object' under which all units are stored
         Transform unitGroup = this.gameObject.transform.FindChild("Units");
-        
+
         // Insert units into array
-        for(int i = 0; i < unitGroup.childCount; i++)
+        for (int i = 0; i < unitGroup.childCount; i++)
         {
             // If the unit doesn't have a unit script attached, there's something crazy going on, skip it to avoid buggy game
             if (unitGroup.GetChild(i).gameObject.GetComponent<Unit>() == null)
@@ -98,13 +98,13 @@ public class Map : MonoBehaviour
             // Put the units in the right place in the unit array
             addUnit(Mathf.RoundToInt(pos.x - bounds.xMin), Mathf.RoundToInt(pos.z - bounds.yMin), unitGroup.GetChild(i).gameObject.GetComponent<Unit>());
         }
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
-	    
-	}
+
+    }
 
     public void addTile(Point p, Tile t)
     {
@@ -161,13 +161,21 @@ public class Map : MonoBehaviour
 
     public void moveUnit(Point start, Point dest)
     {
+        // Don't move anything if the unit isn't trying to go anywhere
         if (start.x == dest.x && start.y == dest.y)
             return;
 
+        // Move the unit
         units[dest.x, dest.y] = units[start.x, start.y];
         units[start.x, start.y] = null;
 
-        units[dest.x, dest.y].gameObject.transform.position = tiles[dest.x, dest.y].transform.position + new Vector3(0, 1, 0);
+        // Update the unit's visual position (WE DON'T DO THIS BECAUSE WE DON'T TELEPORT ANYMORE)
+        // units[dest.x, dest.y].gameObject.transform.position = tiles[dest.x, dest.y].transform.position + new Vector3(0, 1, 0);
+
+        // set unit's movement path
+        units[dest.x, dest.y].pathfinder.getPath(units[dest.x, dest.y], dest);
+
+        // update unit's position, take away its ability to move for the turn, and stop highlighting tiles it could have moved to
         units[dest.x, dest.y].setPosition(dest);
         units[dest.x, dest.y].unHighlightReachable();
         units[dest.x, dest.y].canMove = false;
@@ -181,5 +189,10 @@ public class Map : MonoBehaviour
     public List<Unit> getUnitList()
     {
         return unitList;
+    }
+
+    public bool contains(Point p)
+    {
+        return p.x >= 0 && p.x < bounds.width && p.y >= 0 && p.y < bounds.height;
     }
 }

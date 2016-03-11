@@ -19,45 +19,45 @@ public class Cursor : MonoBehaviour
     private bool spinning = false; // Are we spinning or waiting?
 
     // Use this for initialization
-	void Start ()
+    void Start()
     {
         // Grab Game object from scene
         game = GameObject.Find("GameManager").GetComponent<Game>();
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
         // On mouse left click, select the unit at the current location
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             selectUnit(position);
         }
 
         // On mouse right click, if we have a unit selected, move the unit to the cursor's location
         // TODO: Make units move rather than teleport
-        if(Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayerIndex)
+        if (Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayerIndex)
         {
-            if(selectedUnit.canReach(position) && selectedUnit.canMove)
+            if (selectedUnit.canReach(position) && selectedUnit.canMove)
                 selectedUnit.moveTo(position);
         }
 
         // When space is pressed, go to the next turn (for testing purposes) -- TODO: DELETE THIS
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            //game.advanceTurn();
+            game.advanceTurn();
         }
 
         animate();
-	}
+    }
 
     private void animate()
     {
-        if(spinning)
-        {            
+        if (spinning)
+        {
             // When spinning, check to see when we've spun the whole way around (90 degrees)
 
-            if(transform.rotation.eulerAngles.y + (spinSpeed * Time.deltaTime) >= 90)
+            if (transform.rotation.eulerAngles.y + (spinSpeed * Time.deltaTime) >= 90)
             {
                 // If we reach 90 degrees this frame, stay at 90 degrees and start waiting until next spin
                 transform.rotation = Quaternion.AngleAxis(0, new Vector3(0, 1, 0));
@@ -75,14 +75,14 @@ public class Cursor : MonoBehaviour
             spinWaitProgress += Time.deltaTime;
 
             // If our wait time is over, start spinning again
-            if(spinWaitProgress >= spinWait)
+            if (spinWaitProgress >= spinWait)
             {
                 spinWaitProgress = 0;
                 spinning = true;
             }
         }
     }
-    
+
     public void selectUnit(Point p)
     {
         if (selectedUnit != null)
@@ -96,7 +96,7 @@ public class Cursor : MonoBehaviour
             Debug.Log("Selected " + selectedUnit.name);
             selectedUnit.pathfinder.updateReachable(selectedUnit);
 
-            if(selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)
+            if (selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)
                 selectedUnit.highlightReachable();
         }
         else
@@ -113,7 +113,7 @@ public class Cursor : MonoBehaviour
         this.position = t.GetComponent<Tile>().getPosition();
 
         // Float our cursor above the selected tile
-        transform.position = t.transform.position + new Vector3(0, 1, 0); 
+        transform.position = t.transform.position + new Vector3(0, 1, 0);
     }
 
     public void setCurrentUnit(Point loc)
