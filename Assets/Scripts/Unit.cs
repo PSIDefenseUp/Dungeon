@@ -38,6 +38,9 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Turn to face the camera! Billboards! DO NOT DO THIS FOR THE LOVE OF GOD
+        //transform.LookAt(new Vector3(game.gameCamera.transform.position.x, transform.position.y, game.gameCamera.transform.position.z));
+
         // Move towards destination if we have one
         if(path.Count > 0)
         {
