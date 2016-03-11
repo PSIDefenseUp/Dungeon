@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class Player  {
 
   public string playerName;   // Player Name
+  public int playerIndex;     // Which player number is this?
   public List<Unit> units;    // List of Units on the board the player controls
   public bool isTurn = false; // boolean for later use of highlighting player units during their turn
 

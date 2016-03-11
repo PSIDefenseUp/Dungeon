@@ -3,25 +3,51 @@ using System.Collections;
 
 public class Cursor : MonoBehaviour
 {
-    // Current selections
-    private Transform selectedTile;
-    private Transform selectedUnit;
+    private Point position; // The current position of the cursor
+    private Game game;      // Reference to the current Game object
+
+    // The Tile under our cursor
+    private Transform currentTile;
+
+    // The selected unit (if we have made a selection)
+    private Unit selectedUnit;
 
     // Animation variables
     private float spinSpeed = 360; // Degrees per second to spin around
-    private float spinWait = 1; // Seconds to wait between spins
+    private float spinWait = .5f; // Seconds to wait between spins
     private float spinWaitProgress = 0; // How far we are in our current wait
     private bool spinning = false; // Are we spinning or waiting?
 
     // Use this for initialization
 	void Start ()
     {
-	
-	}
+        // Grab Game object from scene
+        game = GameObject.Find("GameManager").GetComponent<Game>();
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        // On mouse left click, select the unit at the current location
+        if(Input.GetMouseButtonDown(0))
+        {
+            selectUnit(position);
+        }
+
+        // On mouse right click, if we have a unit selected, move the unit to the cursor's location
+        // TODO: Make units move rather than teleport
+        if(Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayerIndex)
+        {
+            if(selectedUnit.canReach(position) && selectedUnit.canMove)
+                selectedUnit.moveTo(position);
+        }
+
+        // When space is pressed, go to the next turn (for testing purposes) -- TODO: DELETE THIS
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            //game.advanceTurn();
+        }
+
         animate();
 	}
 
@@ -56,27 +82,47 @@ public class Cursor : MonoBehaviour
             }
         }
     }
-
-    public void selectTile(Transform t)
+    
+    public void selectUnit(Point p)
     {
-        this.selectedTile = t;
+        if (selectedUnit != null)
+            selectedUnit.unHighlightReachable();
+
+        selectedUnit = game.map.getUnit(position);
+
+        // PRINT DEBUG INFO ON SELECTION -- TODO: DELETE THIS
+        if (selectedUnit != null)
+        {
+            Debug.Log("Selected " + selectedUnit.name);
+            selectedUnit.pathfinder.updateReachable(selectedUnit);
+
+            if(selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)
+                selectedUnit.highlightReachable();
+        }
+        else
+        {
+            Debug.Log("Selected Null");
+        }
+    }
+
+    public void setCurrentTile(Transform t)
+    {
+        this.currentTile = t;
+
+        // Set our grid position
+        this.position = t.GetComponent<Tile>().getPosition();
 
         // Float our cursor above the selected tile
         transform.position = t.transform.position + new Vector3(0, 1, 0); 
     }
 
-    public void selectTile(Point loc)
+    public void setCurrentUnit(Point loc)
     {
         // TODO: IMPLEMENT
     }
 
-    public void selectUnit(Transform t)
+    public void setSelectedUnit(Unit u)
     {
-        this.selectedUnit = t;
-    }
-
-    public void selectUnit(Point loc)
-    {
-        // TODO: IMPLEMENT
+        this.selectedUnit = u;
     }
 }

@@ -5,10 +5,13 @@ public class GroundPathfinder : Pathfinder
 {
     public override void updateReachable(Unit u)
     {
+        // get reference to map
+        Map map = GameObject.Find("GameManager").GetComponent<Game>().map;
+
         // TODO: REWRITE THIS BUGGY PIECE OF SHIT 
 
         // Get map bounds (for width and height)
-        Rect mapBounds = this.map.getBounds();
+        Rect mapBounds = map.getBounds();
 
         // Set up reachable array
         int[,] reachable = new int[(int)mapBounds.width, (int)mapBounds.height];

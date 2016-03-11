@@ -4,13 +4,16 @@ using System.Collections;
 public class Unit : MonoBehaviour
 {
     private Game game;              // The game object
-
-    private bool canMove;           // Does this unit still have its move action?
-    private bool canAct;            // Does this unit still have its turn action?
+        
     private int[,] reachable;       // Array containing the cost of movement to each tile on the map
     private Point position;         // The current position of this unit on the map
 
+    private bool moving;            // Are we currently moving? -- For animation purposes
+
     public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map   
+    public bool canMove;            // Does this unit still have its move action?
+    public bool canAct;             // Does this unit still have its turn action?
+    public int owner;               // The player that owns this unit
     public int team;                // The 'team' this unit is on -- 0: heroes, 1: dungeon master
     public int maxHealth;           // The maximum health of this unit
     public int currentHealth;       // The current health of this unit
@@ -23,26 +26,25 @@ public class Unit : MonoBehaviour
     public int cost;                // The cost of purchasing this unit -- only applies to the DM when building the map
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         // Grab current Game object
         game = GameObject.Find("GameManager").GetComponent<Game>();
+        
+        this.canMove = true;
+        this.canAct = true;
+    }
 
-        // TODO: DELETE THIS?
-        this.canMove = false;
-        this.canAct = false;
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    // Update is called once per frame
+    void Update()
     {
-	    // TODO: Implement
-	}
+        // TODO: Implement
+    }
 
     void OnMouseEnter()
     {
         // Our units block the tiles off for their OnEnter call, so we want to make the cursor select this unit's tile when the unit is hovered over
-        game.cursor.selectTile(game.map.getTile(position).transform);
+        game.cursor.setCurrentTile(game.map.getTile(position).transform);
     }
 
     public bool canAttack(Unit other)
@@ -66,6 +68,21 @@ public class Unit : MonoBehaviour
             other.currentHealth = 0;
     }
 
+    public void moveTo(Point p)
+    {
+        // TODO: Replace with setDestination so we don't just teleport everywhere
+        if(game.map.getUnit(p) == null)
+        {
+            game.map.moveUnit(this.position, p);
+        }
+    }
+
+    // Returns true if we the input location has no other unit, and is reachable by this unit
+    private bool canAccess(Point p)
+    {
+        return true; // TODO: IMPLEMENT
+    }
+
     public int[,] getReachable()
     {
         return this.reachable;
@@ -75,6 +92,43 @@ public class Unit : MonoBehaviour
     {
         this.reachable = newReachable;
     }    
+
+    // Highlight tiles that this unit can travel to
+    public void highlightReachable()
+    {
+        Rect mapBounds = game.map.getBounds();
+        
+        // Loop only over tiles that could be in move range of this unit
+        for(int y = Mathf.Max(position.y - moveSpeed, 0); y < Mathf.Max(position.y + moveSpeed, mapBounds.height); y++)
+        {
+            for (int x = Mathf.Max(position.x - moveSpeed, 0); x < Mathf.Max(position.x + moveSpeed, mapBounds.width); x++)
+            {
+                if(canReach(new Point(x, y)))
+                    game.map.getTile(x, y).highlight(Color.cyan);
+            }
+        }        
+    }
+
+    // Remove highlights from reachable tiles
+    public void unHighlightReachable()
+    {
+        Rect mapBounds = game.map.getBounds();
+
+        // Loop only over tiles that could be in move range of this unit
+        for (int y = 0; y < mapBounds.height; y++)
+        {
+            for (int x = 0; x < mapBounds.width; x++)
+            {
+                if(game.map.getTile(x, y) != null)
+                    game.map.getTile(x, y).highlight(Color.white);
+            }
+        }
+    }
+
+    public bool canReach(Point p)
+    {
+        return reachable[p.x, p.y] >= 0;
+    }
 
     public Point getPosition()
     {
@@ -88,6 +142,6 @@ public class Unit : MonoBehaviour
 
     public void setPosition(int x, int y)
     {
-        this.position = new Point(x, y);
+        this.position = new Point(x, y);        
     }
 }

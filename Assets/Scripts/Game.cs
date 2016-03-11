@@ -24,13 +24,14 @@ public class Game : MonoBehaviour
   public Text playerTurnText;     // UI: player turn text
   public Text playerPhase;        // UI: player Phase text
   public Dropdown unitSelect;     // UI: dungeon master drop down list
-  public Toggle unitSelecltToggle;// UI: duingeon master toggle 
+  public Toggle unitSelectToggle;// UI: duingeon master toggle 
   public Button next;             // UI: Next button
   public Button End;              // UI: End Button
 
   // Use this for initialization
   void Start()
   {
+
     // Grab essential game components. This is done through their names as strings, so don't get too creative with editing the scene later.
     map = GameObject.Find("Map").GetComponent<Map>();
     cursor = GameObject.Find("Cursor").GetComponent<Cursor>();
@@ -39,7 +40,7 @@ public class Game : MonoBehaviour
     playerTurnText = GameObject.Find("playerTurn").GetComponent<Text>();
     playerPhase = GameObject.Find("playerPhase").GetComponent<Text>();
     unitSelect = GameObject.Find("unitSelectDropdownList").GetComponent<Dropdown>();
-    unitSelecltToggle = GameObject.Find("placeUnitToggle").GetComponent<Toggle>();
+    unitSelectToggle = GameObject.Find("placeUnitToggle").GetComponent<Toggle>();
     next = GameObject.Find("NextButton").GetComponent<Button>();
     End = GameObject.Find("EndButton").GetComponent<Button>();
 
@@ -80,31 +81,25 @@ public class Game : MonoBehaviour
   // created players for Demo purposes
   void demoPlayers()
   {
-    Players Player1  = new Players("Test Player");
-    DungeonMaster DM = new DungeonMaster("Dungeon Master"); 
+    Players Player1 = new Players("Test Player");
+    DungeonMaster DM = new DungeonMaster("Dungeon Master");
 
     playerList.Add(Player1);
     playerList.Add(DM);
-
   }
 
   // return the number of player in game
   public int getPlayerListSize()
   {
-    return playerList.Count;
-  }
 
-  // proceed to next players turn
+    return playerList.Count;
+
+  } 
+
   public void nextPlayer()
   {
     currentPlayer.isTurn = false;
     currentPlayerIndex++;
-    currentPlayer.isTurn = true;
-
-    if (currentPlayerIndex >= playerList.Count)
-    {
-      currentPlayerIndex = 0;
-    }
   }
 
   //UI function: setup to display player turn text 
@@ -122,40 +117,58 @@ public class Game : MonoBehaviour
   //UI function: manipulate ui elements
   private void uiViewables()
   {
-    
     if (string.Equals(currentPlayer.playerName, "Dungeon Master"))
     {
       unitSelect.enabled = true;
       unitSelect.transform.localScale = new Vector3(1, 1, 1);
-      unitSelecltToggle.transform.localScale = new Vector3(1, 1, 1);
+      unitSelectToggle.transform.localScale = new Vector3(1, 1, 1);
     }
     else
     {
       unitSelect.enabled = false;
       unitSelect.transform.localScale = new Vector3(0, 0, 0);
-      unitSelecltToggle.transform.localScale = new Vector3(0, 0, 0);
+      unitSelectToggle.transform.localScale = new Vector3(0, 0, 0);
     }
-
-    if (!string.Equals(currentPhase,"End"))
-    {
-      End.enabled = false;
-      next.enabled = true;
-      next.transform.localScale =  new Vector3(1, 1, 1);
+      if (!string.Equals(currentPhase, "End"))
+      {
+        End.enabled = false;
+        next.enabled = true;
+        next.transform.localScale = new Vector3(1, 1, 1);
+      }
+      else
+      {
+        End.enabled = true;
+        next.enabled = false;
+        next.transform.localScale = new Vector3(0, 0, 0);
+      }
     }
-    else
-    {
-      End.enabled = true;
-      next.enabled = false;
-      next.transform.localScale = new Vector3(0, 0, 0);
-    }
-  }
 
   private void runStateMachines()
+{
+  foreach (Player x in playerList)
   {
-    foreach(Player x in playerList)
-    {
-      x.Update();
-    }
+    x.Update();
   }
+}
+    /*
+    public void advanceTurn()
+    {
+        // Change current player
+        currentPlayerIndex++;
+        currentPlayerIndex %= playerList.Count;
+        currentPlayer = playerList[currentPlayerIndex];
+        cursor.setSelectedUnit(null);
+        //playerTurnText.text = setupPlayerTurnUI(currentPlayer.playerName); TODO: re-enable turn text
 
+        // Give all of this player's units the ability to move and act again
+        foreach(Unit u in map.getUnitList())
+        {
+            if (u.owner == currentPlayer.playerIndex)
+            {
+                u.canAct = true;
+                u.canMove = true;
+            }
+        }
+    }
+*/
 }
