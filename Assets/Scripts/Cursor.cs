@@ -125,4 +125,9 @@ public class Cursor : MonoBehaviour
     {
         this.selectedUnit = u;
     }
+
+   public Point getPosition()
+   {
+    return position;
+   }
 }

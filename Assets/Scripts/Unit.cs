@@ -145,4 +145,12 @@ public class Unit : MonoBehaviour
     {
         this.position = new Point(x, y);
     }
+  public void setCurrentTile(Transform t)
+  {
+    // Set our grid position
+    this.position = t.GetComponent<Tile>().getPosition();
+
+    // Float our cursor above the selected tile
+    transform.position = t.transform.position + new Vector3(0, 1, 0);
+  }
 }
