@@ -1,21 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections;
 
+[System.Serializable]
 public class Game : MonoBehaviour
 {
   public Map map;                 // The map we're playing on
 
+  [SerializeField]
   public List<Player> playerList; // List of players in the game
+
+  [SerializeField]
   public Player currentPlayer;    // simple instance of current player for easy manipulation
   public int currentPlayerIndex;  // Index in the players list of the current player 
+  public string currentPhase;
+  bool inGame;
 
   public Cursor cursor;           // The cursor!
   public Camera gameCamera;       // The camera!
   public Canvas uiCanvas;         // UI: Canvas 
 
   public Text playerTurnText;     // UI: player turn text
+  public Text playerPhase;        // UI: player Phase text
   public Dropdown unitSelect;     // UI: dungeon master drop down list
+  public Toggle unitSelecltToggle;// UI: duingeon master toggle 
+  public Button next;             // UI: Next button
+  public Button End;              // UI: End Button
 
   // Use this for initialization
   void Start()
@@ -26,39 +37,74 @@ public class Game : MonoBehaviour
     gameCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
     uiCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
     playerTurnText = GameObject.Find("playerTurn").GetComponent<Text>();
-    unitSelect = GameObject.Find("dmUnitSelect").GetComponent<Dropdown>();
+    playerPhase = GameObject.Find("playerPhase").GetComponent<Text>();
+    unitSelect = GameObject.Find("unitSelectDropdownList").GetComponent<Dropdown>();
+    unitSelecltToggle = GameObject.Find("placeUnitToggle").GetComponent<Toggle>();
+    next = GameObject.Find("NextButton").GetComponent<Button>();
+    End = GameObject.Find("EndButton").GetComponent<Button>();
+
+    playerList = new List<Player>();
+
+    demoPlayers();
 
     currentPlayerIndex = 0;
+    inGame = true;
 
-    demo();
+    currentPlayer = playerList[currentPlayerIndex];
+    currentPhase = currentPlayer.curPhase.toString();
+
+    StartCoroutine(runGame());
   }
 
   // Update is called once per frame
   void Update()
   {
     currentPlayer = playerList[currentPlayerIndex];
+    currentPhase = currentPlayer.curPhase.toString();
     playerTurnText.text = setupPlayerTurnUI(currentPlayer.playerName);
-    ui();
+    playerPhase.text = setupPlayerPhaseUI(currentPlayer.curPhase.toString());
+    uiViewables();
+    runStateMachines();
   }
 
-
-  void demo()
+  IEnumerator runGame()
   {
-    Player Player1 = new Player();
-    Player DM = new Player();
+    while (inGame)
+    {
+      //TODO: implement a better loop for game for now UI driven loop works
+      yield return null;
+    }
+      //TODO: Setup end game 
+  }
 
-    Player1.playerName = "Test Player";
-    DM.playerName = "Dungeon Master";
+  // created players for Demo purposes
+  void demoPlayers()
+  {
+    Players Player1  = new Players("Test Player");
+    DungeonMaster DM = new DungeonMaster("Dungeon Master"); 
 
     playerList.Add(Player1);
     playerList.Add(DM);
 
   }
 
-
+  // return the number of player in game
   public int getPlayerListSize()
   {
     return playerList.Count;
+  }
+
+  // proceed to next players turn
+  public void nextPlayer()
+  {
+    currentPlayer.isTurn = false;
+    currentPlayerIndex++;
+    currentPlayer.isTurn = true;
+
+    if (currentPlayerIndex >= playerList.Count)
+    {
+      currentPlayerIndex = 0;
+    }
   }
 
   //UI function: setup to display player turn text 
@@ -67,19 +113,48 @@ public class Game : MonoBehaviour
     return "Player Turn: " + playerName;
   }
 
+  //UI function: setup to display player turn text 
+  private string setupPlayerPhaseUI(string phase)
+  {
+    return "Phase: " + phase;
+  }
+
   //UI function: manipulate ui elements
-  private void ui()
+  private void uiViewables()
   {
     
     if (string.Equals(currentPlayer.playerName, "Dungeon Master"))
     {
       unitSelect.enabled = true;
       unitSelect.transform.localScale = new Vector3(1, 1, 1);
+      unitSelecltToggle.transform.localScale = new Vector3(1, 1, 1);
     }
     else
     {
       unitSelect.enabled = false;
       unitSelect.transform.localScale = new Vector3(0, 0, 0);
+      unitSelecltToggle.transform.localScale = new Vector3(0, 0, 0);
+    }
+
+    if (!string.Equals(currentPhase,"End"))
+    {
+      End.enabled = false;
+      next.enabled = true;
+      next.transform.localScale =  new Vector3(1, 1, 1);
+    }
+    else
+    {
+      End.enabled = true;
+      next.enabled = false;
+      next.transform.localScale = new Vector3(0, 0, 0);
+    }
+  }
+
+  private void runStateMachines()
+  {
+    foreach(Player x in playerList)
+    {
+      x.Update();
     }
   }
 
