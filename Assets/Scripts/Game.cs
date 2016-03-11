@@ -24,7 +24,7 @@ public class Game : MonoBehaviour
   public Text playerTurnText;     // UI: player turn text
   public Text playerPhase;        // UI: player Phase text
   public Dropdown unitSelect;     // UI: dungeon master drop down list
-  public Toggle unitSelectToggle;// UI: duingeon master toggle 
+  public Toggle unitSelectToggle; // UI: duingeon master toggle 
   public Button next;             // UI: Next button
   public Button End;              // UI: End Button
 

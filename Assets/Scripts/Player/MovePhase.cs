@@ -36,7 +36,7 @@ public class MovePhase : IPlayerPhase
     //TODO: setup highlight units that can move during this players turn
   }
 
-  // Default Next Phase if you doesnt define next pohase for turn
+  // Default Next Phase if user doesnt define next phase for turn
   public void nextPhase()
   {
     player.curPhase = player.EndPhase;

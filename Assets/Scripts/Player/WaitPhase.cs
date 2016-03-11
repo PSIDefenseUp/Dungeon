@@ -35,7 +35,7 @@ public class WaitPhase : IPlayerPhase
     // TODO: define anything the player can do as they wait for other player to take there turn
   }
 
-  // Default Next Phase if you doesnt define next pohase for turn
+  // Default Next Phase if user doesnt define next phase for turn
   public void nextPhase()
   {
     player.curPhase = player.MainPhase;
