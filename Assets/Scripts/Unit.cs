@@ -104,7 +104,7 @@ public class Unit : MonoBehaviour
             for (int x = Mathf.Max(position.x - moveSpeed, 0); x < Mathf.Max(position.x + moveSpeed, mapBounds.width); x++)
             {
                 if(canReach(new Point(x, y)))
-                    game.map.getTile(x, y).highlight(Color.blue);
+                    game.map.getTile(x, y).highlight(Color.cyan);
             }
         }        
     }

@@ -36,7 +36,7 @@ public class Cursor : MonoBehaviour
 
         // On mouse right click, if we have a unit selected, move the unit to the cursor's location
         // TODO: Make units move rather than teleport
-        if(Input.GetMouseButtonDown(1) && selectedUnit != null)
+        if(Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayerIndex)
         {
             if(selectedUnit.canReach(position) && selectedUnit.canMove)
                 selectedUnit.moveTo(position);
@@ -96,7 +96,7 @@ public class Cursor : MonoBehaviour
             Debug.Log("Selected " + selectedUnit.name);
             selectedUnit.pathfinder.updateReachable(selectedUnit);
 
-            if(selectedUnit.canMove)
+            if(selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)
                 selectedUnit.highlightReachable();
         }
         else
