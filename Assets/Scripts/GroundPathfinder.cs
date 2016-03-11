@@ -30,6 +30,7 @@ public class GroundPathfinder : Pathfinder
 
         // Add current position to queue with a distance of 0
         field.Enqueue(new int[] { u.getPosition().x, u.getPosition().y, 0 });
+
         //reachable[u.getPosition().x, u.getPosition().y] = 0;
 
         // Create trackers for current position and distance

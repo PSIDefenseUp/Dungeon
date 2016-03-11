@@ -6,7 +6,8 @@ public class Unit : MonoBehaviour
     private Game game;                       // The game object        
     private float animationMoveSpeed = 10;   // Speed at which we move from tile to tile (in units / second)
 
-    public int[,] reachable;        // Array containing the cost of movement to each tile on the map    
+    public int[,] reachable;        // Array containing the cost of movement to each tile on the map 
+    public List<Unit> attack;   
     public Point position;          // The current position of this unit on the map
     public Queue<Tile> path;        // The path for our unit to travel
     public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map   

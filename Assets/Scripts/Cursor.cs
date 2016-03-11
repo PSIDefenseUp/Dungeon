@@ -105,7 +105,8 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    public void setCurrentTile(Transform t)
+
+  public void setCurrentTile(Transform t)
     {
         this.currentTile = t;
 

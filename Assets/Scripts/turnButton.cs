@@ -2,6 +2,7 @@
 using WindowsInput;
 using System.Threading;
 using System.Collections;
+using System.Collections.Generic;
 
 public class turnButton : MonoBehaviour
 {
@@ -26,6 +27,12 @@ public class turnButton : MonoBehaviour
     InputSimulator.SimulateKeyDown(VirtualKeyCode.SPACE);
     yield return new WaitForSeconds(0.5f);
     InputSimulator.SimulateKeyUp(VirtualKeyCode.SPACE);
+  }
+
+  public void AttackList()
+  {
+    List<Unit> x = managerRef.attackList;
+    x[0].Attack(x[1]);
   }
 
 }

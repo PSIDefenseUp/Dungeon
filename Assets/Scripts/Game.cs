@@ -7,10 +7,15 @@ public class Game : MonoBehaviour
 {
     public Map map;                 // The map we're playing on
     public Unit Warrior;            // cloneable warrior
+  
+  //these need rework. but in efforts of a good presentation they work 
     public GameObject unitsObj;     //
     public Unit buildObj;           //
+    public List<Unit> attackList;   //
+    public Toggle attackT;          // 
+    public Button attackB;          // 
 
-    public List<Player> playerList; // List of players in the game
+  public List<Player> playerList; // List of players in the game
     public Player currentPlayer;    // simple instance of current player for easy manipulation
     public int currentPlayerIndex;  // Index in the players list of the current player 
 
@@ -35,10 +40,16 @@ public class Game : MonoBehaviour
         unitSelect = GameObject.Find("unitSelectDropdownList").GetComponent<Dropdown>();
         unitSelectToggle = GameObject.Find("placeUnitToggle").GetComponent<Toggle>();
         End = GameObject.Find("EndButton").GetComponent<Button>();
+
+        // Needs revamp
         Warrior = GameObject.Find("unitForClone").GetComponent<Unit>();
         unitsObj = GameObject.Find("Units").GetComponent<GameObject>();
+        attackT = GameObject.Find("AttackToggle").GetComponent<Toggle>();
+        attackB = GameObject.Find("AttackButton").GetComponent<Button>();
+
 
         playerList = new List<Player>();
+        attackList = new List<Unit>();
         unitSelectToggle.enabled = false;
 
         demo();
@@ -54,6 +65,7 @@ public class Game : MonoBehaviour
     {
        uiViewables();
        buildObjSet();
+       setupAttack();
     }
 
 
@@ -112,7 +124,6 @@ public class Game : MonoBehaviour
   // TODO: Needs revamp but it works
   // Duck taped build function while you are dungeonmaster 
   // and build is selected press N to make a unit at cursor position
-   
   public void buildObjSet()
   {
 
@@ -128,6 +139,20 @@ public class Game : MonoBehaviour
       map.addUnit(cursor.getPosition(), buildObj);
       buildObj.transform.parent = unitsObj.transform;
       buildObj = null;
+    }
+  }
+  //TODO: Needs revamp but it works
+  // press B to add current mouse over unit the hit attack to attack first unit specified 
+  public void setupAttack()
+  {
+    if (attackT.isOn != true)
+    {
+      attackList.Clear();
+      return;
+    }
+    if (Input.GetKeyDown(KeyCode.B))
+    {
+      attackList.Add(map.getUnit(cursor.getPosition()));
     }
   }
 
