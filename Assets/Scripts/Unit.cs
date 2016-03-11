@@ -166,4 +166,14 @@ public class Unit : MonoBehaviour
         // Float our cursor above the selected tile
         transform.position = t.transform.position + new Vector3(0, 1, 0);
     }
+
+    public void refresh()
+    {
+        // To be called on the start of its owner's turn
+        // Allows the unit to act and move again, and brings back its light
+        canMove = true;
+        canAct = true;
+
+        gameObject.GetComponentInChildren<Light>().intensity = 1;
+    }
 }

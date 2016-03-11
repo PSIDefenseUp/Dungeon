@@ -87,8 +87,7 @@ public class Game : MonoBehaviour
         {
             if (u.owner == currentPlayer.playerIndex)
             {
-                u.canAct = true;
-                u.canMove = true;
+                u.refresh();
             }
         }
     }

@@ -47,6 +47,10 @@ public class Cursor : MonoBehaviour
             // If we clicked on an empty space, try to move there
             if (selectedUnit.canReach(position) && selectedUnit.canMove)
                 selectedUnit.moveTo(position);
+
+            // Dim the light on a unit that can't do anything more this turn
+            if(!(selectedUnit.canMove || selectedUnit.canAct))
+                selectedUnit.gameObject.GetComponentInChildren<Light>().intensity = 0;
         }
 
         // When space is pressed, go to the next turn (for testing purposes) -- TODO: DELETE THIS
