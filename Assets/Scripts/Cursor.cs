@@ -34,10 +34,17 @@ public class Cursor : MonoBehaviour
             selectUnit(position);
         }
 
-        // On mouse right click, if we have a unit selected, move the unit to the cursor's location
+        // On mouse right click, if we have a unit selected, move the unit to the cursor's location or attack the unit there if in range
         // TODO: Make units move rather than teleport
         if (Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayerIndex)
         {
+            // If we clicked on a unit, see if we can attack it
+            if (selectedUnit.canAttack(game.map.getUnit(position)))
+            {
+                selectedUnit.attack(game.map.getUnit(position));
+            }
+
+            // If we clicked on an empty space, try to move there
             if (selectedUnit.canReach(position) && selectedUnit.canMove)
                 selectedUnit.moveTo(position);
         }

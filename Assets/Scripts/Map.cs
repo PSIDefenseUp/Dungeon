@@ -129,10 +129,11 @@ public class Map : MonoBehaviour
         unitList.Add(u);
     }
 
-    public void remvoeUnit(Unit u)
+    public void removeUnit(Unit u)
     {
         unitList.Remove(u);
         units[u.getPosition().x, u.getPosition().y] = null;
+        Destroy(u.gameObject);
     }
 
     // Returns the tile at (p.x, p.y)

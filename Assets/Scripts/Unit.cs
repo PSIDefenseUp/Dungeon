@@ -7,7 +7,7 @@ public class Unit : MonoBehaviour
     private float animationMoveSpeed = 10;   // Speed at which we move from tile to tile (in units / second)
 
     public int[,] reachable;        // Array containing the cost of movement to each tile on the map 
-    public List<Unit> attack;   
+    //public List<Unit> attack;   
     public Point position;          // The current position of this unit on the map
     public Queue<Tile> path;        // The path for our unit to travel
     public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map   
@@ -54,13 +54,19 @@ public class Unit : MonoBehaviour
 
     void OnMouseEnter()
     {
-        // NO LONGER TRUE:
-        // Our units block the tiles off for their OnEnter call, so we want to make the cursor select this unit's tile when the unit is hovered over
-        // game.cursor.setCurrentTile(game.map.getTile(position).transform);
+        
     }
 
     public bool canAttack(Unit other)
     {
+        // We can't attack something that doesn't exist
+        if (other == null)
+            return false;
+
+        // Don't let us attack if we can't act anymore
+        if (canAct == false)
+            return false;
+
         // Don't let us attack our own teammates
         if (other.team == this.team)
             return false;
@@ -70,14 +76,19 @@ public class Unit : MonoBehaviour
         return distance >= minRange && distance <= maxRange;
     }
 
-    public void Attack(Unit other)
+    public void attack(Unit other)
     {
         // Reduce HP of targetted unit
-        other.currentHealth -= attackBase + (int)(attackSpread * Random.value) - other.armor;
+        other.getAttacked(attackBase + (int)(attackSpread * Random.value) - other.armor, this);
+        canAct = false;
+    }
 
-        // Don't let HP go to crazy, negative values
-        if (other.currentHealth < 0)
-            other.currentHealth = 0;
+    public void getAttacked(int damage, Unit other)
+    {
+        this.currentHealth -= damage;
+
+        if (currentHealth <= 0)
+            game.map.removeUnit(this);
     }
 
     public void moveTo(Point p)
@@ -146,12 +157,13 @@ public class Unit : MonoBehaviour
     {
         this.position = new Point(x, y);
     }
-  public void setCurrentTile(Transform t)
-  {
-    // Set our grid position
-    this.position = t.GetComponent<Tile>().getPosition();
 
-    // Float our cursor above the selected tile
-    transform.position = t.transform.position + new Vector3(0, 1, 0);
-  }
+    public void setCurrentTile(Transform t)
+    {
+        // Set our grid position
+        this.position = t.GetComponent<Tile>().getPosition();
+
+        // Float our cursor above the selected tile
+        transform.position = t.transform.position + new Vector3(0, 1, 0);
+    }
 }
