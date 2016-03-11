@@ -31,7 +31,7 @@ public class Cursor : MonoBehaviour
         // On mouse left click, select the unit at the current location
         if (Input.GetMouseButtonDown(0))
         {
-            selectUnit(position);
+            selectUnit(game.map.getUnit(position));
         }
 
         // On mouse right click, if we have a unit selected, move the unit to the cursor's location or attack the unit there if in range
@@ -51,13 +51,7 @@ public class Cursor : MonoBehaviour
             // Dim the light on a unit that can't do anything more this turn
             if(!(selectedUnit.canMove || selectedUnit.canAct))
                 selectedUnit.gameObject.GetComponentInChildren<Light>().intensity = 0;
-        }
-
-        // When space is pressed, go to the next turn (for testing purposes) -- TODO: DELETE THIS
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            game.advanceTurn();
-        }
+        }       
 
         animate();
     }
@@ -94,12 +88,12 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    public void selectUnit(Point p)
+    public void selectUnit(Unit u)
     {
         if (selectedUnit != null)
             selectedUnit.unHighlightReachable();
 
-        selectedUnit = game.map.getUnit(position);
+        selectedUnit = u;
 
         // PRINT DEBUG INFO ON SELECTION -- TODO: DELETE THIS
         if (selectedUnit != null)
@@ -116,8 +110,7 @@ public class Cursor : MonoBehaviour
         }
     }
 
-
-  public void setCurrentTile(Transform t)
+    public void setCurrentTile(Transform t)
     {
         this.currentTile = t;
 
@@ -133,13 +126,8 @@ public class Cursor : MonoBehaviour
         // TODO: IMPLEMENT
     }
 
-    public void setSelectedUnit(Unit u)
+    public Point getPosition()
     {
-        this.selectedUnit = u;
+        return position;
     }
-
-   public Point getPosition()
-   {
-    return position;
-   }
 }

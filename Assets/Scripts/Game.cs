@@ -41,6 +41,12 @@ public class Game : MonoBehaviour
     void Update()
     {
        uiViewables();
+
+       // When space is pressed, go to the next turn (for testing purposes) -- TODO: DELETE THIS
+       if (Input.GetKeyDown(KeyCode.Space))
+       {
+           advanceTurn();
+       }
     }
 
     void demoSetup()
@@ -79,7 +85,7 @@ public class Game : MonoBehaviour
         currentPlayerIndex++;
         currentPlayerIndex %= playerList.Count;
         currentPlayer = playerList[currentPlayerIndex];
-        cursor.setSelectedUnit(null);
+        cursor.selectUnit(null);
         //playerTurnText.text = setupPlayerTurnUI(currentPlayer.playerName); TODO: re-enable turn text
 
         // Give all of this player's units the ability to move and act again

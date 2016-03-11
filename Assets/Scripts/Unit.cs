@@ -19,11 +19,12 @@ public class Unit : MonoBehaviour
     public int currentHealth;       // The current health of this unit
     public int moveSpeed;           // The maximum number of tiles this unit can move in one turn
     public int attackBase;          // The minimum damage this unit can inflict on attack -- Damage = (attackSpread * random) + attackBase - enemy.armor
-    public int attackSpread;        // A random value between 0 and attackSpread is added to each attack
+    public int attackSpread;        // A random value between 0 and attackSpread (inclusive) is added to each attack
     public int minRange;            // Minimum number of tiles away that this unit's attacks can reach
     public int maxRange;            // Maximum number of tiles away that this unit's attacks can reach -- An enemy unit must be within [minRange, maxRange] to be a valid target
     public int armor;               // The amount by which we reduce the damage of incoming attacks
     public int cost;                // The cost of purchasing this unit -- only applies to the DM when building the map
+    public int regen;               // The amount of health this unit regenerates each turn
 
     // Use this for initialization
     void Start()
@@ -89,6 +90,14 @@ public class Unit : MonoBehaviour
 
         if (currentHealth <= 0)
             game.map.removeUnit(this);
+    }
+
+    public void heal(int health)
+    {
+        this.currentHealth += health;
+
+        if (this.currentHealth > this.maxHealth)
+            this.currentHealth = this.maxHealth;
     }
 
     public void moveTo(Point p)
@@ -173,6 +182,7 @@ public class Unit : MonoBehaviour
         // Allows the unit to act and move again, and brings back its light
         canMove = true;
         canAct = true;
+        this.heal(this.regen);
 
         gameObject.GetComponentInChildren<Light>().intensity = 1;
     }
