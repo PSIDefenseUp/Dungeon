@@ -44,6 +44,15 @@ public class Unit : MonoBehaviour
     void OnMouseEnter()
     {
         // Our units block the tiles off for their OnEnter call, so we want to make the cursor select this unit's tile when the unit is hovered over
+        if (game == null)
+            Debug.Log("GAME");
+
+        if (game.cursor == null)
+            Debug.Log("CURSOR");
+
+        if (game.map == null)
+            Debug.Log("MAP");
+        
         game.cursor.setCurrentTile(game.map.getTile(position).transform);
     }
 

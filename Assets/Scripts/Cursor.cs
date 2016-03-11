@@ -45,7 +45,7 @@ public class Cursor : MonoBehaviour
         // When space is pressed, go to the next turn (for testing purposes) -- TODO: DELETE THIS
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            //game.advanceTurn();
+            game.advanceTurn();
         }
 
         animate();
