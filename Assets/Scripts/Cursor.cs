@@ -97,32 +97,25 @@ public class Cursor : MonoBehaviour
         if (selectedUnit != null)
             selectedUnit.unHighlightReachable();
 
-        selectedUnit = u;
+        selectedUnit = u;        
 
-        // Enable/Disable unit selection spotlight
-        if(selectedUnit != null)
+        if (selectedUnit != null)
         {
+            // Update reachable, highlight if the unit can move and is owned by the current player
+            selectedUnit.pathfinder.updateReachable(selectedUnit);
+
+            if (selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)
+                selectedUnit.highlightReachable();
+
+            // Set spotlight on selected unit
             spotlight.gameObject.transform.parent = selectedUnit.transform;
             spotlight.gameObject.transform.position = selectedUnit.transform.position + new Vector3(0, 2, 0);
             spotlight.intensity = 1;
         }
         else
         {
+            // Disable spotlight if our selection is null
             spotlight.intensity = 0;
-        }
-
-        // PRINT DEBUG INFO ON SELECTION -- TODO: DELETE THIS
-        if (selectedUnit != null)
-        {
-            Debug.Log("Selected " + selectedUnit.name);
-            selectedUnit.pathfinder.updateReachable(selectedUnit);
-
-            if (selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)
-                selectedUnit.highlightReachable();
-        }
-        else
-        {
-            Debug.Log("Selected Null");
         }
     }
 
