@@ -6,6 +6,9 @@ public class Cursor : MonoBehaviour
     private Point position; // The current position of the cursor
     private Game game;      // Reference to the current Game object
 
+    // The spotlight for the selected unit
+    private Light spotlight;
+
     // The Tile under our cursor
     private Transform currentTile;
 
@@ -23,6 +26,7 @@ public class Cursor : MonoBehaviour
     {
         // Grab Game object from scene
         game = GameObject.Find("GameManager").GetComponent<Game>();
+        spotlight = GameObject.Find("Spotlight").GetComponent<Light>();
     }
 
     // Update is called once per frame
@@ -94,6 +98,18 @@ public class Cursor : MonoBehaviour
             selectedUnit.unHighlightReachable();
 
         selectedUnit = u;
+
+        // Enable/Disable unit selection spotlight
+        if(selectedUnit != null)
+        {
+            spotlight.gameObject.transform.parent = selectedUnit.transform;
+            spotlight.gameObject.transform.position = selectedUnit.transform.position + new Vector3(0, 2, 0);
+            spotlight.intensity = 1;
+        }
+        else
+        {
+            spotlight.intensity = 0;
+        }
 
         // PRINT DEBUG INFO ON SELECTION -- TODO: DELETE THIS
         if (selectedUnit != null)
