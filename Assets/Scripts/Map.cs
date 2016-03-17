@@ -42,10 +42,10 @@ public class Map : MonoBehaviour
         bounds.width++;
         bounds.height++;
 
-        /* DEBUG INFO ON MAP DIMENSIONS, TODO: REMOVE?
+        // DEBUG INFO ON MAP DIMENSIONS, TODO: REMOVE?
         Debug.Log("Width: " + bounds.width);
         Debug.Log("Height: " + bounds.height);
-        */
+        
 
         // Initialize arrays to empty
         tiles = new Tile[(int)bounds.width, (int)bounds.height];

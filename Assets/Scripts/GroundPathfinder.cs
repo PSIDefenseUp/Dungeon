@@ -8,8 +8,6 @@ public class GroundPathfinder : Pathfinder
         // get reference to map
         Map map = GameObject.Find("GameManager").GetComponent<Game>().map;
 
-        // TODO: REWRITE THIS BUGGY PIECE OF SHIT 
-
         // Get map bounds (for width and height)
         Rect mapBounds = map.getBounds();
 
@@ -30,9 +28,7 @@ public class GroundPathfinder : Pathfinder
 
         // Add current position to queue with a distance of 0
         field.Enqueue(new int[] { u.getPosition().x, u.getPosition().y, 0 });
-
-        //reachable[u.getPosition().x, u.getPosition().y] = 0;
-
+        
         // Create trackers for current position and distance
         int[] current;
         int distance = 0;
@@ -52,41 +48,53 @@ public class GroundPathfinder : Pathfinder
 
             // Add the current space to reachable
             reachable[current[0], current[1]] = distance;
-            
+
             // NORTH
-            currentTile = map.getTile(new Point(current[0], current[1] - 1));
-            otherUnit = map.getUnit(new Point(current[0], current[1] - 1));
-            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0], current[1] - 1] == -1)
+            if (map.contains(new Point(current[0], current[1] - 1)))
             {
-                if (otherUnit == null || otherUnit.team == u.team)
-                    field.Enqueue(new int[] { current[0], current[1] - 1, distance + currentTile.moveCost });
+                currentTile = map.getTile(new Point(current[0], current[1] - 1));
+                otherUnit = map.getUnit(new Point(current[0], current[1] - 1));
+                if (currentTile != null && !currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0], current[1] - 1] == -1)
+                {
+                    if (otherUnit == null || otherUnit.team == u.team)
+                        field.Enqueue(new int[] { current[0], current[1] - 1, distance + currentTile.moveCost });
+                }
             }
 
             // SOUTH
-            currentTile = map.getTile(new Point(current[0], current[1] + 1));
-            otherUnit = map.getUnit(new Point(current[0], current[1] + 1));
-            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0], current[1] + 1] == -1)
+            if (map.contains(new Point(current[0], current[1] + 1)))
             {
-                if (otherUnit == null || otherUnit.team == u.team)
-                    field.Enqueue(new int[] { current[0], current[1] + 1, distance + currentTile.moveCost });
+                currentTile = map.getTile(new Point(current[0], current[1] + 1));
+                otherUnit = map.getUnit(new Point(current[0], current[1] + 1));
+                if (currentTile != null && !currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0], current[1] + 1] == -1)
+                {
+                    if (otherUnit == null || otherUnit.team == u.team)
+                        field.Enqueue(new int[] { current[0], current[1] + 1, distance + currentTile.moveCost });
+                }
             }
 
             // EAST
-            currentTile = map.getTile(new Point(current[0] + 1, current[1]));
-            otherUnit = map.getUnit(new Point(current[0] + 1, current[1]));
-            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0] + 1, current[1]] == -1)
+            if (map.contains(new Point(current[0] + 1, current[1])))
             {
-                if (otherUnit == null || otherUnit.team == u.team)
-                    field.Enqueue(new int[] { current[0] + 1, current[1], distance + currentTile.moveCost });
+                currentTile = map.getTile(new Point(current[0] + 1, current[1]));
+                otherUnit = map.getUnit(new Point(current[0] + 1, current[1]));
+                if (currentTile != null && !currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0] + 1, current[1]] == -1)
+                {
+                    if (otherUnit == null || otherUnit.team == u.team)
+                        field.Enqueue(new int[] { current[0] + 1, current[1], distance + currentTile.moveCost });
+                }
             }
 
             // WEST
-            currentTile = map.getTile(new Point(current[0] - 1, current[1]));
-            otherUnit = map.getUnit(new Point(current[0] - 1, current[1]));
-            if (!currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0] - 1, current[1]] == -1)
+            if (map.contains(new Point(current[0] - 1, current[1])))
             {
-                if (otherUnit == null || otherUnit.team == u.team)
-                    field.Enqueue(new int[] { current[0] - 1, current[1], distance + currentTile.moveCost });
+                currentTile = map.getTile(new Point(current[0] - 1, current[1]));
+                otherUnit = map.getUnit(new Point(current[0] - 1, current[1]));
+                if (currentTile != null && !currentTile.solid && distance + currentTile.moveCost <= u.moveSpeed && reachable[current[0] - 1, current[1]] == -1)
+                {
+                    if (otherUnit == null || otherUnit.team == u.team)
+                        field.Enqueue(new int[] { current[0] - 1, current[1], distance + currentTile.moveCost });
+                }
             }
         }
 

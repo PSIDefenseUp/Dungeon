@@ -121,9 +121,9 @@ public class Unit : MonoBehaviour
         Rect mapBounds = game.map.getBounds();
 
         // Loop only over tiles that could be in move range of this unit
-        for (int y = Mathf.Max(position.y - moveSpeed, 0); y < Mathf.Max(position.y + moveSpeed, mapBounds.height); y++)
+        for (int y = Mathf.Max(position.y - moveSpeed, 0); y <= Mathf.Min(position.y + moveSpeed, mapBounds.height - 1); y++)
         {
-            for (int x = Mathf.Max(position.x - moveSpeed, 0); x < Mathf.Max(position.x + moveSpeed, mapBounds.width); x++)
+            for (int x = Mathf.Max(position.x - moveSpeed, 0); x <= Mathf.Min(position.x + moveSpeed, mapBounds.width - 1); x++)
             {
                 if (canReach(new Point(x, y)))
                     game.map.getTile(x, y).highlight(Color.cyan);
@@ -149,6 +149,7 @@ public class Unit : MonoBehaviour
 
     public bool canReach(Point p)
     {
+        //Debug.Log("canreach (" + p.x + ", " + p.y + ") - " + (reachable[p.x, p.y] >= 0 ? "yes" : "no"));
         return reachable[p.x, p.y] >= 0;
     }
 
