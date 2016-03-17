@@ -95,17 +95,24 @@ public class Cursor : MonoBehaviour
     public void selectUnit(Unit u)
     {
         if (selectedUnit != null)
-            selectedUnit.unHighlightReachable();
+            selectedUnit.removeHighlights();
 
         selectedUnit = u;        
 
         if (selectedUnit != null)
         {
             // Update reachable, highlight if the unit can move and is owned by the current player
-            selectedUnit.pathfinder.updateReachable(selectedUnit);
-
             if (selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)
+            {
+                selectedUnit.pathfinder.updateReachable(selectedUnit);
                 selectedUnit.highlightReachable();
+            }
+            
+            // Highlight interactable tiles if the unit can act and is owned by the current player
+            if(selectedUnit.canAct && selectedUnit.owner == game.currentPlayerIndex)
+            {
+                selectedUnit.highlightInteractable();
+            }
 
             // Set spotlight on selected unit
             spotlight.gameObject.transform.parent = selectedUnit.transform;

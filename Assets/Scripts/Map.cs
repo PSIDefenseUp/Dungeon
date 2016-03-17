@@ -179,7 +179,7 @@ public class Map : MonoBehaviour
 
         // update unit's position, take away its ability to move for the turn, and stop highlighting tiles it could have moved to
         units[dest.x, dest.y].setPosition(dest);
-        units[dest.x, dest.y].unHighlightReachable();
+        units[dest.x, dest.y].removeHighlights();
         units[dest.x, dest.y].canMove = false;
     }
 

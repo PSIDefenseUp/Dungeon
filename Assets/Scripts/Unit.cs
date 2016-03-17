@@ -42,9 +42,10 @@ public class Unit : MonoBehaviour
     {
         // Turn to face the camera! Billboards! DO NOT DO THIS FOR THE LOVE OF GOD
         //transform.LookAt(new Vector3(game.gameCamera.transform.position.x, transform.position.y, game.gameCamera.transform.position.z));
+        //transform.LookAt(Camera.main.transform.position, -Vector3.up);
 
         // Move towards destination if we have one
-        if(path.Count > 0)
+        if (path.Count > 0)
         {
             transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
 
@@ -82,6 +83,8 @@ public class Unit : MonoBehaviour
         // Reduce HP of targetted unit
         other.getAttacked(attackBase + (int)(attackSpread * Random.value) - other.armor, this);
         canAct = false;
+        canMove = false;
+        removeHighlights();
     }
 
     public void getAttacked(int damage, Unit other)
@@ -107,6 +110,10 @@ public class Unit : MonoBehaviour
         {
             game.map.moveUnit(this.position, p);
         }
+
+        // If we can act, start highlighting tiles we can interact with
+        if (this.canAct)
+            this.highlightInteractable();
     }
 
     // Returns true if we the input location has no other unit, and is reachable by this unit
@@ -115,12 +122,12 @@ public class Unit : MonoBehaviour
         return true; // TODO: IMPLEMENT
     }
 
-    // Highlight tiles that this unit can travel to
+    // Highlight tiles that this unit interact with (attack or otherwise act on)
     public void highlightReachable()
     {
         Rect mapBounds = game.map.getBounds();
 
-        // Loop only over tiles that could be in move range of this unit
+        // Loop only over tiles that could be in attack range of this unit
         for (int y = Mathf.Max(position.y - moveSpeed, 0); y <= Mathf.Min(position.y + moveSpeed, mapBounds.height - 1); y++)
         {
             for (int x = Mathf.Max(position.x - moveSpeed, 0); x <= Mathf.Min(position.x + moveSpeed, mapBounds.width - 1); x++)
@@ -131,8 +138,28 @@ public class Unit : MonoBehaviour
         }
     }
 
+    // Highlight tiles that this unit can travel to
+    public void highlightInteractable()
+    {
+        Rect mapBounds = game.map.getBounds();
+
+        // Loop only over tiles that could be in move range of this unit
+        for (int y = Mathf.Max(position.y - maxRange, 0); y <= Mathf.Min(position.y + maxRange, mapBounds.height - 1); y++)
+        {
+            for (int x = Mathf.Max(position.x - maxRange, 0); x <= Mathf.Min(position.x + maxRange, mapBounds.width - 1); x++)
+            {
+                // Highlight tiles with units we can attack in red
+                if (canAttack(game.map.getUnit(new Point(x, y))))
+                    game.map.getTile(x, y).highlight(Color.red);
+
+                // Highlight tiles with interactable objects in yellow
+                // TODO: Implement
+            }
+        }
+    }
+
     // Remove highlights from reachable tiles
-    public void unHighlightReachable()
+    public void removeHighlights()
     {
         Rect mapBounds = game.map.getBounds();
 
