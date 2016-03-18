@@ -8,6 +8,7 @@ public class Player
     public string playerName;     // Player Name
     public int playerIndex;       // Which player number is this?
     public int team;              // The 'team' this player is on -- 0: heroes, 1: dungeon master
+    public int keyCount = 0;      // The number of keys this player possesses
 
     //public List<Unit> units;    // List of Units on the board the player controls
     //public bool isTurn = false; // boolean for later use of highlighting player units during their turn
