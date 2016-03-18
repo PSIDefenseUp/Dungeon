@@ -99,6 +99,10 @@ public class Unit : MonoBehaviour
 
     public bool canInteract(Unit other)
     {
+        // Don't let the DM interact with anything
+        if (game.playerList[this.owner].team == 1)
+            return false;
+
         // We can't interact with something that doesn't exist
         if (other == null)
             return false;
