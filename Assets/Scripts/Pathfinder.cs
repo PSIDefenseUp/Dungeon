@@ -31,7 +31,7 @@ public abstract class Pathfinder : MonoBehaviour
             {
                 other = map.getTile(new Point(u.path.Peek().getPosition().x, u.path.Peek().getPosition().y - 1));
 
-                if (u.reachable[other.getPosition().x, other.getPosition().y] >= 0)
+                if (other != null && u.reachable[other.getPosition().x, other.getPosition().y] >= 0)
                 {
                     if (next == null || u.reachable[next.getPosition().x, next.getPosition().y] == -1 || u.reachable[other.getPosition().x, other.getPosition().y] <= u.reachable[next.getPosition().x, next.getPosition().y])
                         next = other;
@@ -43,7 +43,7 @@ public abstract class Pathfinder : MonoBehaviour
             {
                 other = map.getTile(new Point(u.path.Peek().getPosition().x, u.path.Peek().getPosition().y + 1));
 
-                if (u.reachable[other.getPosition().x, other.getPosition().y] >= 0)
+                if (other != null && u.reachable[other.getPosition().x, other.getPosition().y] >= 0)
                 {
                     if (next == null || u.reachable[next.getPosition().x, next.getPosition().y] == -1 || u.reachable[other.getPosition().x, other.getPosition().y] <= u.reachable[next.getPosition().x, next.getPosition().y])
                         next = other;
@@ -55,7 +55,7 @@ public abstract class Pathfinder : MonoBehaviour
             {
                 other = map.getTile(new Point(u.path.Peek().getPosition().x + 1, u.path.Peek().getPosition().y));
 
-                if (u.reachable[other.getPosition().x, other.getPosition().y] >= 0)
+                if (other != null && u.reachable[other.getPosition().x, other.getPosition().y] >= 0)
                 {
                     if (next == null || u.reachable[next.getPosition().x, next.getPosition().y] == -1 || u.reachable[other.getPosition().x, other.getPosition().y] <= u.reachable[next.getPosition().x, next.getPosition().y])
                         next = other;
@@ -67,7 +67,7 @@ public abstract class Pathfinder : MonoBehaviour
             {
                 other = map.getTile(new Point(u.path.Peek().getPosition().x - 1, u.path.Peek().getPosition().y));
 
-                if (u.reachable[other.getPosition().x, other.getPosition().y] >= 0)
+                if (other != null && u.reachable[other.getPosition().x, other.getPosition().y] >= 0)
                 {
                     if (next == null || u.reachable[next.getPosition().x, next.getPosition().y] == -1 || u.reachable[other.getPosition().x, other.getPosition().y] <= u.reachable[next.getPosition().x, next.getPosition().y])
                         next = other;
