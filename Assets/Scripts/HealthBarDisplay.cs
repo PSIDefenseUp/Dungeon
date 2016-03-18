@@ -24,8 +24,11 @@ public class HealthBarDisplay : MonoBehaviour
     {
         foreach(Unit u in game.map.getUnitList())
         {
-            Vector3 pos = game.gameCamera.WorldToScreenPoint(u.transform.position + new Vector3(-.4f, 1, .5f));
-            Vector3 pos2 = game.gameCamera.WorldToScreenPoint(u.transform.position + new Vector3(.4f, 1f, .5f));
+            if (u.maxHealth == 0)
+                continue;
+
+            Vector3 pos = game.gameCamera.WorldToScreenPoint(u.transform.position + new Vector3(-.4f, -.5f, 0f));
+            Vector3 pos2 = game.gameCamera.WorldToScreenPoint(u.transform.position + new Vector3(.4f, -.5f, 0f));
             
             GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, pos2.x - pos.x, 10), red);
             GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, (pos2.x - pos.x) * (u.currentHealth / (float)u.maxHealth), 10), green);
