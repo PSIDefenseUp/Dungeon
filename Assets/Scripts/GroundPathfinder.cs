@@ -101,17 +101,17 @@ public class GroundPathfinder : Pathfinder
         u.reachable = reachable;
 
         // DEBUG PRINT REACHABLE
-        /*
+        
         string s = "";
         for(int y = 0; y < map.getBounds().height; y++)
         {
             for(int x = 0; x < map.getBounds().width; x++)
             {
-                s += Mathf.Abs(reachable[x, y]) + " ";
+                s += (reachable[x, y] >= 0 ? reachable[x, y] : 9) + " ";
             }
             s += "\n";
         }
         Debug.Log(s);
-        */
+        
     }       
 }

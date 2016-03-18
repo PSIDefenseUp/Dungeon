@@ -9,7 +9,7 @@ public class Unit : MonoBehaviour
     public int[,] reachable;        // Array containing the cost of movement to each tile on the map 
     //public List<Unit> attack;   
     public Point position;          // The current position of this unit on the map
-    public Queue<Tile> path;        // The path for our unit to travel
+    public Stack<Tile> path;        // The path for our unit to travel
     public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map   
     public bool canMove;            // Does this unit still have its move action?
     public bool canAct;             // Does this unit still have its turn action?
@@ -32,7 +32,7 @@ public class Unit : MonoBehaviour
         // Grab current Game object
         game = GameObject.Find("GameManager").GetComponent<Game>();
 
-        path = new Queue<Tile>();
+        path = new Stack<Tile>();
         this.canMove = true;
         this.canAct = true;
     }
@@ -49,8 +49,10 @@ public class Unit : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
 
-            if (transform.position.Equals(path.Peek().gameObject.transform.position))
-                path.Dequeue();
+            if (transform.position.Equals(path.Peek().gameObject.transform.position + new Vector3(0, 1, 0)))
+            {
+                path.Pop();
+            }
         }
     }
 
