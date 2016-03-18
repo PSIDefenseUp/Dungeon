@@ -100,7 +100,7 @@ public class GroundPathfinder : Pathfinder
 
         u.reachable = reachable;
 
-        // DEBUG PRINT REACHABLE
+        /* DEBUG PRINT REACHABLE
         
         string s = "";
         for(int y = 0; y < map.getBounds().height; y++)
@@ -112,6 +112,6 @@ public class GroundPathfinder : Pathfinder
             s += "\n";
         }
         Debug.Log(s);
-        
+        */
     }       
 }

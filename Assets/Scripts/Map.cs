@@ -43,8 +43,8 @@ public class Map : MonoBehaviour
         bounds.height++;
 
         // DEBUG INFO ON MAP DIMENSIONS, TODO: REMOVE?
-        Debug.Log("Width: " + bounds.width);
-        Debug.Log("Height: " + bounds.height);
+        //Debug.Log("Width: " + bounds.width);
+        //Debug.Log("Height: " + bounds.height);
         
 
         // Initialize arrays to empty
