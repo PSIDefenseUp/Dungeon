@@ -18,10 +18,7 @@ public abstract class Pathfinder : MonoBehaviour
         // TODO: Until we are back at u's current location, move back from the dest 
         Tile next;  // Tile we will add to the queue at the end of the loop
         Tile other; // Current tile we are evaluating
-
-        Debug.Log("PATHFINDER");
-
-
+        
         while(!(u.path.Peek().getPosition().x == u.getPosition().x && u.path.Peek().getPosition().y == u.getPosition().y))
         {
             next = null;
@@ -76,11 +73,9 @@ public abstract class Pathfinder : MonoBehaviour
 
             if(next == null || next == map.getTile(u.getPosition()))
             {
-                Debug.Log("end on null");
                 return;
             }
-
-            Debug.Log("Pathadd: " + next.getPosition().x + ", " + next.getPosition().y);
+            
             u.path.Push(next);
         }
     }
