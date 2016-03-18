@@ -139,7 +139,6 @@ public class Unit : MonoBehaviour
 
     public void moveTo(Point p)
     {
-        // TODO: Replace with setDestination so we don't just teleport everywhere
         if (game.map.getUnit(p) == null || game.map.getUnit(p) == this)
         {
             game.map.moveUnit(this.position, p);
@@ -238,7 +237,7 @@ public class Unit : MonoBehaviour
         transform.position = t.transform.position + new Vector3(0, 1, 0);
     }
 
-    public void refresh()
+    public virtual void refresh()
     {
         // To be called on the start of its owner's turn
         // Allows the unit to act and move again, and brings back its light

@@ -23,7 +23,7 @@ public class Interactable : Unit
                 p.x = (int)(Random.value * (mapBounds.width - 1));
                 p.y = (int)(Random.value * (mapBounds.height - 1));
 
-                if(map.getTile(p) != null && map.getUnit(p) == null)
+                if(map.getTile(p) != null && !map.getTile(p).solid && map.getUnit(p) == null)
                 {
                     Unit u = Instantiate(builder.spawnable);
                     builder.spawnUnit(u, p);
