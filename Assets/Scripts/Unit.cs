@@ -47,6 +47,9 @@ public class Unit : MonoBehaviour
         // Move towards destination if we have one
         if (path.Count > 0)
         {
+            if (path.Peek() == null)
+                Debug.Log("WHAT");
+
             transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
 
             if (transform.position.Equals(path.Peek().gameObject.transform.position + new Vector3(0, 1, 0)))

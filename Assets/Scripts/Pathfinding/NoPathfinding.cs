@@ -19,7 +19,7 @@ public class NoPathfinding : Pathfinder
         {
             for (int j = 0; j < mapBounds.width; j++)
             {
-                reachable[j, i] = -1;
+                reachable[j, i] = u.position.distanceTo(new Point(j, i));
             }
         }
 

@@ -14,6 +14,11 @@ public abstract class Pathfinder : MonoBehaviour
 
         // Add destination as last point in path
         u.path.Push(map.getTile(p));
+        Debug.Log("Pathend: " + p.ToString());
+
+        // TODO: REMOVE?
+        if (u.pathfinder is NoPathfinding)
+            return;
 
         // TODO: Until we are back at u's current location, move back from the dest 
         Tile next;  // Tile we will add to the queue at the end of the loop
