@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public class Unit : MonoBehaviour
 {
-    private Game game;                       // The game object        
-    private float animationMoveSpeed = 10;   // Speed at which we move from tile to tile (in units / second)
+    protected Game game;                       // The game object        
+    protected float animationMoveSpeed = 10;   // Speed at which we move from tile to tile (in units / second)
 
     public int[,] reachable;        // Array containing the cost of movement to each tile on the map 
     //public List<Unit> attack;   
@@ -47,6 +47,9 @@ public class Unit : MonoBehaviour
         // Move towards destination if we have one
         if (path.Count > 0)
         {
+            if (path.Peek() == null)
+                Debug.Log("WHAT");
+
             transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
 
             if (transform.position.Equals(path.Peek().gameObject.transform.position + new Vector3(0, 1, 0)))
@@ -97,6 +100,38 @@ public class Unit : MonoBehaviour
             game.map.removeUnit(this);
     }
 
+    public bool canInteract(Unit other)
+    {
+        // Don't let the DM interact with anything
+        if (game.playerList[this.owner].team == 1)
+            return false;
+
+        // We can't interact with something that doesn't exist
+        if (other == null)
+            return false;
+
+        // Don't let us act if we can't act anymore
+        if (canAct == false)
+            return false;
+
+        // Make sure the object is interactable
+        if (!(other is Interactable))
+            return false;
+
+        // Check whether or not we are next to the unit
+        int distance = position.distanceTo(other.position);
+        return distance == 1;
+    }
+
+    public void interact(Unit other)
+    {
+        // Reduce HP of targetted unit
+        (other as Interactable).getInteracted(this);
+        canAct = false;
+        canMove = false;
+        removeHighlights();
+    }    
+
     public void heal(int health)
     {
         this.currentHealth += health;
@@ -107,7 +142,6 @@ public class Unit : MonoBehaviour
 
     public void moveTo(Point p)
     {
-        // TODO: Replace with setDestination so we don't just teleport everywhere
         if (game.map.getUnit(p) == null || game.map.getUnit(p) == this)
         {
             game.map.moveUnit(this.position, p);
@@ -154,8 +188,8 @@ public class Unit : MonoBehaviour
                 if (canAttack(game.map.getUnit(new Point(x, y))))
                     game.map.getTile(x, y).highlight(Color.red);
 
-                // Highlight tiles with interactable objects in yellow
-                // TODO: Implement
+                if (canInteract(game.map.getUnit(new Point(x, y))))
+                    game.map.getTile(x, y).highlight(Color.yellow);
             }
         }
     }
@@ -206,7 +240,7 @@ public class Unit : MonoBehaviour
         transform.position = t.transform.position + new Vector3(0, 1, 0);
     }
 
-    public void refresh()
+    public virtual void refresh()
     {
         // To be called on the start of its owner's turn
         // Allows the unit to act and move again, and brings back its light

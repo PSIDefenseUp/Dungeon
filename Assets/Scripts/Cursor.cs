@@ -42,8 +42,12 @@ public class Cursor : MonoBehaviour
         // TODO: Make units move rather than teleport
         if (Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayerIndex)
         {
-            // If we clicked on a unit, see if we can attack it
-            if (selectedUnit.canAttack(game.map.getUnit(position)))
+            // If we clicked on a unit, see if we can interact with it
+            if (selectedUnit.canInteract(game.map.getUnit(position)))
+            {
+                selectedUnit.interact(game.map.getUnit(position));
+            }
+            else if (selectedUnit.canAttack(game.map.getUnit(position)))
             {
                 selectedUnit.attack(game.map.getUnit(position));
             }

@@ -57,6 +57,11 @@ public class DMBuilder : MonoBehaviour
     void buildUnit(Unit u, Point p)
     {
         gold -= u.cost;
+        spawnUnit(u, p);
+    }
+
+    public void spawnUnit(Unit u, Point p)
+    {
         game.map.addUnit(p, u);
         u.transform.position = game.map.getTile(p).transform.position + new Vector3(0, 1, 0);
     }
