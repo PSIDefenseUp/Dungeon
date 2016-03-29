@@ -3,13 +3,46 @@ using System.Collections.Generic;
 
 public class Map : MonoBehaviour
 {
+    private Game game;          // Reference to game object
     private Rect bounds;        // The boundaries of the map (top left and bottom right)
     private Tile[,] tiles;      // Array containing all the tiles on the map
     private Unit[,] units;      // Array containing all the units on the map
     private List<Unit> unitList;   // List of all units on the map
 
+    public Texture collide;
+    public Texture noCollide;
+    public Texture heroUnitCollide;
+    public Texture dmUnitCollide;
+    public Texture interactableCollide;
+
+    public bool drawDebugMap = false;
+
     // Use this for initialization
     void Start()
+    {
+        // Grab game management object
+        game = GameObject.Find("GameManager").GetComponent<Game>();
+
+        // Load Map
+        loadMapFromScene();       
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    void OnGUI()
+    {
+        if(drawDebugMap)
+        {
+            debugDrawCollisionMap();
+            debugDrawMoveCosts();
+        }
+    }
+
+    public void loadMapFromScene()
     {
         // Initialize unit list
         unitList = new List<Unit>();
@@ -42,11 +75,6 @@ public class Map : MonoBehaviour
         bounds.width++;
         bounds.height++;
 
-        // DEBUG INFO ON MAP DIMENSIONS, TODO: REMOVE?
-        //Debug.Log("Width: " + bounds.width);
-        //Debug.Log("Height: " + bounds.height);
-        
-
         // Initialize arrays to empty
         tiles = new Tile[(int)bounds.width, (int)bounds.height];
         units = new Unit[(int)bounds.width, (int)bounds.height];
@@ -65,23 +93,6 @@ public class Map : MonoBehaviour
             addTile(Mathf.RoundToInt(pos.x - bounds.xMin), Mathf.RoundToInt(pos.z - bounds.yMin), tileGroup.GetChild(i).gameObject.GetComponent<Tile>());
         }
 
-        /* DEBUG CODE: PRINT MAP ARRAY, TODO: REMOVE?
-        string row = "";
-
-        for(int y = 0; y < (int)bounds.height; y++)
-        {
-            for(int x = 0; x < (int)bounds.width; x++)
-            {
-                if (tiles[x, y] != null)
-                    row += tiles[x, y].type + " ";
-                else
-                    row += "-1 ";
-            }
-            Debug.Log(row);
-            row = "";
-        }
-        */
-
         // Grab the 'object' under which all units are stored
         Transform unitGroup = this.gameObject.transform.FindChild("Units");
 
@@ -98,12 +109,6 @@ public class Map : MonoBehaviour
             // Put the units in the right place in the unit array
             addUnit(Mathf.RoundToInt(pos.x - bounds.xMin), Mathf.RoundToInt(pos.z - bounds.yMin), unitGroup.GetChild(i).gameObject.GetComponent<Unit>());
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void addTile(Point p, Tile t)
@@ -195,5 +200,48 @@ public class Map : MonoBehaviour
     public bool contains(Point p)
     {
         return p.x >= 0 && p.x < bounds.width && p.y >= 0 && p.y < bounds.height;
+    }
+
+    public void debugDrawCollisionMap()
+    {
+        const int tileSize = 16;
+
+        for (int y = 0; y < bounds.height; y++)
+        {
+            for (int x = 0; x < bounds.width; x++)
+            {
+                // Draw minimap
+                if (tiles[x, y] != null && !tiles[x, y].solid)
+                {
+                    if (units[x, y] != null)
+                    {
+                        if (units[x, y] is Interactable)
+                        {
+                            GUI.DrawTexture(new Rect(x * tileSize, (bounds.height - y) * tileSize, tileSize, tileSize), interactableCollide);
+                        }
+                        else
+                        {
+                            if (units[x, y].team == 0)
+                                GUI.DrawTexture(new Rect(x * tileSize, (bounds.height - y) * tileSize, tileSize, tileSize), heroUnitCollide);
+                            else
+                                GUI.DrawTexture(new Rect(x * tileSize, (bounds.height - y) * tileSize, tileSize, tileSize), dmUnitCollide);
+                        }
+                    }
+                    else
+                    {
+                        GUI.DrawTexture(new Rect(x * tileSize, (bounds.height - y) * tileSize, tileSize, tileSize), noCollide);
+                    }
+                }
+                else
+                {
+                    GUI.DrawTexture(new Rect(x * tileSize, (bounds.height - y) * tileSize, tileSize, tileSize), collide);
+                }
+            }
+        }
+    }
+
+    public void debugDrawMoveCosts()
+    {
+
     }
 }

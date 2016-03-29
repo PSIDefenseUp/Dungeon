@@ -48,7 +48,11 @@ public class Unit : MonoBehaviour
         if (path.Count > 0)
         {
             if (path.Peek() == null)
+            {
                 Debug.Log("WHAT");
+                path.Pop();
+                return;
+            }
 
             transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
 

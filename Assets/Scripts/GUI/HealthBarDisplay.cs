@@ -7,6 +7,9 @@ public class HealthBarDisplay : MonoBehaviour
 
     public Texture red;
     public Texture green;
+    public Texture black;
+
+    const int healthBarHeight = 10;
 
 	// Use this for initialization
 	void Start ()
@@ -17,7 +20,7 @@ public class HealthBarDisplay : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-	
+	    
 	}
 
     void OnGUI()
@@ -27,11 +30,20 @@ public class HealthBarDisplay : MonoBehaviour
             if (u.maxHealth == 0)
                 continue;
 
+            // Top left
             Vector3 pos = game.gameCamera.WorldToScreenPoint(u.transform.position + new Vector3(-.4f, -.5f, 0f));
+
+            // Bottom right
             Vector3 pos2 = game.gameCamera.WorldToScreenPoint(u.transform.position + new Vector3(.4f, -.5f, 0f));
-            
-            GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, pos2.x - pos.x, 10), red);
-            GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, (pos2.x - pos.x) * (u.currentHealth / (float)u.maxHealth), 10), green);
+
+            // Draw health bar 'outline'
+            GUI.DrawTexture(new Rect(pos.x - 2, Screen.height - pos.y - 2, pos2.x - pos.x + 4, healthBarHeight + 4), black);
+
+            // Draw red background
+            GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, pos2.x - pos.x, healthBarHeight), red);
+
+            // Draw health in green
+            GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, (pos2.x - pos.x) * (u.currentHealth / (float)u.maxHealth), healthBarHeight), green);
         }
     }
 }

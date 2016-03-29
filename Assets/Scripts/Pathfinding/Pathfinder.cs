@@ -14,7 +14,7 @@ public abstract class Pathfinder : MonoBehaviour
 
         // Add destination as last point in path
         u.path.Push(map.getTile(p));
-        Debug.Log("Pathend: " + p.ToString());
+        //Debug.Log("Pathend: " + p.ToString());
 
         // TODO: REMOVE?
         if (u.pathfinder is NoPathfinding)
