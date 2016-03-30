@@ -31,10 +31,10 @@ public class HealthBarDisplay : MonoBehaviour
                 continue;
 
             // Top left
-            Vector3 pos = game.gameCamera.WorldToScreenPoint(u.transform.position + new Vector3(-.4f, -.5f, 0f));
+            Vector3 pos = game.gameCamera.WorldToScreenPoint(u.transform.position + new Vector3(-.4f, -.5f, -.25f));
 
             // Bottom right
-            Vector3 pos2 = game.gameCamera.WorldToScreenPoint(u.transform.position + new Vector3(.4f, -.5f, 0f));
+            Vector3 pos2 = game.gameCamera.WorldToScreenPoint(u.transform.position + new Vector3(.4f, -.5f, -.25f));
 
             // Draw health bar 'outline'
             GUI.DrawTexture(new Rect(pos.x - 2, Screen.height - pos.y - 2, pos2.x - pos.x + 4, healthBarHeight + 4), black);

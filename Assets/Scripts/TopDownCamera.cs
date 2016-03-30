@@ -3,6 +3,11 @@ using System.Collections;
 
 public class TopDownCamera : MonoBehaviour
 {
+    private int speed = 10; // Move speed of the camera using keys or edge pan
+    private int edgePanDistance = 5; // Max number of pixels from the edge of the screen to check for edge pan
+    private int minZoom = 3;
+    private int maxZoom = 11;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -20,7 +25,45 @@ public class TopDownCamera : MonoBehaviour
         }
         else
         {
+            // Zoom with mouse wheel, make sure we can't zoom too far in/out
+            Vector3 oldpos = transform.position;
+
             transform.Translate(0, 0, Input.mouseScrollDelta.y * 100 * Time.deltaTime);
+
+            if (transform.position.y < minZoom)
+                transform.position = oldpos;
+
+            if (transform.position.y > maxZoom)
+                transform.position = oldpos;
+            
+
+            // Edge pan
+            if (Input.mousePresent)
+            {
+                // Check west
+                if(Input.mousePosition.x <= edgePanDistance)
+                {
+                    transform.Translate(new Vector3(-1 * speed * Time.deltaTime, 0, 0), Space.World);
+                }
+
+                // Check east
+                if (Screen.width - Input.mousePosition.x <= edgePanDistance)
+                {
+                    transform.Translate(new Vector3(speed * Time.deltaTime, 0, 0), Space.World);
+                }
+
+                // Check north
+                if (Screen.height - Input.mousePosition.y <= edgePanDistance)
+                {
+                    transform.Translate(new Vector3(0, 0, speed * Time.deltaTime), Space.World);
+                }
+
+                // Check south
+                if (Input.mousePosition.y <= edgePanDistance)
+                {
+                    transform.Translate(new Vector3(0, 0, -1 * speed * Time.deltaTime), Space.World);
+                }                
+            }
         }
 	}
 }
