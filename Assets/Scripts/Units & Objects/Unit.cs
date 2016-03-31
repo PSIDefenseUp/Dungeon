@@ -84,6 +84,9 @@ public class Unit : MonoBehaviour
 
         // Check whether or not the other unit is within our attack range
         int distance = position.distanceTo(other.position);
+        Debug.Log("Pos: " + position.ToString());
+        Debug.Log("Other: " + other.position.ToString());
+        Debug.Log("Distance: " + distance);
         return distance >= minRange && distance <= maxRange;
     }
 

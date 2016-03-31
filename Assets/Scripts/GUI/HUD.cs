@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StateMachine : MonoBehaviour {
+public class HUD : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
