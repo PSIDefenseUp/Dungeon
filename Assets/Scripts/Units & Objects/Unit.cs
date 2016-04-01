@@ -26,15 +26,28 @@ public class Unit : MonoBehaviour
     public int cost;                // The cost of purchasing this unit -- only applies to the DM when building the map
     public int regen;               // The amount of health this unit regenerates each turn
 
+    // Dialog strings
+    List<string> selectLines; // Lines this unit can say when selected
+
     // Use this for initialization
     void Start()
     {
         // Grab current Game object
         game = GameObject.Find("GameManager").GetComponent<Game>();
 
+        // Initialize path + movement
         path = new Stack<Tile>();
         this.canMove = true;
         this.canAct = true;
+
+        // Add dialog (TODO: REMOVE, THIS NEEDS TO BE PER-UNIT)
+        selectLines = new List<string>();
+        selectLines.Add("Ugh... I cannot believe I signed up for this.");
+        selectLines.Add("This is beginning to feel rather hopeless.");
+        selectLines.Add("I feel... quite comfortable down here.");
+        selectLines.Add("I thought I would be working alone...");
+        selectLines.Add("If I had muscles, I would most certainly have a headache by now.");
+        selectLines.Add("Do not fear, I'll keep you able bodied... Maybe.");
     }
 
     // Update is called once per frame
@@ -84,9 +97,6 @@ public class Unit : MonoBehaviour
 
         // Check whether or not the other unit is within our attack range
         int distance = position.distanceTo(other.position);
-        Debug.Log("Pos: " + position.ToString());
-        Debug.Log("Other: " + other.position.ToString());
-        Debug.Log("Distance: " + distance);
         return distance >= minRange && distance <= maxRange;
     }
 
@@ -256,5 +266,14 @@ public class Unit : MonoBehaviour
         this.heal(this.regen);
 
         gameObject.GetComponentInChildren<Light>().intensity = 1;
+    }
+
+    public string getSelectLine()
+    {
+        // returns a random line from the pool of on-selection dialog for this unit
+        if (this.team == 0)
+            return selectLines[(int)(Random.value * (selectLines.Count - 1))];
+        else
+            return "";
     }
 }

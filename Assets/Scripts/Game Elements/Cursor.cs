@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Cursor : MonoBehaviour
 {
@@ -24,7 +24,7 @@ public class Cursor : MonoBehaviour
     private float spinSpeed = 360; // Degrees per second to spin around
     private float spinWait = .5f; // Seconds to wait between spins
     private float spinWaitProgress = 0; // How far we are in our current wait
-    private bool spinning = false; // Are we spinning or waiting?
+    private bool spinning = false; // Are we spinning or waiting?    
 
     // Use this for initialization
     void Start()
@@ -40,20 +40,26 @@ public class Cursor : MonoBehaviour
         // On mouse left click, select the unit at the current location
         if (Input.GetMouseButtonDown(0))
         {
-          //get unit for manipulation
-          anim = game.map.getUnit(position);
+            //get unit for manipulation
+            anim = game.map.getUnit(position);
 
-          //Select Unit
-          selectUnit(anim);
+            //Select Unit
+            selectUnit(anim);
 
-      //play IsHighlighted in mecanin if unit selected is yours
-      animator = anim.GetComponent<Animator>();
+            //play IsHighlighted in mecanin if unit selected is yours (and exists)
+            if (anim != null)
+            {
+                animator = anim.GetComponent<Animator>();
 
-      if (game.currentPlayer.team == anim.team)
-        animator.SetTrigger(selMyUnit);
-      else
-        animator.SetTrigger(selEnUnit);
-     }
+                if (animator != null)
+                {
+                    if (game.currentPlayer.team == anim.team)
+                        animator.SetTrigger(selMyUnit);
+                    else
+                        animator.SetTrigger(selEnUnit);
+                }
+            }
+        }
 
         // On mouse right click, if we have a unit selected, move the unit to the cursor's location or attack the unit there if in range
         // TODO: Make units move rather than teleport
@@ -115,13 +121,21 @@ public class Cursor : MonoBehaviour
 
     public void selectUnit(Unit u)
     {
+        // Remove highlights from tiles highlighted by previous selection
         if (selectedUnit != null)
             selectedUnit.removeHighlights();
 
+        // Set new selection
         selectedUnit = u;        
 
         if (selectedUnit != null)
         {
+            // If selected by its owner, make the unit say something
+            if(selectedUnit.owner == game.currentPlayerIndex)
+            {
+                DialogDisplay.speak(selectedUnit, selectedUnit.getSelectLine());
+            }
+
             // Update reachable, highlight if the unit can move and is owned by the current player
             if (selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)
             {
@@ -166,5 +180,5 @@ public class Cursor : MonoBehaviour
     public Point getPosition()
     {
         return position;
-    }
+    }    
 }
