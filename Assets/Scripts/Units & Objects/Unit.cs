@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Unit : MonoBehaviour
 {
     protected Game game;                       // The game object        
-    protected float animationMoveSpeed = 10;   // Speed at which we move from tile to tile (in units / second)
+    protected float animationMoveSpeed = 1;   // Speed at which we move from tile to tile (in units / second)
 
     public int[,] reachable;        // Array containing the cost of movement to each tile on the map 
     //public List<Unit> attack;   
@@ -25,7 +25,15 @@ public class Unit : MonoBehaviour
     public int armor;               // The amount by which we reduce the damage of incoming attacks
     public int cost;                // The cost of purchasing this unit -- only applies to the DM when building the map
     public int regen;               // The amount of health this unit regenerates each turn
+    public GameObject skill;
 
+    private Animator animator;      // get animator for manipulation on animations
+    private int isWalkingHash = Animator.StringToHash("isWalking");
+    private int toAttackHash = Animator.StringToHash("toAttack");
+    private int attackTransition = Animator.StringToHash("Afire");
+    private bool attackOnce;
+    public float howCloseWalkPath;
+    public Transform Target;
     // Dialog strings
     List<string> selectLines; // Lines this unit can say when selected
 
@@ -34,6 +42,7 @@ public class Unit : MonoBehaviour
     {
         // Grab current Game object
         game = GameObject.Find("GameManager").GetComponent<Game>();
+        animator = this.GetComponent<Animator>();
 
         // Initialize path + movement
         path = new Stack<Tile>();
@@ -60,6 +69,7 @@ public class Unit : MonoBehaviour
         // Move towards destination if we have one
         if (path.Count > 0)
         {
+
             if (path.Peek() == null)
             {
                 Debug.Log("WHAT");
@@ -67,13 +77,45 @@ public class Unit : MonoBehaviour
                 return;
             }
 
-            transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
+             // Set Target
+             setTarget(path.Peek().gameObject.transform);
 
-            if (transform.position.Equals(path.Peek().gameObject.transform.position + new Vector3(0, 1, 0)))
-            {
-                path.Pop();
-            }
+             // Turn Unit
+              turnUnit();
+
+             //double check if im walking and if not start walking
+             if (!animator.GetBool(isWalkingHash))
+             {
+                 animator.SetBool(isWalkingHash, true);
+                 Debug.Log("Broken");
+             }
+
+            // Remove? - animation root motion takes care of movement
+            //transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
+
+
+              if ((transform.position - Target.position).magnitude < howCloseWalkPath)
+              {
+                  path.Pop();
+              }
+
         }
+        // if i dont have a path to walk and im currently walking stop
+        else if(animator.GetBool(isWalkingHash))
+        {
+            animator.SetBool(isWalkingHash, false);
+            // TODO:  turn towards user after move 
+            //this.transform.eulerAngles = new Vector3(0, 180, 0);
+        }  
+
+        // Fire prjectile
+        if(animator.GetAnimatorTransitionInfo(0).userNameHash == attackTransition && attackOnce == true )
+         {
+                Vector3 pos = this.transform.position;
+                Vector3 dir = this.transform.forward;
+                spawnSkill(pos, dir.normalized);
+                attackOnce = false;
+         }
     }
 
     void OnMouseEnter()
@@ -102,6 +144,15 @@ public class Unit : MonoBehaviour
 
     public void attack(Unit other)
     {
+        attackOnce = true;
+
+        // turn toward unit
+        setTarget(other.transform);
+        turnUnit();
+       
+        // run mecanim attack animation
+        animator.SetTrigger(toAttackHash);
+
         // Reduce HP of targetted unit
         other.getAttacked(attackBase + (int)(attackSpread * Random.value) - other.armor, this);
         canAct = false;
@@ -268,6 +319,25 @@ public class Unit : MonoBehaviour
         gameObject.GetComponentInChildren<Light>().intensity = 1;
     }
 
+    // set target Transform
+
+    public void setTarget(Transform x)
+    {
+        Target = x;
+    }
+
+    // turn unit towards current Target
+    public void turnUnit()
+    {
+        Vector3 targetPosition = new Vector3(Target.position.x, this.transform.position.y, Target.position.z);
+        this.transform.LookAt(targetPosition);
+    }
+
+  public void spawnSkill(Vector3 position, Vector3 direction)
+  {
+    GameObject sk = (GameObject)GameObject.Instantiate(skill, position, skill.transform.rotation);
+    sk.transform.forward = direction;
+  }
     public string getSelectLine()
     {
         // returns a random line from the pool of on-selection dialog for this unit

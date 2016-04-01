@@ -59,4 +59,5 @@ public class DialogDisplay : MonoBehaviour
         x = pos.x;
         y = Screen.height - pos.y;
     }
+    
 }

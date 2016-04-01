@@ -43,8 +43,12 @@ public class Cursor : MonoBehaviour
             //get unit for manipulation
             anim = game.map.getUnit(position);
 
-            //Select Unit
-            selectUnit(anim);
+
+         if(anim == null)
+            return;
+
+      //Select Unit
+      selectUnit(anim);
 
             //play IsHighlighted in mecanin if unit selected is yours (and exists)
             if (anim != null)
@@ -130,11 +134,13 @@ public class Cursor : MonoBehaviour
 
         if (selectedUnit != null)
         {
+            /*// weird issue
             // If selected by its owner, make the unit say something
             if(selectedUnit.owner == game.currentPlayerIndex)
             {
                 DialogDisplay.speak(selectedUnit, selectedUnit.getSelectLine());
             }
+            */
 
             // Update reachable, highlight if the unit can move and is owned by the current player
             if (selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)

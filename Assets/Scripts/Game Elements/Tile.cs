@@ -52,4 +52,38 @@ public class Tile : MonoBehaviour
     {
         this.position = new Point(x, y);
     }
+
+    // return directon from point to this tile 1 = north, 2 = east, 3 = south, 4 = west, 0 = error 
+    public int getDirection(Point fromPoint)
+    {
+
+    Debug.Log("FROM x: " + fromPoint.x +"y: "+fromPoint.y+"TO x: "+position.x+"y: " + position.y);
+
+    if (position.y > fromPoint.y)
+    {
+      Debug.Log("Tile is South");
+      return 3;
+    }
+    else if (position.x > fromPoint.x)
+    {
+      Debug.Log("Tile is East");
+      return 2;
+    }
+    else if (position.y < fromPoint.y)
+    {
+      Debug.Log("Tile is North");
+      return 1;
+    }
+    else if (position.x < fromPoint.x)
+    {
+      Debug.Log("Tile is West");
+      return 4;
+    }
+    else
+    {
+      Debug.Log("Error in tile Compare");
+      return 0;
+    }
+
+    }
 }
