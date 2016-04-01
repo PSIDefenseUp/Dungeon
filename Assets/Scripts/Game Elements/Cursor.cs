@@ -134,13 +134,12 @@ public class Cursor : MonoBehaviour
 
         if (selectedUnit != null)
         {
-            /*// weird issue
+            
             // If selected by its owner, make the unit say something
             if(selectedUnit.owner == game.currentPlayerIndex)
             {
                 DialogDisplay.speak(selectedUnit, selectedUnit.getSelectLine());
             }
-            */
 
             // Update reachable, highlight if the unit can move and is owned by the current player
             if (selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)

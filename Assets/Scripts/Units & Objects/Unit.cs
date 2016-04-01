@@ -87,7 +87,7 @@ public class Unit : MonoBehaviour
              if (!animator.GetBool(isWalkingHash))
              {
                  animator.SetBool(isWalkingHash, true);
-                 Debug.Log("Broken");
+                 //Debug.Log("Broken");
              }
 
             // Remove? - animation root motion takes care of movement
@@ -335,15 +335,18 @@ public class Unit : MonoBehaviour
 
   public void spawnSkill(Vector3 position, Vector3 direction)
   {
-    GameObject sk = (GameObject)GameObject.Instantiate(skill, position, skill.transform.rotation);
-    sk.transform.forward = direction;
+    //GameObject sk = (GameObject)GameObject.Instantiate(skill, position, skill.transform.rotation);
+    //sk.transform.forward = direction;
   }
     public string getSelectLine()
     {
         // returns a random line from the pool of on-selection dialog for this unit
+        string ret =  "";
+
         if (this.team == 0)
-            return selectLines[(int)(Random.value * (selectLines.Count - 1))];
-        else
-            return "";
+            ret = selectLines[(int)(Random.value * (selectLines.Count - 1))];
+
+        //Debug.Log("Line: " + ret);
+        return ret;
     }
 }
