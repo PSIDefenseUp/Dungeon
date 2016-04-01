@@ -3,8 +3,13 @@ using System.Collections;
 
 public class Cursor : MonoBehaviour
 {
-    private Point position; // The current position of the cursor
-    private Game game;      // Reference to the current Game object
+    private Point position;    // The current position of the cursor
+    private Game game;         // Reference to the current Game object
+    private Animator animator; // get animator for manipulation on animations
+    private Unit anim;         // unit holder for animation manipulation        
+
+    private int selMyUnit = Animator.StringToHash("selectMyUnit");
+    private int selEnUnit = Animator.StringToHash("selectEnemyUnit");
 
     // The spotlight for the selected unit
     private Light spotlight;
@@ -27,7 +32,7 @@ public class Cursor : MonoBehaviour
         // Grab Game object from scene
         game = GameObject.Find("GameManager").GetComponent<Game>();
         spotlight = GameObject.Find("Spotlight").GetComponent<Light>();
-    }
+  }
 
     // Update is called once per frame
     void Update()
@@ -35,8 +40,20 @@ public class Cursor : MonoBehaviour
         // On mouse left click, select the unit at the current location
         if (Input.GetMouseButtonDown(0))
         {
-            selectUnit(game.map.getUnit(position));
-        }
+          //get unit for manipulation
+          anim = game.map.getUnit(position);
+
+          //Select Unit
+          selectUnit(anim);
+
+      //play IsHighlighted in mecanin if unit selected is yours
+      animator = anim.GetComponent<Animator>();
+
+      if (game.currentPlayer.team == anim.team)
+        animator.SetTrigger(selMyUnit);
+      else
+        animator.SetTrigger(selEnUnit);
+     }
 
         // On mouse right click, if we have a unit selected, move the unit to the cursor's location or attack the unit there if in range
         // TODO: Make units move rather than teleport
