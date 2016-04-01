@@ -14,7 +14,7 @@ public class MainMenu : MonoBehaviour
     //public Texture bgMenu;
     //public Texture bgBlack;
 
-    private float fadeTime = 1.5f;    // How long should each image take to fade in/out?
+    private float fadeTime = 3.5f;    // How long should each image take to fade in/out?
     private float displayTime = 10;  // How long do we display each intro image between fading?
     private int introProgress = 0;  // Which intro image are we showing?
     private float progress = 0;     // How far we are in seconds into our current state
@@ -26,6 +26,8 @@ public class MainMenu : MonoBehaviour
     public Texture intro2;
     public Texture intro3;
     public Texture bgMenu;
+
+    public AudioSource introAudio;
 
     enum state
     {
@@ -40,6 +42,7 @@ public class MainMenu : MonoBehaviour
     {
         currentState = state.FADEIN;
         currentTexture = intro1;
+        introAudio = GameObject.Find("IntroAudio").GetComponent<AudioSource>();
 
         /*
         introTextObj = GameObject.Find("IntroText").GetComponent<Text>();
@@ -73,6 +76,7 @@ The lone and level sands stretch far away.''";
                 currentTexture = bgMenu;
                 currentAlpha = 1;
                 currentState = state.TITLE;
+                introAudio.Stop();
                 break;
         }
 
@@ -106,7 +110,7 @@ The lone and level sands stretch far away.''";
                 if (progress / displayTime >= 1)
                 {
                     currentState = state.FADEOUT;
-                    progress = progress % fadeTime;
+                    progress = progress % displayTime;
                 }
                 break;
 
