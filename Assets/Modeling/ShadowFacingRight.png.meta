@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Modeling/ShadowFacingRight.png.meta
 guid: 26dc7157af7a48d428d00982e6badee2
 timeCreated: 1459461366
+=======
+guid: ca26ebe5365099e42b90e413926cfc5c
+timeCreated: 1459453052
+>>>>>>> origin/master:Assets/Modeling/ShadowFacingRight.png.meta
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
