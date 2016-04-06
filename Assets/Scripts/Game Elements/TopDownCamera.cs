@@ -5,7 +5,7 @@ public class TopDownCamera : MonoBehaviour
 {
     private int speed = 10; // Move speed of the camera using keys or edge pan
     private int edgePanDistance = 5; // Max number of pixels from the edge of the screen to check for edge pan
-    private int minZoom = 3;
+    private int minZoom = 6;
     private int maxZoom = 11;
 
 	// Use this for initialization

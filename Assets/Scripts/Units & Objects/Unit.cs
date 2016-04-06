@@ -4,10 +4,11 @@ using System.Collections.Generic;
 public class Unit : MonoBehaviour
 {
     protected Game game;                       // The game object        
-    protected float animationMoveSpeed = 1;   // Speed at which we move from tile to tile (in units / second)
+    protected float animationMoveSpeed = 2;    // Speed at which we move from tile to tile (in units / second)
 
     public int[,] reachable;        // Array containing the cost of movement to each tile on the map 
-    //public List<Unit> attack;   
+    
+    // Properties
     public Point position;          // The current position of this unit on the map
     public Stack<Tile> path;        // The path for our unit to travel
     public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map   
@@ -27,13 +28,16 @@ public class Unit : MonoBehaviour
     public int regen;               // The amount of health this unit regenerates each turn
     public GameObject skill;
 
-    private Animator animator;      // get animator for manipulation on animations
+    // Animation vars
+    private Transform model;        // The model
+    private Animator animator;      // The animator attached to the model (for animations)
     private int isWalkingHash = Animator.StringToHash("isWalking");
     private int toAttackHash = Animator.StringToHash("toAttack");
     private int attackTransition = Animator.StringToHash("Afire");
-    private bool attackOnce;
-    public float howCloseWalkPath;
-    public Transform Target;
+    private bool attackOnce;        // 
+    public float howCloseWalkPath;  // How close we need to be to a tile's position before we consider it reached (TODO: REIMPLEMENT OR REMOVE)
+    public Transform Target;        // The next tile we want to walk to
+
     // Dialog strings
     List<string> selectLines; // Lines this unit can say when selected
 
@@ -42,7 +46,17 @@ public class Unit : MonoBehaviour
     {
         // Grab current Game object
         game = GameObject.Find("GameManager").GetComponent<Game>();
-        animator = this.GetComponent<Animator>();
+        model = this.transform.FindChild("Model");
+
+        if (model == null)
+            Debug.Log("NULL MODEL");
+
+        animator = model.GetComponent<Animator>();
+
+        if (animator == null)
+            Debug.Log("NULL ANIMATOR");
+
+
 
         // Initialize path + movement
         path = new Stack<Tile>();
@@ -62,10 +76,6 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Turn to face the camera! Billboards! DO NOT DO THIS FOR THE LOVE OF GOD
-        //transform.LookAt(new Vector3(game.gameCamera.transform.position.x, transform.position.y, game.gameCamera.transform.position.z));
-        //transform.LookAt(Camera.main.transform.position, -Vector3.up);
-
         // Move towards destination if we have one
         if (path.Count > 0)
         {
@@ -80,34 +90,34 @@ public class Unit : MonoBehaviour
              // Set Target
              setTarget(path.Peek().gameObject.transform);
 
-             // Turn Unit
-              turnUnit();
+             // Turn Unit to face target
+             turnUnit();
 
-             //double check if im walking and if not start walking
+             // double check if im walking and if not start walking
              if (!animator.GetBool(isWalkingHash))
              {
                  animator.SetBool(isWalkingHash, true);
                  //Debug.Log("Broken");
              }
 
-            // Remove? - animation root motion takes care of movement
-            //transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
+            // Update our position
+            transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
+            
+            // If we're at the target position, start looking at the next position to move to (TODO: reimplement moving by animation if we don't want to use this method)
+            if ((transform.position - (Target.position + new Vector3(0, 1, 0))).magnitude == 0)
+            {
+                path.Pop();
+            }
 
-
-              if ((transform.position - Target.position).magnitude < howCloseWalkPath)
-              {
-                  path.Pop();
-              }
-
-        }
-        // if i dont have a path to walk and im currently walking stop
-        else if(animator.GetBool(isWalkingHash))
+        }        
+        else if(animator.GetBool(isWalkingHash)) // if i dont have a path to walk and im currently walking stop
         {
             animator.SetBool(isWalkingHash, false);
             // TODO:  turn towards user after move 
             //this.transform.eulerAngles = new Vector3(0, 180, 0);
         }  
 
+        /*
         // Fire prjectile
         if(animator.GetAnimatorTransitionInfo(0).userNameHash == attackTransition && attackOnce == true )
          {
@@ -116,6 +126,7 @@ public class Unit : MonoBehaviour
                 spawnSkill(pos, dir.normalized);
                 attackOnce = false;
          }
+         */
     }
 
     void OnMouseEnter()
