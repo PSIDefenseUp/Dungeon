@@ -64,6 +64,30 @@ public class TopDownCamera : MonoBehaviour
                     transform.Translate(new Vector3(0, 0, -1 * speed * Time.deltaTime), Space.World);
                 }                
             }
+
+            // Keyboard camera movement (wasd or arrow keys)
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            {
+                transform.Translate(new Vector3(-1 * speed * Time.deltaTime, 0, 0), Space.World);
+            }
+
+            // Check east
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            {
+                transform.Translate(new Vector3(speed * Time.deltaTime, 0, 0), Space.World);
+            }
+
+            // Check north
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            {
+                transform.Translate(new Vector3(0, 0, speed * Time.deltaTime), Space.World);
+            }
+
+            // Check south
+            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            {
+                transform.Translate(new Vector3(0, 0, -1 * speed * Time.deltaTime), Space.World);
+            }
         }
 	}
 }
