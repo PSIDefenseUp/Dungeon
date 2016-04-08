@@ -46,6 +46,13 @@ public class Interactable : Unit
         {
             if(other.inventory != null)
             {
+                if (other.inventory.isFull())
+                {
+                    DialogDisplay.speak(other, "I can't hold any more.");
+                    return;
+                }
+
+                DialogDisplay.speak(other, "Something new for my collection.");
                 other.inventory.addItem(new Item());
             }
         }

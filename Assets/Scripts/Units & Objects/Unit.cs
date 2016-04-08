@@ -143,6 +143,10 @@ public class Unit : MonoBehaviour
         if (other == null)
             return false;
 
+        // Don't let us attack interactable objects (not real 'units')
+        if (other is Interactable)
+            return false;
+
         // Don't let us attack if we can't act anymore
         if (canAct == false)
             return false;

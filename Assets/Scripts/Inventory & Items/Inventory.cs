@@ -87,6 +87,7 @@ public class Inventory
             if (items[i] == null)
             {
                 items[i] = item;
+                numItems++;
                 return;
             }
         }
@@ -95,6 +96,10 @@ public class Inventory
     public void removeItem(int i)
     {
         items[i] = null;
+        numItems--;
+
+        if (numItems < 0)
+            numItems = 0;
     }
 
     public bool isFull()
