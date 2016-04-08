@@ -444,12 +444,10 @@ public class Unit : MonoBehaviour
         }
     }
   public void playSelectedAudio()
-  {
-    
-    if (game.currentPlayer.team == team)
+  {    
+    if (UserSelected.Count > 0 && game.currentPlayer.team == team)
       source.PlayOneShot(UserSelected[Random.Range(0,UserSelected.Count)], randomVolRange());
     else
-
       source.PlayOneShot(EnemySelected, randomVolRange());
   }
 
