@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+[System.Serializable]
 
 public class Unit : MonoBehaviour
 {
@@ -33,11 +34,24 @@ public class Unit : MonoBehaviour
 
     // Animation vars
     private Transform model;        // The model
-    private Animator animator;      // The animator attached to the model (for animations)
+    public Animator animator;      // The animator attached to the model (for animations)
     private int isWalkingHash = Animator.StringToHash("isWalking");
     private int toAttackHash = Animator.StringToHash("toAttack");
     private int attackTransition = Animator.StringToHash("Afire");
     public Transform Target;        // The next tile we want to walk to
+
+    // Audio
+    public AudioSource source;
+    public List <AudioClip> UserSelected = new List<AudioClip>();
+    public AudioClip EnemySelected;
+    public AudioClip Move;
+    public AudioClip Walk;
+    public AudioClip Hit;
+    public AudioClip AttackSound;
+    private float walktimer = 0f;
+    private float walkCooldown = 0.28f;
+    private float volLowRange = 0.5f;
+    private float volHighRange = 1.0f;
 
     // Dialog strings
     List<string> selectLines; // Lines this unit can say when selected
@@ -71,6 +85,7 @@ public class Unit : MonoBehaviour
         {
             this.inventory = new Inventory();
         }
+        source = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -105,7 +120,8 @@ public class Unit : MonoBehaviour
 
             // Update our position
             transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
-            
+            walktimer -= Time.deltaTime;
+            playwalkAudio();
             // If we're at the target position, start looking at the next position to move to (TODO: reimplement moving by animation if we don't want to use this method)
             if ((transform.position - (Target.position + new Vector3(0, 1, 0))).magnitude == 0)
             {
@@ -162,7 +178,7 @@ public class Unit : MonoBehaviour
 
     public void attack(Unit other)
     {
-        //attackOnce = true;
+        source.PlayOneShot(AttackSound,randomVolRange());
 
         // turn toward unit
         setTarget(other.transform);
@@ -180,6 +196,7 @@ public class Unit : MonoBehaviour
 
     public void getAttacked(int damage, Unit other)
     {
+        source.PlayOneShot(Hit, randomVolRange());
         if (damage <= 0)
             return;
 
@@ -234,6 +251,7 @@ public class Unit : MonoBehaviour
         if (game.map.getUnit(p) == null || game.map.getUnit(p) == this)
         {
             game.map.moveUnit(this.position, p);
+            source.PlayOneShot(Move, randomVolRange());
         }
 
         // If we can act, start highlighting tiles we can interact with
@@ -425,4 +443,27 @@ public class Unit : MonoBehaviour
             return moveSpeed + inventory.getBonusSpeed();
         }
     }
+  public void playSelectedAudio()
+  {
+    
+    if (game.currentPlayer.team == team)
+      source.PlayOneShot(UserSelected[Random.Range(0,UserSelected.Count)], randomVolRange());
+    else
+
+      source.PlayOneShot(EnemySelected, randomVolRange());
+  }
+
+  public void playwalkAudio()
+  {
+    if (walktimer <= 0)
+    {
+      source.PlayOneShot(Walk, randomVolRange());
+      walktimer = walkCooldown;
+    }
+  }
+  
+  public float randomVolRange()
+  {
+    return Random.Range(volLowRange, volHighRange);
+  }
 }

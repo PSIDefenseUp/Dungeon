@@ -4,9 +4,7 @@ using System.Collections.Generic;
 public class Cursor : MonoBehaviour
 {
     private Point position;    // The current position of the cursor
-    private Game game;         // Reference to the current Game object
-    private Animator animator; // get animator for manipulation on animations
-    //private Unit anim;         // unit holder for animation manipulation        
+    private Game game;         // Reference to the current Game object   
 
     private int selMyUnit = Animator.StringToHash("selectMyUnit");
     private int selEnUnit = Animator.StringToHash("selectEnemyUnit");
@@ -43,23 +41,16 @@ public class Cursor : MonoBehaviour
             // Select Unit
             selectUnit(game.map.getUnit(position));
 
-            if (selectedUnit != null)
-            {
                 //play IsHighlighted in mecanin if unit selected is yours (and exists)
-
                 if (selectedUnit != null)
                 {
-                    animator = selectedUnit.GetComponent<Animator>();
-
-                    if (animator != null)
-                    {
+                        selectedUnit.playSelectedAudio();
                         if (game.currentPlayer.team == selectedUnit.team)
-                            animator.SetTrigger(selMyUnit);
+                            selectedUnit.animator.SetTrigger(selMyUnit);
                         else
-                            animator.SetTrigger(selEnUnit);
-                    }
+                            selectedUnit.animator.SetTrigger(selEnUnit);
+                    
                 }
-            }
         }
 
         // On mouse right click, if we have a unit selected, move the unit to the cursor's location or attack the unit there if in range
