@@ -33,4 +33,26 @@ public class Item
             case 4: bonusSpeed = (int)(Random.value * 2) + 1; break;
         }
     }
+
+    public override string ToString()
+    {
+        string s = "";
+
+        if (bonusRegen > 0)
+            s += "Regen + " + bonusRegen + "\n";
+
+        if (bonusArmor > 0)
+            s += "Armor + " + bonusArmor + "\n";
+
+        if (bonusAttack > 0)
+            s += "Attack + " + bonusAttack + "\n";
+
+        if (bonusRange > 0)
+            s += "Attack Range + " + bonusRange + "\n";
+
+        if (bonusSpeed > 0)
+            s += "Speed + " + bonusSpeed + "\n";
+
+        return s;
+    }
 }

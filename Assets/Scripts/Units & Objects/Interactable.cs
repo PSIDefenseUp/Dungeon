@@ -30,17 +30,25 @@ public class Interactable : Unit
                     i++;
                 }
             }
+
+            DialogDisplay.speak(other, "A trap, sprung!");
         }
         else if (this.tag.Equals("Key"))
         {
             game.currentPlayer.keyCount++;
+
+            DialogDisplay.speak(other, "A key. Fairly self-explanatory.");
         }
         else if (this.tag.Equals("Gate"))
         {
             if (game.currentPlayer.keyCount == 0)
+            {
+                DialogDisplay.speak(other, "I'll need a key to open this.");
                 return;
+            }
 
             game.currentPlayer.keyCount--;
+            DialogDisplay.speak(other, "No more gate, but they key is lost with it.");
         }
         else if (this.tag.Equals("Chest"))
         {

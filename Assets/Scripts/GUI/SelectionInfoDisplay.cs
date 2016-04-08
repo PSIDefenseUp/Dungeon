@@ -22,7 +22,7 @@ public class SelectionInfoDisplay : MonoBehaviour
     
 	void Start ()
     {
-        cursor = GameObject.Find("Cursor").GetComponent<Cursor>() ;
+        cursor = GameObject.Find("Cursor").GetComponent<Cursor>();
 
         panel = GameObject.Find("SelectionInfoPanel");
         panelGroup = panel.GetComponent<CanvasGroup>();

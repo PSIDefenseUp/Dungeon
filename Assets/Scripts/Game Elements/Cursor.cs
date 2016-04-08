@@ -13,7 +13,7 @@ public class Cursor : MonoBehaviour
 
     // The spotlight for the selected unit
     private Light spotlight;
-
+    
     // The Tile under our cursor
     private Transform currentTile;
 
@@ -32,11 +32,11 @@ public class Cursor : MonoBehaviour
         // Grab Game object from scene
         game = GameObject.Find("GameManager").GetComponent<Game>();
         spotlight = GameObject.Find("Spotlight").GetComponent<Light>();
-  }
+    }
 
     // Update is called once per frame
     void Update()
-    {
+    {     
         // On mouse left click, select the unit at the current location
         if (Input.GetMouseButtonDown(0))
         {          
@@ -165,7 +165,7 @@ public class Cursor : MonoBehaviour
     public Unit getSelection()
     {
         return this.selectedUnit;
-}
+    }
 
     public void setCurrentTile(Transform t)
     {
@@ -177,12 +177,7 @@ public class Cursor : MonoBehaviour
         // Float our cursor above the selected tile
         transform.position = t.transform.position + new Vector3(0, 1, 0);
     }
-
-    public void setCurrentUnit(Point loc)
-    {
-        // TODO: IMPLEMENT
-    }
-
+    
     public Point getPosition()
     {
         return position;

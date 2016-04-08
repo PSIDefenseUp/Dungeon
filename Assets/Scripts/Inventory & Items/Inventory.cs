@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class Inventory
@@ -105,5 +106,11 @@ public class Inventory
     public bool isFull()
     {
         return numItems == 4;
+    }
+
+    public void tooltip(int i)
+    {
+        // If there's an item in this slot, show a tooltip. Otherwise show empty.
+        GameObject.Find("InventoryTooltipText").GetComponent<Text>().text = (items[i] != null ? items[i].ToString() : "EMPTY");
     }
 }
