@@ -39,10 +39,13 @@ public class DMBuildDisplay : MonoBehaviour
             if(Input.GetMouseButtonDown(0) && game.map.getUnit(cursor.getPosition()) == null)
             {
                 // BUILD UNIT
-                buildUnit(placing, cursor.getPosition());
+                if (canBuild(placing))
+                {
+                    buildUnit(placing, cursor.getPosition());
 
-                // We've placed the unit
-                placing = null;
+                    // We've placed the unit
+                    placing = null;
+                }                
             }
 
             // If we right click while trying to place, cancel
@@ -73,12 +76,9 @@ public class DMBuildDisplay : MonoBehaviour
         return placing != null;
     }
 
-    public bool canBuild(Unit u, Point p)
+    public bool canBuild(Unit u)
     {
         if (u.cost > gold)
-            return false;
-
-        if (game.map.getUnit(p) != null)
             return false;
 
         return true;
