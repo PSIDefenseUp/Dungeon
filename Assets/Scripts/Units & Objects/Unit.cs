@@ -355,7 +355,8 @@ public class Unit : MonoBehaviour
         canAct = true;
         this.heal(getRegen());
 
-        gameObject.GetComponentInChildren<Light>().intensity = 1;
+        if(gameObject.GetComponentInChildren<Light>() != null)
+            gameObject.GetComponentInChildren<Light>().intensity = 1;
     }
 
     // set target Transform

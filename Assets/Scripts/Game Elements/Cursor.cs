@@ -38,6 +38,7 @@ public class Cursor : MonoBehaviour
         // Don't allow for selections if we're placing a unit
         if(DMBuildDisplay.isPlacing())
         {
+            selectUnit(null);
             animate();
             return;
         }
