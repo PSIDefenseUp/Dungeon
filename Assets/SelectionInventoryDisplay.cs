@@ -4,6 +4,8 @@ using System.Collections;
 
 public class SelectionInventoryDisplay : MonoBehaviour
 {
+    private Game game;
+
     private Cursor cursor;
     private GameObject inventoryDisplay;
     private Inventory inventory;
@@ -14,6 +16,7 @@ public class SelectionInventoryDisplay : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
+        game = GameObject.Find("GameManager").GetComponent<Game>();
         cursor = GameObject.Find("Cursor").GetComponent<Cursor>();
         inventoryDisplay = GameObject.Find("SelectionInventoryDisplay");
     }
@@ -22,7 +25,7 @@ public class SelectionInventoryDisplay : MonoBehaviour
 	void Update ()
     {
         // Draw inventory display if we have a hero selected
-        if (cursor.getSelection() != null && cursor.getSelection().team == 0)
+        if (game.currentPlayerIndex == 0 && cursor.getSelection() != null && cursor.getSelection().team == 0)
         {
             inventoryDisplay.SetActive(true);
 
