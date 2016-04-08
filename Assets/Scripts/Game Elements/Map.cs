@@ -156,6 +156,9 @@ public class Map : MonoBehaviour
     // Returns the unit at (p.x, p.y)
     public Unit getUnit(Point p)
     {
+        if (p == null)
+            return null;
+
         return units[p.x, p.y];
     }
 
