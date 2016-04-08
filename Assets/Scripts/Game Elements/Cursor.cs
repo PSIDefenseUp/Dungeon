@@ -6,7 +6,7 @@ public class Cursor : MonoBehaviour
     private Point position;    // The current position of the cursor
     private Game game;         // Reference to the current Game object
     private Animator animator; // get animator for manipulation on animations
-    private Unit anim;         // unit holder for animation manipulation        
+    //private Unit anim;         // unit holder for animation manipulation        
 
     private int selMyUnit = Animator.StringToHash("selectMyUnit");
     private int selEnUnit = Animator.StringToHash("selectEnemyUnit");
@@ -39,34 +39,30 @@ public class Cursor : MonoBehaviour
     {
         // On mouse left click, select the unit at the current location
         if (Input.GetMouseButtonDown(0))
-        {
-            //get unit for manipulation
-            anim = game.map.getUnit(position);
+        {          
+            // Select Unit
+            selectUnit(game.map.getUnit(position));
 
-
-         if(anim == null)
-            return;
-
-      //Select Unit
-      selectUnit(anim);
-
-            //play IsHighlighted in mecanin if unit selected is yours (and exists)
-            if (anim != null)
+            if (selectedUnit != null)
             {
-                animator = anim.GetComponent<Animator>();
+                //play IsHighlighted in mecanin if unit selected is yours (and exists)
 
-                if (animator != null)
+                if (selectedUnit != null)
                 {
-                    if (game.currentPlayer.team == anim.team)
-                        animator.SetTrigger(selMyUnit);
-                    else
-                        animator.SetTrigger(selEnUnit);
+                    animator = selectedUnit.GetComponent<Animator>();
+
+                    if (animator != null)
+                    {
+                        if (game.currentPlayer.team == selectedUnit.team)
+                            animator.SetTrigger(selMyUnit);
+                        else
+                            animator.SetTrigger(selEnUnit);
+                    }
                 }
             }
         }
 
         // On mouse right click, if we have a unit selected, move the unit to the cursor's location or attack the unit there if in range
-        // TODO: Make units move rather than teleport
         if (Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayerIndex)
         {
             // If we clicked on a unit, see if we can interact with it
@@ -165,6 +161,11 @@ public class Cursor : MonoBehaviour
             spotlight.intensity = 0;
         }
     }
+
+    public Unit getSelection()
+    {
+        return this.selectedUnit;
+}
 
     public void setCurrentTile(Transform t)
     {

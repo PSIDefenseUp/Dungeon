@@ -34,8 +34,6 @@ public class Unit : MonoBehaviour
     private int isWalkingHash = Animator.StringToHash("isWalking");
     private int toAttackHash = Animator.StringToHash("toAttack");
     private int attackTransition = Animator.StringToHash("Afire");
-    private bool attackOnce;        // 
-    public float howCloseWalkPath;  // How close we need to be to a tile's position before we consider it reached (TODO: REIMPLEMENT OR REMOVE)
     public Transform Target;        // The next tile we want to walk to
 
     // Dialog strings
@@ -90,15 +88,18 @@ public class Unit : MonoBehaviour
              // Set Target
              setTarget(path.Peek().gameObject.transform);
 
-             // Turn Unit to face target
-             turnUnit();
+            // Manage walking animation
+            if (animator != null)
+            {
+                // Turn Unit to face target
+                turnUnit();
 
-             // double check if im walking and if not start walking
-             if (!animator.GetBool(isWalkingHash))
-             {
-                 animator.SetBool(isWalkingHash, true);
-                 //Debug.Log("Broken");
-             }
+                // double check if im walking and if not start walking
+                if (!animator.GetBool(isWalkingHash))
+                {
+                    animator.SetBool(isWalkingHash, true);
+                }
+            }
 
             // Update our position
             transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
@@ -110,7 +111,7 @@ public class Unit : MonoBehaviour
             }
 
         }        
-        else if(animator.GetBool(isWalkingHash)) // if i dont have a path to walk and im currently walking stop
+        else if(animator != null && animator.GetBool(isWalkingHash)) // if i dont have a path to walk and im currently walking stop
         {
             animator.SetBool(isWalkingHash, false);
             // TODO:  turn towards user after move 
@@ -155,7 +156,7 @@ public class Unit : MonoBehaviour
 
     public void attack(Unit other)
     {
-        attackOnce = true;
+        //attackOnce = true;
 
         // turn toward unit
         setTarget(other.transform);
