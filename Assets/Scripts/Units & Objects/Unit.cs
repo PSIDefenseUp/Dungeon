@@ -68,8 +68,8 @@ public class Unit : MonoBehaviour
 
         // Initialize path + movement
         path = new Stack<Tile>();
-        this.canMove = true;
-        this.canAct = true;
+        this.canMove = false;
+        this.canAct = false;
 
         // Add dialog (TODO: REMOVE, THIS NEEDS TO BE PER-UNIT)
         selectLines = new List<string>();

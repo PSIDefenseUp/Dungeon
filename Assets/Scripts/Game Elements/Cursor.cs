@@ -45,11 +45,14 @@ public class Cursor : MonoBehaviour
                 if (selectedUnit != null)
                 {
                         selectedUnit.playSelectedAudio();
+
+                    if (selectedUnit.animator)
+                    {
                         if (game.currentPlayer.team == selectedUnit.team)
                             selectedUnit.animator.SetTrigger(selMyUnit);
                         else
                             selectedUnit.animator.SetTrigger(selEnUnit);
-                    
+                    }                    
                 }
         }
 
