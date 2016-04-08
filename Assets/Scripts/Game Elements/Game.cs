@@ -33,8 +33,8 @@ public class Game : MonoBehaviour
 
         demoSetup();
 
-        currentPlayer = playerList[currentPlayerIndex];
-        currentPlayerIndex = 0;       
+        currentPlayerIndex = 0; 
+        currentPlayer = playerList[currentPlayerIndex]; 
     }
 
     // Update is called once per frame
@@ -66,18 +66,18 @@ public class Game : MonoBehaviour
         return "Player Turn: " + playerName;
     }
 
-  //UI function: manipulate ui elements
-  private void uiViewables()
-  {
-    End.enabled = true;
-    playerTurnText.text = setupPlayerTurnUI(currentPlayer.playerName);
-  }
+    //UI function: manipulate ui elements
+    private void uiViewables()
+    {
+        End.enabled = true;
+        playerTurnText.text = setupPlayerTurnUI(currentPlayer.playerName);
+    }
     
-  public void addPlayer(Player p)
-  {
+    public void addPlayer(Player p)
+    {
         p.playerIndex = playerList.Count;
         playerList.Add(p);
-  }
+    }
 
     public void advanceTurn()
     {
