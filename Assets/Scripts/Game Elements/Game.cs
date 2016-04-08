@@ -18,6 +18,8 @@ public class Game : MonoBehaviour
     public Text playerTurnText;     // UI: player turn text
     public Button End;              // UI: End Button
 
+    public bool buildPhase;         // Are we in the DM build phase? -- If not, we're in normal gameplay
+
     // Use this for initialization
     void Start()
     {
@@ -33,20 +35,25 @@ public class Game : MonoBehaviour
 
         demoSetup();
 
-        currentPlayerIndex = 0; 
-        currentPlayer = playerList[currentPlayerIndex]; 
+        currentPlayerIndex = 1; 
+        currentPlayer = playerList[currentPlayerIndex];
+
+        buildPhase = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-       uiViewables();
+        if (buildPhase)
+            return;
 
-       // When space is pressed, go to the next turn (for testing purposes) -- TODO: DELETE THIS
-       if (Input.GetKeyDown(KeyCode.Space))
-       {
-           advanceTurn();
-       }
+        uiViewables();
+
+         // When space is pressed, go to the next turn (for testing purposes) -- TODO: DELETE THIS
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            advanceTurn();
+        }
     }
 
     void demoSetup()
