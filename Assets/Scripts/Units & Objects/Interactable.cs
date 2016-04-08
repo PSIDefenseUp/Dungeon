@@ -42,6 +42,13 @@ public class Interactable : Unit
 
             game.currentPlayer.keyCount--;
         }
+        else if (this.tag.Equals("Chest"))
+        {
+            if(other.inventory != null)
+            {
+                other.inventory.addItem(new Item());
+            }
+        }
 
         game.map.removeUnit(this);
     }

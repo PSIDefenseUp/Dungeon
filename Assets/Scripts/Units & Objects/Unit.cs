@@ -28,6 +28,9 @@ public class Unit : MonoBehaviour
     public int regen;               // The amount of health this unit regenerates each turn
     public GameObject skill;
 
+    // Inventory
+    public Inventory inventory;     // The inventory of items this unit has -- Only heroes should have one!
+
     // Animation vars
     private Transform model;        // The model
     private Animator animator;      // The animator attached to the model (for animations)
@@ -45,16 +48,9 @@ public class Unit : MonoBehaviour
         // Grab current Game object
         game = GameObject.Find("GameManager").GetComponent<Game>();
         model = this.transform.FindChild("Model");
-
-        if (model == null)
-            Debug.Log("NULL MODEL");
-
-        animator = model.GetComponent<Animator>();
-
-        if (animator == null)
-            Debug.Log("NULL ANIMATOR");
-
-
+        
+        if(model != null)
+            animator = model.GetComponent<Animator>();      
 
         // Initialize path + movement
         path = new Stack<Tile>();
@@ -69,6 +65,12 @@ public class Unit : MonoBehaviour
         selectLines.Add("I thought I would be working alone...");
         selectLines.Add("If I had muscles, I would most certainly have a headache by now.");
         selectLines.Add("Do not fear, I'll keep you able bodied... Maybe.");
+
+        // If a hero, add inventory
+        if(this.team == 0)
+        {
+            this.inventory = new Inventory();
+        }
     }
 
     // Update is called once per frame
@@ -151,7 +153,7 @@ public class Unit : MonoBehaviour
 
         // Check whether or not the other unit is within our attack range
         int distance = position.distanceTo(other.position);
-        return distance >= minRange && distance <= maxRange;
+        return distance >= getMinRange() && distance <= getMaxRange();
     }
 
     public void attack(Unit other)
@@ -166,7 +168,7 @@ public class Unit : MonoBehaviour
         animator.SetTrigger(toAttackHash);
 
         // Reduce HP of targetted unit
-        other.getAttacked(attackBase + (int)(attackSpread * Random.value) - other.armor, this);
+        other.getAttacked(getAttackBase() + (int)(attackSpread * Random.value) - other.getArmor(), this);
         canAct = false;
         canMove = false;
         removeHighlights();
@@ -174,6 +176,9 @@ public class Unit : MonoBehaviour
 
     public void getAttacked(int damage, Unit other)
     {
+        if (damage <= 0)
+            return;
+
         this.currentHealth -= damage;
 
         if (currentHealth <= 0)
@@ -244,9 +249,9 @@ public class Unit : MonoBehaviour
         Rect mapBounds = game.map.getBounds();
 
         // Loop only over tiles that could be in attack range of this unit
-        for (int y = Mathf.Max(position.y - moveSpeed, 0); y <= Mathf.Min(position.y + moveSpeed, mapBounds.height - 1); y++)
+        for (int y = Mathf.Max(position.y - getMoveSpeed(), 0); y <= Mathf.Min(position.y + getMoveSpeed(), mapBounds.height - 1); y++)
         {
-            for (int x = Mathf.Max(position.x - moveSpeed, 0); x <= Mathf.Min(position.x + moveSpeed, mapBounds.width - 1); x++)
+            for (int x = Mathf.Max(position.x - getMoveSpeed(), 0); x <= Mathf.Min(position.x + getMoveSpeed(), mapBounds.width - 1); x++)
             {
                 if (canReach(new Point(x, y)))
                     game.map.getTile(x, y).highlight(Color.cyan);
@@ -260,9 +265,9 @@ public class Unit : MonoBehaviour
         Rect mapBounds = game.map.getBounds();
 
         // Loop only over tiles that could be in move range of this unit
-        for (int y = Mathf.Max(position.y - maxRange, 0); y <= Mathf.Min(position.y + maxRange, mapBounds.height - 1); y++)
+        for (int y = Mathf.Max(position.y - getMaxRange(), 0); y <= Mathf.Min(position.y + getMaxRange(), mapBounds.height - 1); y++)
         {
-            for (int x = Mathf.Max(position.x - maxRange, 0); x <= Mathf.Min(position.x + maxRange, mapBounds.width - 1); x++)
+            for (int x = Mathf.Max(position.x - getMaxRange(), 0); x <= Mathf.Min(position.x + getMaxRange(), mapBounds.width - 1); x++)
             {
                 // Highlight tiles with units we can attack in red
                 if (canAttack(game.map.getUnit(new Point(x, y))))
@@ -326,7 +331,7 @@ public class Unit : MonoBehaviour
         // Allows the unit to act and move again, and brings back its light
         canMove = true;
         canAct = true;
-        this.heal(this.regen);
+        this.heal(getRegen());
 
         gameObject.GetComponentInChildren<Light>().intensity = 1;
     }
@@ -345,20 +350,75 @@ public class Unit : MonoBehaviour
         this.transform.LookAt(targetPosition);
     }
 
-  public void spawnSkill(Vector3 position, Vector3 direction)
-  {
-    //GameObject sk = (GameObject)GameObject.Instantiate(skill, position, skill.transform.rotation);
-    //sk.transform.forward = direction;
-  }
+    public void spawnSkill(Vector3 position, Vector3 direction)
+    {
+        //GameObject sk = (GameObject)GameObject.Instantiate(skill, position, skill.transform.rotation);
+        //sk.transform.forward = direction;
+    }
+
     public string getSelectLine()
     {
         // returns a random line from the pool of on-selection dialog for this unit
-        string ret =  "";
+        string ret = "";
 
         if (this.team == 0)
             ret = selectLines[(int)(Random.value * (selectLines.Count - 1))];
 
-        //Debug.Log("Line: " + ret);
         return ret;
+    }
+
+    public int getRegen()
+    {
+        if (inventory == null)
+            return regen;
+        else
+        {
+            return regen + inventory.getBonusRegen();
+        }
+    }
+
+    public int getArmor()
+    {
+        if (inventory == null)
+            return armor;
+        else
+        {
+            return armor + inventory.getBonusArmor();
+        }
+    }
+
+    public int getAttackBase()
+    {
+        if (inventory == null)
+            return attackBase;
+        else
+        {
+            return attackBase + inventory.getBonusAttack();
+        }
+    }
+
+    public int getMinRange()
+    {
+        return minRange;
+    }
+
+    public int getMaxRange()
+    {
+        if (inventory == null)
+            return maxRange;
+        else
+        {
+            return maxRange + inventory.getBonusRange();
+        }
+    }
+
+    public int getMoveSpeed()
+    {
+        if (inventory == null)
+            return moveSpeed;
+        else
+        {
+            return moveSpeed + inventory.getBonusSpeed();
+        }
     }
 }

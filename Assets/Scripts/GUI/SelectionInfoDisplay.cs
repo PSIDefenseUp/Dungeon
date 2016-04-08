@@ -53,12 +53,12 @@ public class SelectionInfoDisplay : MonoBehaviour
         nameText.text = "Selected: " + unit.name;
 
         health.text = "HP: " + unit.currentHealth + " / " + unit.maxHealth;
-        regen.text = "Regen: " + unit.regen;
-        armor.text = "Armor: " + unit.armor;
+        regen.text = "Regen: " + unit.getRegen();
+        armor.text = "Armor: " + unit.getArmor();
 
-        attack.text = "Attack: [" + unit.attackBase + ", " + (unit.attackBase + unit.attackSpread) + "]";
-        range.text = "Range: [" + unit.minRange + ", " + unit.maxRange + "]";
-        speed.text = "Speed: " + unit.moveSpeed;
+        attack.text = "Attack: [" + unit.getAttackBase() + ", " + (unit.getAttackBase() + unit.attackSpread) + "]";
+        range.text = "Range: [" + unit.getMinRange() + ", " + unit.getMaxRange() + "]";
+        speed.text = "Speed: " + unit.getMoveSpeed();
 
         canMove.text = "Can Move: " + (unit.canMove ? "YES" : "NO");
         canAct.text = "Can Act: " + (unit.canAct ? "YES" : "NO");

@@ -33,7 +33,7 @@ public class Game : MonoBehaviour
 
         demoSetup();
 
-        currentPlayerIndex = 0;
+        currentPlayerIndex = 0; 
         currentPlayer = playerList[currentPlayerIndex]; 
     }
 
