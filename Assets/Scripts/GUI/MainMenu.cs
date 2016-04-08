@@ -14,8 +14,8 @@ public class MainMenu : MonoBehaviour
     //public Texture bgMenu;
     //public Texture bgBlack;
 
-    private float fadeTime = 1.5f;    // How long should each image take to fade in/out?
-    private float displayTime = 10;  // How long do we display each intro image between fading?
+    private float fadeTime = 1.0f;    // How long should each image take to fade in/out?
+    private float displayTime = 9f;  // How long do we display each intro image between fading?
     private int introProgress = 0;  // Which intro image are we showing?
     private float progress = 0;     // How far we are in seconds into our current state
     private state currentState;     // What state are we in now?
