@@ -35,6 +35,13 @@ public class Cursor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {     
+        // Don't allow for selections if we're placing a unit
+        if(DMBuildDisplay.isPlacing())
+        {
+            animate();
+            return;
+        }
+
         // On mouse left click, select the unit at the current location
         if (Input.GetMouseButtonDown(0))
         {          
