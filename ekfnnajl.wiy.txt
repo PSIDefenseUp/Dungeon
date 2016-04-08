@@ -1,0 +1,60 @@
+﻿Merge remote-tracking branch 'origin/master'
+
+# Conflicts:
+#	Assets/Scenes/Level1.unity
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 1 and 4 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	deleted:    Assets/Modeling/ModelBlend/SW_SH_Enemy/enemy.blend
+#	deleted:    Assets/Modeling/ModelBlend/SW_SH_Enemy/enemy.blend.meta
+#	deleted:    Assets/Modeling/ModelBlend/SW_SH_Enemy/enemy.blend1
+#	deleted:    Assets/Modeling/ModelBlend/SW_SH_Enemy/enemy.blend1.meta
+#	deleted:    Assets/Modeling/ModelBlend/SW_SH_Enemy/enemy.fbx
+#	deleted:    Assets/Modeling/ModelBlend/SW_SH_Enemy/enemy.fbx.meta
+#	deleted:    Assets/Prefabs/CubePrototype08x08x08.fbx
+#	deleted:    Assets/Prefabs/CubePrototype08x08x08.fbx.meta
+#	deleted:    Assets/Prefabs/DMBuildDisplay.prefab
+#	deleted:    Assets/Prefabs/EnemyTest.prefab
+#	deleted:    Assets/Prefabs/EnemyTest.prefab.meta
+#	renamed:    Assets/Prefabs/Units/DM.meta~- -> Assets/Prefabs/GUI.meta
+#	new file:   Assets/Prefabs/GUI/DMBuildDisplay.prefab
+#	renamed:    Assets/Prefabs/DMBuildDisplay.prefab.meta -> Assets/Prefabs/GUI/DMBuildDisplay.prefab.meta
+#	renamed:    Assets/Prefabs/SelectionInfoPanel.prefab -> Assets/Prefabs/GUI/SelectionInfoPanel.prefab
+#	renamed:    Assets/Prefabs/SelectionInfoPanel.prefab.meta -> Assets/Prefabs/GUI/SelectionInfoPanel.prefab.meta
+#	renamed:    Assets/Prefabs/SelectionInventoryDisplay.prefab -> Assets/Prefabs/GUI/SelectionInventoryDisplay.prefab
+#	renamed:    Assets/Prefabs/SelectionInventoryDisplay.prefab.meta -> Assets/Prefabs/GUI/SelectionInventoryDisplay.prefab.meta
+#	deleted:    Assets/Prefabs/MusicPlayer.prefab
+#	deleted:    Assets/Prefabs/MusicPlayer.prefab.meta
+#	deleted:    Assets/Prefabs/Units/DM.meta~-.meta
+#	deleted:    Assets/Prefabs/Units/DM.meta~ce1d69561b8f01be4ebc8cb8eec9cc9a2d2b1ed3
+#	deleted:    Assets/Prefabs/Units/DM.meta~ce1d69561b8f01be4ebc8cb8eec9cc9a2d2b1ed3.meta
+#	renamed:    Assets/Prefabs/EnemyTest2.prefab -> Assets/Prefabs/Units/DM/Shadow.prefab
+#	renamed:    Assets/Prefabs/EnemyTest2.prefab.meta -> Assets/Prefabs/Units/DM/Shadow.prefab.meta
+#	renamed:    Assets/Prefabs/Medic2.5.prefab -> Assets/Prefabs/Units/Heroes/Medic.prefab
+#	renamed:    Assets/Prefabs/Medic2.5.prefab.meta -> Assets/Prefabs/Units/Heroes/Medic.prefab.meta
+#	modified:   Assets/Prefabs/Units/Interactable/Chest.prefab
+#	modified:   Assets/Prefabs/Units/Interactable/Gate.prefab
+#	modified:   Assets/Prefabs/Units/Interactable/Key.prefab
+#	deleted:    Assets/Prefabs/Units/TestEnemy.prefab
+#	deleted:    Assets/Prefabs/Units/TestEnemy.prefab.meta
+#	deleted:    Assets/Scenes/Level1.unity
+#	modified:   Assets/Scripts/GUI/DMBuildDisplay.cs
+#	modified:   Assets/Scripts/Game Elements/Cursor.cs
+#	modified:   ProjectSettings/DynamicsManager.asset
+#	modified:   ProjectSettings/TagManager.asset
+#
+
