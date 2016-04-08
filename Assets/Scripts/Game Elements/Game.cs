@@ -35,10 +35,10 @@ public class Game : MonoBehaviour
 
         demoSetup();
 
-        currentPlayerIndex = 1; 
+        currentPlayerIndex = 0; 
         currentPlayer = playerList[currentPlayerIndex];
 
-        buildPhase = true;
+        buildPhase = false;
     }
 
     // Update is called once per frame
