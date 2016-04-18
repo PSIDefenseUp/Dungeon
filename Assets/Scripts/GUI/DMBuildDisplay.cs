@@ -68,6 +68,9 @@ public class DMBuildDisplay : MonoBehaviour
 
     public void setPlacing(int i)
     {
+        if(placing != null)
+            Destroy(placing.gameObject);
+
         placing = Instantiate(placeable[i]);
     }
 
