@@ -34,7 +34,7 @@ public class Unit : MonoBehaviour
 
     // Animation vars
     private Transform model;        // The model
-    public Animator animator;      // The animator attached to the model (for animations)
+    public Animator animator;       // The animator attached to the model (for animations)
     private int isWalkingHash = Animator.StringToHash("isWalking");
     private int toAttackHash = Animator.StringToHash("toAttack");
     private int attackTransition = Animator.StringToHash("Afire");
@@ -42,8 +42,8 @@ public class Unit : MonoBehaviour
 
     // Audio
     public AudioSource source;
-    public List <AudioClip> UserSelected = new List<AudioClip>();
-    public AudioClip EnemySelected;
+    public List <AudioClip> ownerSelectLines = new List<AudioClip>();
+    public List <AudioClip> enemySelectLines = new List<AudioClip>();
     public AudioClip Move;
     public AudioClip Walk;
     public AudioClip Hit;
@@ -54,7 +54,7 @@ public class Unit : MonoBehaviour
     private float volHighRange = 1.0f;
 
     // Dialog strings
-    List<string> selectLines; // Lines this unit can say when selected
+    public List<string> selectLines = new List<string>();  // Lines this unit can say when selected (by its owner)
 
     // Use this for initialization
     void Start()
@@ -69,16 +69,7 @@ public class Unit : MonoBehaviour
         // Initialize path + movement
         path = new Stack<Tile>();
         this.canMove = false;
-        this.canAct = false;
-
-        // Add dialog (TODO: REMOVE, THIS NEEDS TO BE PER-UNIT)
-        selectLines = new List<string>();
-        selectLines.Add("Ugh... I cannot believe I signed up for this.");
-        selectLines.Add("This is beginning to feel rather hopeless.");
-        selectLines.Add("I feel... quite comfortable down here.");
-        selectLines.Add("I thought I would be working alone...");
-        selectLines.Add("If I had muscles, I would most certainly have a headache by now.");
-        selectLines.Add("Do not fear, I'll keep you able bodied... Maybe.");
+        this.canAct = false;        
 
         // If a hero, add inventory
         if(this.team == 0)
@@ -188,7 +179,7 @@ public class Unit : MonoBehaviour
         animator.SetTrigger(toAttackHash);
 
         // Reduce HP of targetted unit
-        other.getAttacked(getAttackBase() + (int)(attackSpread * Random.value) - other.getArmor(), this);
+        other.getAttacked(getAttackBase() + Random.Range(0, attackSpread + 1) - other.getArmor(), this);
         canAct = false;
         canMove = false;
         removeHighlights();
@@ -384,8 +375,8 @@ public class Unit : MonoBehaviour
         // returns a random line from the pool of on-selection dialog for this unit
         string ret = "";
 
-        if (this.team == 0)
-            ret = selectLines[(int)(Random.value * (selectLines.Count - 1))];
+        if(selectLines.Count > 0)
+            ret = selectLines[Random.Range(0, selectLines.Count)];
 
         return ret;
     }
@@ -446,10 +437,16 @@ public class Unit : MonoBehaviour
     }
   public void playSelectedAudio()
   {    
-    if (UserSelected.Count > 0 && game.currentPlayer.team == team)
-      source.PlayOneShot(UserSelected[Random.Range(0,UserSelected.Count)], randomVolRange());
+    if(game.currentPlayer.team == team)
+    {
+        if(ownerSelectLines.Count > 0)
+            source.PlayOneShot(ownerSelectLines[Random.Range(0, ownerSelectLines.Count)], randomVolRange());
+    }
     else
-      source.PlayOneShot(EnemySelected, randomVolRange());
+    {
+        if(enemySelectLines.Count > 0)
+            source.PlayOneShot(enemySelectLines[Random.Range(0, enemySelectLines.Count)], randomVolRange());
+        }
   }
 
   public void playwalkAudio()
