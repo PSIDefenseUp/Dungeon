@@ -39,11 +39,14 @@ public class HealthBarDisplay : MonoBehaviour
             // Draw health bar 'outline'
             GUI.DrawTexture(new Rect(pos.x - 2, Screen.height - pos.y - 2, pos2.x - pos.x + 4, healthBarHeight + 4), black);
 
-            // Draw red background
-            GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, pos2.x - pos.x, healthBarHeight), red);
+            // Draw black background
+            GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, pos2.x - pos.x, healthBarHeight), black);
 
-            // Draw health in green
-            GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, (pos2.x - pos.x) * (u.currentHealth / (float)u.maxHealth), healthBarHeight), green);
+            // Draw health depending on the currently acting player
+            if(game.currentPlayer.team == u.team)
+                GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, (pos2.x - pos.x) * (u.currentHealth / (float)u.maxHealth), healthBarHeight), green);
+            else
+                GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, (pos2.x - pos.x) * (u.currentHealth / (float)u.maxHealth), healthBarHeight), red);
         }
     }
 }
