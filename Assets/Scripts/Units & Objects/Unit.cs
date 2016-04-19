@@ -350,6 +350,15 @@ public class Unit : MonoBehaviour
             gameObject.GetComponentInChildren<Light>().intensity = 1;
     }
 
+    public virtual void endTurn()
+    {
+        // To be called at the end of its owner's turn
+        // Turns off the lights! May have further use.
+
+        if (gameObject.GetComponentInChildren<Light>() != null)
+            gameObject.GetComponentInChildren<Light>().intensity = 0;
+    }
+
     // set target Transform
 
     public void setTarget(Transform x)

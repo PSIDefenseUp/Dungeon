@@ -96,6 +96,10 @@ public class Game : MonoBehaviour
             {
                 u.refresh();
             }
+            else
+            {
+                u.endTurn();
+            }
         }
     }
 }
