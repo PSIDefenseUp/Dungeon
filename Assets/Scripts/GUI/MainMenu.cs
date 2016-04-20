@@ -27,17 +27,22 @@ public class MainMenu : MonoBehaviour
     public Texture intro3;
     public Texture bgMenu;
 
+    public LoadScreen loadScreen;
+
     enum state
     {
         FADEIN,
         FADEOUT,
         DISPLAY,
-        TITLE
+        TITLE,
     }
 
     // Use this for initialization
     void Start()
     {
+        loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
+        loadScreen.gameObject.SetActive(false);
+
         currentState = state.FADEIN;
         currentTexture = intro1;
 
@@ -63,8 +68,11 @@ The lone and level sands stretch far away.''";
 	// Update is called once per frame
 	void Update()
     {
-        // Get correct intro image
-        switch (introProgress)
+        if (loadScreen.isActiveAndEnabled)
+            return;
+
+            // Get correct intro image
+            switch (introProgress)
         {
             case 0: currentTexture = intro1; break;
             case 1: currentTexture = intro2; break;
@@ -122,7 +130,9 @@ The lone and level sands stretch far away.''";
                 switch (currentState)
                 {
                     case state.TITLE:
-                        SceneManager.LoadScene("Level1");
+                        currentAlpha = 0;
+                        loadScreen.gameObject.SetActive(true);
+                        loadScreen.loadScene("Level1");
                         break;
 
                     default:

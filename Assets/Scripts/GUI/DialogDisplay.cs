@@ -26,7 +26,7 @@ public class DialogDisplay : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-	    if(currentLine != null)
+	    if(currentLine != null && speaker != null)
         {
             Vector3 pos = game.gameCamera.WorldToScreenPoint(speaker.transform.position + new Vector3(-1f, 1f, -.25f));
             x = pos.x;
@@ -39,6 +39,11 @@ public class DialogDisplay : MonoBehaviour
                 alpha = 0;
                 progress = 0;
             }
+        }
+        else
+        {
+            speaker = null;
+            currentLine = null;
         }
 	}
 
@@ -58,6 +63,5 @@ public class DialogDisplay : MonoBehaviour
         Vector3 pos = game.gameCamera.WorldToScreenPoint(speaker.transform.position + new Vector3(-1f, 1f, -.25f));
         x = pos.x;
         y = Screen.height - pos.y;
-    }
-    
+    }    
 }

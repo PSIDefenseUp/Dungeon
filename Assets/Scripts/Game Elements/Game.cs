@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class Game : MonoBehaviour
@@ -18,6 +19,10 @@ public class Game : MonoBehaviour
     public Text playerTurnText;     // UI: player turn text
     public Button End;              // UI: End Button
 
+    public bool gameOver = false;   // Is the game over?
+
+    public LoadScreen loadScreen;
+
     // Use this for initialization
     void Start()
     {
@@ -28,6 +33,8 @@ public class Game : MonoBehaviour
         uiCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         playerTurnText = GameObject.Find("playerTurn").GetComponent<Text>();
         End = GameObject.Find("EndButton").GetComponent<Button>();
+        loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
+        loadScreen.gameObject.SetActive(false);
 
         playerList = new List<Player>();
 
@@ -40,8 +47,21 @@ public class Game : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gameOver)
+        {
+            if(Input.anyKeyDown)
+            {
+                //SceneManager.LoadScene("MainMenu");
+                GameObject.Find("GUI").gameObject.SetActive(false);
+                loadScreen.gameObject.SetActive(true);
+                loadScreen.loadScene("MainMenu");
+            }
+
+            return;
+        }
 
         uiViewables();
+        checkGameEnd();
 
          // When space is pressed, go to the next turn (for testing purposes) -- TODO: DELETE THIS
         if (Input.GetKeyDown(KeyCode.Space))
@@ -100,6 +120,31 @@ public class Game : MonoBehaviour
             {
                 u.endTurn();
             }
+        }
+    }
+
+    public void checkGameEnd()
+    {
+        int heroCount = 0;
+        int dmCount = 0;
+
+        foreach(Unit u in map.getUnitList())
+        {
+            if (u.team == 0)
+                heroCount++;
+            else if (u.team == 1)
+                dmCount++;
+        }
+
+        if (dmCount == 0)
+        {
+            // HEROES WIN!
+            GameObject.Find("GUI").GetComponent<GameEnd>().endGame(0);
+        }
+        else if (heroCount == 0)
+        {
+            // DM WINS!
+            GameObject.Find("GUI").GetComponent<GameEnd>().endGame(1);
         }
     }
 }
