@@ -50,7 +50,7 @@ public class StateMachine : MonoBehaviour {
     path = search();
 
     // if a path exist start populating unit me list 
-    if (path.Count > 0 && path != null)
+    if (path != null && path.Count > 0)
     {
       if (me.moveSpeed < path.Count)
         stopPush = me.moveSpeed;

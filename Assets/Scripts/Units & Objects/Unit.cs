@@ -86,7 +86,7 @@ public class Unit : MonoBehaviour
     void Update()
     {
         // Move towards destination if we have one
-        if (path.Count > 0)
+        if (path !=  null && path.Count > 0)
         {
 
             if (path.Peek() == null)
@@ -131,7 +131,7 @@ public class Unit : MonoBehaviour
         }
 
     // if im done moving and i have been flagged to attack do so
-    if(atk && path.Count<=0)
+    if(atk && target != null && path.Count<=0)
     {
       source.PlayOneShot(AttackSound, randomVolRange());
       // turn toward unit
@@ -313,6 +313,10 @@ public class Unit : MonoBehaviour
     public bool canReach(Point p)
     {
         //Debug.Log("canreach (" + p.x + ", " + p.y + ") - " + (reachable[p.x, p.y] >= 0 ? "yes" : "no"));
+
+        if (reachable == null)
+            return false;
+
         return reachable[p.x, p.y] >= 0;
     }
 
