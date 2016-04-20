@@ -10,6 +10,8 @@ public class HealthBarDisplay : MonoBehaviour
     public Texture black;
     public Texture white;
 
+    public bool active = true;
+
     const int healthBarHeight = 10;
 
 	// Use this for initialization
@@ -26,6 +28,9 @@ public class HealthBarDisplay : MonoBehaviour
 
     void OnGUI()
     {
+        if (!active)
+            return;
+
         foreach(Unit u in game.map.getUnitList())
         {
             if (u.maxHealth == 0)
