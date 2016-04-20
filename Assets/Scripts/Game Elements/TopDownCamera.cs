@@ -63,7 +63,7 @@ public class TopDownCamera : MonoBehaviour
                 {
                     transform.Translate(new Vector3(0, 0, -1 * speed * Time.deltaTime), Space.World);
                 }                
-            }
+            } 
 
             // Keyboard camera movement (wasd or arrow keys)
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))

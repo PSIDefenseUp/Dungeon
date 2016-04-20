@@ -1,5 +1,5 @@
 ﻿using System;
-
+[System.Serializable]
 public class Point
 {
     public int x, y;

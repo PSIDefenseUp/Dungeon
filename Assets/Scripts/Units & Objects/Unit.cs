@@ -11,10 +11,13 @@ public class Unit : MonoBehaviour
     
     // Properties
     public Point position;          // The current position of this unit on the map
+    public Point stMech;
     public Stack<Tile> path;        // The path for our unit to travel
-    public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map   
+    public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map
     public bool canMove;            // Does this unit still have its move action?
     public bool canAct;             // Does this unit still have its turn action?
+    private bool atk;               // to force better animation when a person attacks i flag attack then play attack animation after unit stop moving
+    private Unit target;            // target unit used for attacking animation
     public int owner;               // The player that owns this unit
     public int team;                // The 'team' this unit is on -- 0: heroes, 1: dungeon master
     public int maxHealth;           // The maximum health of this unit
@@ -60,7 +63,7 @@ public class Unit : MonoBehaviour
     void Start()
     {
         // Grab current Game object
-        game = GameObject.Find("GameManager").GetComponent<Game>();
+        game  = GameObject.Find("GameManager").GetComponent<Game>();
         model = this.transform.FindChild("Model");
         
         if(model != null)
@@ -113,6 +116,7 @@ public class Unit : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, path.Peek().gameObject.transform.position + new Vector3(0, 1, 0), animationMoveSpeed * Time.deltaTime);
             walktimer -= Time.deltaTime;
             playwalkAudio();
+
             // If we're at the target position, start looking at the next position to move to (TODO: reimplement moving by animation if we don't want to use this method)
             if ((transform.position - (Target.position + new Vector3(0, 1, 0))).magnitude == 0)
             {
@@ -123,21 +127,26 @@ public class Unit : MonoBehaviour
         else if(animator != null && animator.GetBool(isWalkingHash)) // if i dont have a path to walk and im currently walking stop
         {
             animator.SetBool(isWalkingHash, false);
-            // TODO:  turn towards user after move 
-            //this.transform.eulerAngles = new Vector3(0, 180, 0);
-        }  
+            game.map.updateOccupy();
+        }
 
-        /*
-        // Fire prjectile
-        if(animator.GetAnimatorTransitionInfo(0).userNameHash == attackTransition && attackOnce == true )
-         {
-                Vector3 pos = this.transform.position;
-                Vector3 dir = this.transform.forward;
-                spawnSkill(pos, dir.normalized);
-                attackOnce = false;
-         }
-         */
+    // if im done moving and i have been flagged to attack do so
+    if(atk && path.Count<=0)
+    {
+      source.PlayOneShot(AttackSound, randomVolRange());
+      // turn toward unit
+      setTarget(target.transform);
+      turnUnit();
+
+      // run mecanim attack animation
+      animator.SetTrigger(toAttackHash);
+
+      // Reduce HP of targetted unit
+      target.getAttacked(getAttackBase() + Random.Range(0, attackSpread + 1) - target.getArmor(), this);
+      atk = false;
     }
+
+  }
 
     void OnMouseEnter()
     {
@@ -169,17 +178,10 @@ public class Unit : MonoBehaviour
 
     public void attack(Unit other)
     {
-        source.PlayOneShot(AttackSound,randomVolRange());
+        atk = true;
 
-        // turn toward unit
-        setTarget(other.transform);
-        turnUnit();
-       
-        // run mecanim attack animation
-        animator.SetTrigger(toAttackHash);
+        target = other;    
 
-        // Reduce HP of targetted unit
-        other.getAttacked(getAttackBase() + Random.Range(0, attackSpread + 1) - other.getArmor(), this);
         canAct = false;
         canMove = false;
         removeHighlights();
@@ -314,7 +316,8 @@ public class Unit : MonoBehaviour
         return reachable[p.x, p.y] >= 0;
     }
 
-    public Point getPosition()
+
+  public Point getPosition()
     {
         return this.position;
     }
@@ -348,6 +351,9 @@ public class Unit : MonoBehaviour
 
         if(gameObject.GetComponentInChildren<Light>() != null)
             gameObject.GetComponentInChildren<Light>().intensity = 1;
+        
+        if( gameObject.GetComponent<StateMachine>() != null)
+            gameObject.GetComponent<StateMachine>().moveOnce = true;
     }
 
     public virtual void endTurn()
@@ -470,5 +476,10 @@ public class Unit : MonoBehaviour
   public float randomVolRange()
   {
     return Random.Range(volLowRange, volHighRange);
+  }
+
+  public void setStMech(Point x)
+  {
+    stMech = x;
   }
 }

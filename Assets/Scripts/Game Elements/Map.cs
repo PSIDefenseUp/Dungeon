@@ -5,9 +5,9 @@ public class Map : MonoBehaviour
 {
     private Game game;          // Reference to game object
     private Rect bounds;        // The boundaries of the map (top left and bottom right)
-    private Tile[,] tiles;      // Array containing all the tiles on the map
-    private Unit[,] units;      // Array containing all the units on the map
-    private List<Unit> unitList;   // List of all units on the map
+    public Tile[,] tiles;      // Array containing all the tiles on the map
+    public Unit[,] units;      // Array containing all the units on the map
+    public List<Unit> unitList; // List of all units on the map
 
     public Texture collide;
     public Texture noCollide;
@@ -24,7 +24,8 @@ public class Map : MonoBehaviour
         game = GameObject.Find("GameManager").GetComponent<Game>();
 
         // Load Map
-        loadMapFromScene();       
+        loadMapFromScene(); 
+        updateOccupy();      
     }
 
     // Update is called once per frame
@@ -132,6 +133,7 @@ public class Map : MonoBehaviour
         u.setPosition(x, y);
         units[x, y] = u;
         unitList.Add(u);
+        updateAllAIList();
     }
 
     public void removeUnit(Unit u)
@@ -151,6 +153,11 @@ public class Map : MonoBehaviour
     public Tile getTile(int x, int y)
     {
         return tiles[x, y];
+    }
+
+    public Tile[,] getBoard()
+    {
+        return tiles;
     }
 
     // Returns the unit at (p.x, p.y)
@@ -189,8 +196,25 @@ public class Map : MonoBehaviour
         units[dest.x, dest.y].removeHighlights();
         units[dest.x, dest.y].canMove = false;
     }
+    public void moveUnitAI(Point start, Point dest)
+    {
+     if (!contains(dest) && contains(start))
+        return;
 
-    public Rect getBounds()
+     // Don't move anywhere if the unit isn't trying to go anywhere
+      if (!(start.x == dest.x && start.y == dest.y))
+     {
+        // Move the unit
+        units[dest.x, dest.y] = units[start.x, start.y];
+        units[start.x, start.y] = null;
+      }
+
+     // update unit's position, take away its ability to move for the turn
+      units[dest.x, dest.y].setPosition(dest);
+      units[dest.x, dest.y].canMove = false;
+    }
+
+  public Rect getBounds()
     {
         return this.bounds;
     }
@@ -247,4 +271,45 @@ public class Map : MonoBehaviour
     {
 
     }
-}
+
+ private void updateAllAIList()
+  {
+
+    foreach( var x in unitList)
+    {
+      StateMachine stateMech = x.GetComponent<StateMachine>();
+
+      if(stateMech != null)
+      {
+        stateMech.mapUnitList = unitList;
+        stateMech.updateEnemyList();
+      }
+    }
+  }
+  public void updateOccupy()
+  {
+    Tile[,] grid = tiles;
+    int xmin = Mathf.RoundToInt(bounds.xMin);
+    int xmax = Mathf.RoundToInt(bounds.xMax);
+    int ymin = Mathf.RoundToInt(bounds.yMin);
+    int ymax = Mathf.RoundToInt(bounds.yMax);
+
+    int xVal = Mathf.Abs(xmin) + Mathf.Abs(xmax);
+    int yVal = Mathf.Abs(ymin) + Mathf.Abs(ymax);
+
+    for (int x = 0; x < xVal; x++)
+    {
+      for (int y = 0; y < yVal; y++)
+      {
+        if (!grid[x, y])
+          continue;
+
+        if (grid[x, y] && units[x, y])
+          grid[x, y].occupy = true;
+        else
+          grid[x, y].occupy = false;
+      }
+    }
+
+  }
+}//end Class

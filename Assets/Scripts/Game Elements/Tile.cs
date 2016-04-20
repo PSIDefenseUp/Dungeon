@@ -4,17 +4,24 @@ using System.Collections;
 public class Tile : MonoBehaviour
 {
     private Game game;          // The game object
-    private Point position;     // This tile's position on the map
+    public Point position;     // This tile's position on the map
 
     public bool solid;          // Is this a solid tile -- one that we cannot path through?
+    public bool occupy;         // is this tile occupied
     public int type;            // What type of tile is this? (0 =normal, 1 = wall, 2 = door, etc.)
     public int moveCost = 1;    // The cost of moving through a tile of this type -- Does not apply if the tile is solid
+
+    public Tile parent;
+    public int f;
+    public int g;
+    public int h;
 
     // Use this for initialization
     void Start()
     {
         // Grab the current game object from the scene
         game = GameObject.Find("GameManager").GetComponent<Game>();
+        occupy = false;
     }
 
     // Update is called once per frame
@@ -85,5 +92,10 @@ public class Tile : MonoBehaviour
       return 0;
     }
 
+    }
+
+    public bool isWalkable(Tile x)
+    {
+      return x.type == 0;
     }
 }
