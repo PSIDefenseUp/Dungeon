@@ -365,7 +365,7 @@ public class Unit : MonoBehaviour
         // To be called at the end of its owner's turn
         // Turns off the lights! May have further use.
 
-        if (gameObject.GetComponentInChildren<Light>() != null)
+        if (gameObject.GetComponentInChildren<Light>() != null && !(this is Interactable))
             gameObject.GetComponentInChildren<Light>().intensity = 0;
     }
 
