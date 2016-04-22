@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class StateMachine : MonoBehaviour {
 
   private Game  game;
-  private Map map; 
+  private Map map;
+  public Shader hLight;
 
   public bool  moveOnce;          // flag so that computer only moves once
   public List<Unit> EnemyList;    // List of Enemies used for deciding who to attack
@@ -46,12 +48,14 @@ public class StateMachine : MonoBehaviour {
 
     moveOnce = false;
 
+    
     // get path to target using A* search
     path = search();
-
+    Debug.Log(path);
     // if a path exist start populating unit me list 
-    if (path.Count > 0 && path != null)
+    if (path != null && path.Count > 0)
     {
+      Debug.Log(path.Count);
       if (me.moveSpeed < path.Count)
         stopPush = me.moveSpeed;
       else
@@ -60,7 +64,19 @@ public class StateMachine : MonoBehaviour {
       //physically move unit on board
       game.map.moveUnitAI(me.position, path[stopPush - 1].getPosition());
 
-      //populat list based on stopPush
+      // if unit is currently moving  add path to new list 
+      if (me.path.Count > 0)
+      {
+        Tile[] curPath = me.path.ToArray();
+        List<Tile> curPathList = curPath.ToList<Tile>();
+
+        for (int i = curPathList.Count - 1; i >= 0; i--)
+          path.Add(curPathList[i]);
+
+        me.path = new Stack<Tile>(); 
+      }
+
+      //populate list based on stopPush
       for (int i = stopPush - 1; i >= 0; i--)
       {
         me.path.Push(path[i]);
@@ -149,6 +165,7 @@ public class StateMachine : MonoBehaviour {
       }
 
       // Normal case -- move currentNode from open to closed, process each of its neighbors
+
       openList.Remove(CurrentTile);
       closedList.Add(CurrentTile);
 
@@ -282,6 +299,11 @@ public class StateMachine : MonoBehaviour {
         EnemyList.Add(x);
       }
     }
+  }
+
+  IEnumerator wait(float x)
+  {
+    yield return new WaitForSeconds(x);
   }
 
 }

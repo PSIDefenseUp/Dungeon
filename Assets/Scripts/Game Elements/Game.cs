@@ -33,8 +33,8 @@ public class Game : MonoBehaviour
         uiCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         playerTurnText = GameObject.Find("playerTurn").GetComponent<Text>();
         End = GameObject.Find("EndButton").GetComponent<Button>();
-        loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
-        loadScreen.gameObject.SetActive(false);
+       // loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
+       // loadScreen.gameObject.SetActive(false);
 
         playerList = new List<Player>();
 

@@ -128,7 +128,7 @@ public class Cursor : MonoBehaviour
             selectedUnit.removeHighlights();
 
         // Set new selection
-        selectedUnit = u;        
+        selectedUnit = u;         
 
         if (selectedUnit != null)
         {

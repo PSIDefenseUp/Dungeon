@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class Map : MonoBehaviour
 {
     private Game game;          // Reference to game object
     private Rect bounds;        // The boundaries of the map (top left and bottom right)
+    private int dieHash = Animator.StringToHash("die");
     public Tile[,] tiles;      // Array containing all the tiles on the map
     public Unit[,] units;      // Array containing all the units on the map
     public List<Unit> unitList; // List of all units on the map
@@ -136,13 +138,22 @@ public class Map : MonoBehaviour
         updateAllAIList();
     }
 
-    public void removeUnit(Unit u)
+    public void  removeUnit(Unit u)
     {
         unitList.Remove(u);
         units[u.getPosition().x, u.getPosition().y] = null;
-        Destroy(u.gameObject);
+        
+        Animator anim = u.animator;
+        anim.SetTrigger(dieHash);
+        StartCoroutine(wait(1.5f, u));
+        updateAllAIList();
     }
 
+  IEnumerator wait(float x, Unit u)
+  {
+    yield return new WaitForSeconds(x);
+    Destroy(u.gameObject);
+  }
     // Returns the tile at (p.x, p.y)
     public Tile getTile(Point p)
     {
