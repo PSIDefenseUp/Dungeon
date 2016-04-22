@@ -142,10 +142,15 @@ public class Map : MonoBehaviour
     {
         unitList.Remove(u);
         units[u.getPosition().x, u.getPosition().y] = null;
+
+        if (u.animator)
+        {
+            u.animator.SetTrigger(dieHash);
+            StartCoroutine(wait(1.5f, u));
+        }
+        else
+            Destroy(u.gameObject);
         
-        Animator anim = u.animator;
-        anim.SetTrigger(dieHash);
-        StartCoroutine(wait(1.5f, u));
         updateAllAIList();
     }
 
