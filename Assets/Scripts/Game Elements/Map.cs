@@ -140,10 +140,20 @@ public class Map : MonoBehaviour
 
     public void  removeUnit(Unit u)
     {
+        
         unitList.Remove(u);
         units[u.getPosition().x, u.getPosition().y] = null;
         
         Animator anim = u.animator;
+
+        // if it doesnt have a animator destroy now
+        if(anim == null)
+        { 
+          Destroy(u.gameObject);
+          updateAllAIList();
+          return;
+        }
+
         anim.SetTrigger(dieHash);
         StartCoroutine(wait(1.5f, u));
         updateAllAIList();

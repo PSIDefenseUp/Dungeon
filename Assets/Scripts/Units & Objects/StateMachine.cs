@@ -105,7 +105,7 @@ public class StateMachine : MonoBehaviour {
 
   void getTarget()
   {
-    if (!me.canMove)
+    if (!me.canMove || EnemyList.Count == 0)
       return;
 
     List<int> enemyDisanceFromMe = new List<int>();

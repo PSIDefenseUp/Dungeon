@@ -526,6 +526,12 @@ ModelImporter:
     101036: VIS-upper_arm_pole.ik.L_end
     101038: VIS-upper_arm_pole.ik.R
     101040: VIS-upper_arm_pole.ik.R_end
+    101042: BeltLowPoly
+    101044: beltLowPoly
+    101046: beltUpperLowPoly
+    101048: MaskLowPoly
+    101050: MedicLowPoly
+    101052: ShirtLowPoly
     400000: Belt
     400002: belt
     400004: Belt_MeshPart0
@@ -1047,6 +1053,14 @@ ModelImporter:
     401036: VIS-upper_arm_pole.ik.L_end
     401038: VIS-upper_arm_pole.ik.R
     401040: VIS-upper_arm_pole.ik.R_end
+    401042: BeltLowPoly
+    401044: beltLowPoly
+    401046: beltUpperLowPoly
+    401048: MaskLowPoly
+    401050: MedicLowPoly
+    401052: ShirtLowPoly
+    2300000: forearmBand
+    3300000: forearmBand
     4300000: Belt_MeshPart0
     4300002: Belt_MeshPart1
     4300004: Belt_MeshPart2
@@ -1059,6 +1073,13 @@ ModelImporter:
     4300018: forearmBand_MeshPart0
     4300020: forearmBand_MeshPart1
     4300022: beltUpper
+    4300024: forearmBand
+    4300026: beltUpperLowPoly
+    4300028: beltLowPoly
+    4300030: ShirtLowPoly
+    4300032: MedicLowPoly
+    4300034: MaskLowPoly
+    4300036: BeltLowPoly
     9500000: //RootNode
     13700000: Belt_MeshPart0
     13700002: belt_MeshPart0
@@ -1072,6 +1093,13 @@ ModelImporter:
     13700018: Mask
     13700020: Medic
     13700022: Shirt
+    13700024: BeltLowPoly
+    13700026: beltLowPoly
+    13700028: beltUpperLowPoly
+    13700030: MaskLowPoly
+    13700032: MedicLowPoly
+    13700034: ShirtLowPoly
+    13700036: forearmBand
   materials:
     importMaterials: 1
     materialName: 0

@@ -305,7 +305,7 @@ public class Unit : MonoBehaviour
             for (int x = 0; x < mapBounds.width; x++)
             {
                 if (game.map.getTile(x, y) != null)
-                    game.map.getTile(x, y).highlight(Color.white);
+                    game.map.getTile(x, y).removeHighlight();
             }
         }
     }

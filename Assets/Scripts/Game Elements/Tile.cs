@@ -39,9 +39,22 @@ public class Tile : MonoBehaviour
     // Highlights this tile in the color provided
     public void highlight(Color c)
     {
-        if (gameObject.GetComponent<Renderer>() != null)
+    Renderer x = gameObject.GetComponent<Renderer>();
+        if (x != null)
         {
-            GetComponent<Renderer>().material.SetColor("_Color", c);
+            x.material.SetColor("_RimColor", c);
+            x.material.SetFloat("_RimPower", 1.5f);
+            //GetComponent<Renderer>().material.SetColor("_Color", c);
+        }
+    }
+    public void removeHighlight()
+    {
+        Renderer x = gameObject.GetComponent<Renderer>();
+        if (x != null)
+        {
+            
+            x.material.SetFloat("_RimPower", 0);
+            //GetComponent<Renderer>().material.SetColor("_Color", c);
         }
     }
 
