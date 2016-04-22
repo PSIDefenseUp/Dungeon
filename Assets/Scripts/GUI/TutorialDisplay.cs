@@ -24,14 +24,7 @@ public class TutorialDisplay : MonoBehaviour
 	void Update ()
     {
 	    
-	}
-
-    public void showTutorial()
-    {
-        tutorialWindow.SetActive(true);
-        tutorialProgress = 0;
-        tutorialText.text = "" + messages[tutorialProgress];
-    }
+	}    
 
     public void rewindTutorial()
     {
@@ -53,9 +46,28 @@ public class TutorialDisplay : MonoBehaviour
             hideTutorial();
     }
 
+    public void showTutorial()
+    {
+        tutorialWindow.SetActive(true);
+        tutorialProgress = 0;
+        tutorialText.text = "" + messages[tutorialProgress];
+    }
+
     public void hideTutorial()
     {
         tutorialWindow.SetActive(false);
+    }
+
+    public void toggleTutorial()
+    {
+        if(tutorialWindow.activeSelf)
+        {
+            hideTutorial();
+        }
+        else
+        {
+            showTutorial();
+        }
     }
 
     public int getTutorialProgress()
