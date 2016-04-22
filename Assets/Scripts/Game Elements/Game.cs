@@ -11,6 +11,7 @@ public class Game : MonoBehaviour
     public List<Player> playerList; // List of players in the game
     public Player currentPlayer;    // simple instance of current player for easy manipulation
     public int currentPlayerIndex;  // Index in the players list of the current player 
+    public bool building;           // Are we in the DM's building phase?
 
     public Cursor cursor;           // The cursor!
     public Camera gameCamera;       // The camera!
@@ -21,7 +22,7 @@ public class Game : MonoBehaviour
 
     public bool gameOver = false;   // Is the game over?
 
-    public LoadScreen loadScreen;
+    public LoadScreen loadScreen;   // Load screen, used to load other scenes
 
     // Use this for initialization
     void Start()
@@ -33,15 +34,17 @@ public class Game : MonoBehaviour
         uiCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         playerTurnText = GameObject.Find("playerTurn").GetComponent<Text>();
         End = GameObject.Find("EndButton").GetComponent<Button>();
+
        // loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
-       // loadScreen.gameObject.SetActive(false);
+        //loadScreen.gameObject.SetActive(false);
 
-        playerList = new List<Player>();
 
-        demoSetup();
 
-        currentPlayerIndex = 1;
-        currentPlayer = playerList[currentPlayerIndex];        
+        // After grabbing the load screen, turn it off until we need it.
+       // loadScreen.gameObject.SetActive(false);        
+
+        // Perform game setup
+        setup();              
     }
 
     // Update is called once per frame
@@ -70,10 +73,17 @@ public class Game : MonoBehaviour
         }
     }
 
-    void demoSetup()
+    void setup()
     {
+        // Initialize players
+        playerList = new List<Player>();
         Player Player1 = new Player(0, "Test Player");
         Player DM = new Player(1, "Dungeon Master");
+
+        // Set starting player as DM and initialize DM build phase
+        currentPlayerIndex = 1;
+        currentPlayer = playerList[currentPlayerIndex];
+        building = true;
     }
 
     public int getPlayerListSize()
@@ -81,13 +91,13 @@ public class Game : MonoBehaviour
         return playerList.Count;
     }
 
-    //UI function: setup to display player turn text 
+    // UI function: setup to display player turn text 
     private string setupPlayerTurnUI(string playerName)
     {
         return "Player Turn: " + playerName;
     }
 
-    //UI function: manipulate ui elements
+    // UI function: manipulate ui elements
     private void uiViewables()
     {
         End.enabled = true;
@@ -102,12 +112,18 @@ public class Game : MonoBehaviour
 
     public void advanceTurn()
     {
+        // If we were in the DM build phase, end it forever
+        if (building)
+        {
+            building = false;
+            GameObject.Find("DMGold").GetComponent<Text>().gameObject.SetActive(false);
+        }
+
         // Change current player
         currentPlayerIndex++;
         currentPlayerIndex %= playerList.Count;
         currentPlayer = playerList[currentPlayerIndex];
         cursor.selectUnit(null);
-        //playerTurnText.text = setupPlayerTurnUI(currentPlayer.playerName); TODO: re-enable turn text
 
         // Give all of this player's units the ability to move and act again
         foreach (Unit u in map.getUnitList())
@@ -125,6 +141,8 @@ public class Game : MonoBehaviour
 
     public void checkGameEnd()
     {
+        // Count number of units owned by each team. If either team has no more units, the other team wins!
+
         int heroCount = 0;
         int dmCount = 0;
 
