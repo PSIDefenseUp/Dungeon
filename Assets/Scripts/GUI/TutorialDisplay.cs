@@ -10,12 +10,14 @@ public class TutorialDisplay : MonoBehaviour
     private GameObject tutorialWindow;
     private Text tutorialText;
     private int tutorialProgress;
+    private GameObject gui;
 
 	// Use this for initialization
 	void Start ()
     {
         tutorialWindow = GameObject.Find("TutorialWindow");
         tutorialText = GameObject.Find("TutorialText").GetComponent<Text>();
+        gui = GameObject.Find("GUI");
 
         showTutorial();
     }
@@ -51,11 +53,13 @@ public class TutorialDisplay : MonoBehaviour
         tutorialWindow.SetActive(true);
         tutorialProgress = 0;
         tutorialText.text = "" + messages[tutorialProgress];
+        gui.SetActive(false);
     }
 
     public void hideTutorial()
     {
         tutorialWindow.SetActive(false);
+        gui.SetActive(true);
     }
 
     public void toggleTutorial()
