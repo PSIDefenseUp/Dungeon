@@ -152,12 +152,12 @@ public class Game : MonoBehaviour
         if (dmCount == 0)
         {
             // HEROES WIN!
-           // GameObject.Find("GUI").GetComponent<GameEnd>().endGame(0);
+            GameObject.Find("GUI").GetComponent<GameEnd>().endGame(0);
         }
         else if (heroCount == 0)
         {
             // DM WINS!
-           // GameObject.Find("GUI").GetComponent<GameEnd>().endGame(1);
+            GameObject.Find("GUI").GetComponent<GameEnd>().endGame(1);
         }
     }
 }

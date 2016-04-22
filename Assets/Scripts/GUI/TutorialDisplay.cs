@@ -53,13 +53,13 @@ public class TutorialDisplay : MonoBehaviour
         tutorialWindow.SetActive(true);
         tutorialProgress = 0;
         tutorialText.text = "" + messages[tutorialProgress];
-        gui.SetActive(false);
+        gui.GetComponentInChildren<HealthBarDisplay>().active = false;
     }
 
     public void hideTutorial()
     {
         tutorialWindow.SetActive(false);
-        gui.SetActive(true);
+        gui.GetComponentInChildren<HealthBarDisplay>().active = true;
     }
 
     public void toggleTutorial()
