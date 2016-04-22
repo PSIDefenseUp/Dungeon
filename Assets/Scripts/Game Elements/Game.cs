@@ -34,10 +34,10 @@ public class Game : MonoBehaviour
         uiCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         playerTurnText = GameObject.Find("playerTurn").GetComponent<Text>();
         End = GameObject.Find("EndButton").GetComponent<Button>();
-        loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
+        //loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
 
         // After grabbing the load screen, turn it off until we need it.
-        loadScreen.gameObject.SetActive(false);        
+        //loadScreen.gameObject.SetActive(false);        
 
         // Perform game setup
         setup();              

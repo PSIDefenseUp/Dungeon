@@ -33,6 +33,7 @@ ModelImporter:
     100050: Torus_005
     100052: Torus_007
     100054: Torus_008
+    100056: Cylinder
     400000: Body_M_GeoRndr
     400002: Cone
     400004: Cone_001
@@ -61,6 +62,7 @@ ModelImporter:
     400050: Torus_005
     400052: Torus_007
     400054: Torus_008
+    400056: Cylinder
     2300000: Body_M_GeoRndr
     2300002: Cone
     2300004: Cone_001
@@ -88,6 +90,7 @@ ModelImporter:
     2300048: Torus_005
     2300050: Torus_007
     2300052: Torus_008
+    2300054: Cylinder
     3300000: Body_M_GeoRndr
     3300002: Cone
     3300004: Cone_001
@@ -115,6 +118,7 @@ ModelImporter:
     3300048: Torus_005
     3300050: Torus_007
     3300052: Torus_008
+    3300054: Cylinder
     4300000: Icosphere_001
     4300002: Icosphere
     4300004: Sphere_003
@@ -142,6 +146,7 @@ ModelImporter:
     4300048: Body_M_GeoRndr
     4300050: Tongue_M_GeoRndr
     4300052: TeethLower_M_GeoRndr
+    4300054: Cylinder
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -154,7 +159,13 @@ ModelImporter:
     resampleRotations: 1
     optimizeGameObjects: 0
     motionNodeName: 
-    animationImportErrors: 
+    animationImportErrors: '
+
+      Imported file ''Protector'' conversion failed: Required human bone ''Hips''
+      not found
+
+
+'
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
