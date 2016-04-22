@@ -9,8 +9,8 @@ public abstract class Pathfinder : MonoBehaviour
     // Finds a valid path from point a to point b for the given Unit
     public void getPath(Unit u, Point p)
     {
-    Debug.Log(u);
-    Debug.Log(p);
+    //Debug.Log(u);
+    //Debug.Log(p);
 
 
     Map map = GameObject.Find("GameManager").GetComponent<Game>().map;

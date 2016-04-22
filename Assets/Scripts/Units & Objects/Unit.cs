@@ -363,10 +363,21 @@ public class Unit : MonoBehaviour
     public virtual void endTurn()
     {
         // To be called at the end of its owner's turn
-        // Turns off the lights! May have further use.
 
+        // Turn off the lights!
         if (gameObject.GetComponentInChildren<Light>() != null && !(this is Interactable))
             gameObject.GetComponentInChildren<Light>().intensity = 0;
+
+        // If this unit was in the middle of moving at the end of the turn, just put it right at its destination
+        if (path != null)
+        {
+            while (path.Count > 0)
+            {                
+                Target = path.Pop().transform;
+                turnUnit();
+                transform.position = Target.position + new Vector3(0, 1, 0);
+            }
+        }
     }
 
     // set target Transform
