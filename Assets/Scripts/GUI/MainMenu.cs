@@ -132,7 +132,7 @@ The lone and level sands stretch far away.''";
                     case state.TITLE:
                         currentAlpha = 0;
                         loadScreen.gameObject.SetActive(true);
-                        loadScreen.loadScene("Level1");
+                        loadScreen.loadScene("Level1Dennis");
                         break;
 
                     default:
