@@ -27,7 +27,7 @@ public class DMBuildDisplay : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        buildDisplay.SetActive(game.currentPlayerIndex == 1);
+        buildDisplay.SetActive(game.building == true);
 
         // If we're placing a unit
         if(placing != null)
