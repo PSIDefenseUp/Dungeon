@@ -34,10 +34,10 @@ public class Game : MonoBehaviour
         uiCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         playerTurnText = GameObject.Find("playerTurn").GetComponent<Text>();
         End = GameObject.Find("EndButton").GetComponent<Button>();
-        //loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
+        loadScreen = GameObject.Find("LoadScreen").GetComponent<LoadScreen>();
 
         // After grabbing the load screen, turn it off until we need it.
-        //loadScreen.gameObject.SetActive(false);        
+        loadScreen.gameObject.SetActive(false);        
 
         // Perform game setup
         setup();              
@@ -136,6 +136,10 @@ public class Game : MonoBehaviour
 
     public void checkGameEnd()
     {
+        // Don't check for game end in building phase
+        if (building)
+            return;
+
         // Count number of units owned by each team. If either team has no more units, the other team wins!
 
         int heroCount = 0;

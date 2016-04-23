@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿/*
+using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public class AlphaNumericSort : UnityEditor.BaseHierarchySort
 {
@@ -12,3 +14,4 @@ public class AlphaNumericSort : UnityEditor.BaseHierarchySort
     return UnityEditor.EditorUtility.NaturalCompare(lhs.name, rhs.name);
   }
 }
+*/
