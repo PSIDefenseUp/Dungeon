@@ -421,6 +421,10 @@ public class Unit : NetworkBehaviour
     if (gameObject.GetComponentInChildren<Light>() != null && !(this is Interactable))
       gameObject.GetComponentInChildren<Light>().intensity = 0;
 
+    // if for some reason you can still move or act change that
+    if(canMove == true) { canMove = false; }
+    if(canAct == true) { canAct = false; }
+
     // If this unit was in the middle of moving at the end of the turn, just put it right at its destination
     if (path != null)
     {

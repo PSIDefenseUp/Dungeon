@@ -89,7 +89,7 @@ public class Cursor :NetworkBehaviour
          }
 
          // On mouse right click, if we have a unit selected, move the unit to the cursor's location or attack the unit there if in range
-         if (Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayerIndex)
+         if (Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayer.team)
          {
               var other = game.map.getUnit(position);
              // If we clicked on a unit, see if we can interact with it
@@ -208,6 +208,22 @@ public class Cursor :NetworkBehaviour
 
   [Command]
   public void CmdInteract(Point unit, Point P)
+  {
+    Unit me = game.map.getUnit(unit);
+
+    if (me == null)
+      return;
+
+    Unit other = game.map.getUnit(P);
+
+    if (other == null)
+      return;
+    me.interact(other);
+    RpcInteract(unit, P);
+  }
+
+  [ClientRpc]
+  public void RpcInteract(Point unit, Point P)
   {
     Unit me = game.map.getUnit(unit);
 

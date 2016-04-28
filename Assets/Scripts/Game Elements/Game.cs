@@ -81,6 +81,7 @@ public class Game : NetworkBehaviour
                 HUD = true;
                 Setup();
             }
+            return;
           }
             
          /*    if (gameOver)
@@ -191,7 +192,7 @@ public class Game : NetworkBehaviour
     // Give all of this player's units the ability to move and act again
     foreach (Unit u in map.getUnitList())
     {
-      if (u.owner == currentPlayer.playerIndex)
+      if (u.owner == currentPlayer.team)
       {
         u.refresh();
       }
