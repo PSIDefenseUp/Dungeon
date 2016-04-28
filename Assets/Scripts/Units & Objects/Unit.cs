@@ -1,40 +1,72 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Networking;
 
 
 [System.Serializable]
 
-public class Unit : MonoBehaviour
+public class Unit : NetworkBehaviour
 {
-  protected Game game;                       // The game object        
+  public Game game;                       // The game object        
   protected float animationMoveSpeed = 2;    // Speed at which we move from tile to tile (in units / second)
-
-  public int[,] reachable;        // Array containing the cost of movement to each tile on the map 
+  //public GameObject skill;
+  public int[,] reachable;                   // Array containing the cost of movement to each tile on the map 
 
   // Properties
-  public Point position;          // The current position of this unit on the map
-  public Point stMech;
+
+  private Point stMech;
   public Stack<Tile> path;        // The path for our unit to travel
   public Pathfinder pathfinder;   // The pathfinder used to navigate this unit around the map
-  public bool canMove;            // Does this unit still have its move action?
-  public bool canAct;             // Does this unit still have its turn action?
-  private bool atk;               // to force better animation when a person attacks i flag attack then play attack animation after unit stop moving
   private Unit target;            // target unit used for attacking animation
+
+  [Space(10)]
+  [Header("Team Info")]
   public int owner;               // The player that owns this unit
   public int team;                // The 'team' this unit is on -- 0: heroes, 1: dungeon master
-  public int maxHealth;           // The maximum health of this unit
-  public int currentHealth;       // The current health of this unit
-  public int moveSpeed;           // The maximum number of tiles this unit can move in one turn
-  public int attackBase;          // The minimum damage this unit can inflict on attack -- Damage = (attackSpread * random) + attackBase - enemy.armor
-  public int attackSpread;        // A random value between 0 and attackSpread (inclusive) is added to each attack
-  public int minRange;            // Minimum number of tiles away that this unit's attacks can reach
-  public int maxRange;            // Maximum number of tiles away that this unit's attacks can reach -- An enemy unit must be within [minRange, maxRange] to be a valid target
-  public int armor;               // The amount by which we reduce the damage of incoming attacks
-  public int cost;                // The cost of purchasing this unit -- only applies to the DM when building the map
-  public int regen;               // The amount of health this unit regenerates each turn
-  public GameObject skill;
 
-  // Inventory
+  [Space(10)]
+  [Header("Movement Booleans")]
+  [SyncVar]
+  public bool canMove;            // Does this unit still have its move action?
+  [SyncVar]
+  public bool canAct;             // Does this unit still have its turn action?
+  [SyncVar]
+  private bool atk;               // to force better animation when a person attacks i flag attack then play attack animation after unit stop moving
+
+  [SyncVar]
+  [Space(10)]
+  [Header("Location")]
+  [SerializeField]
+  public Point position;          // The current position of this unit on the map
+
+  [Space(10)]
+  [Header("Character Stats")]
+  [SerializeField]
+  [SyncVar]
+  public int maxHealth;           // The maximum health of this unit
+  [SyncVar]
+  public int currentHealth;       // The current health of this unit
+  [SyncVar]
+  public int moveSpeed;           // The maximum number of tiles this unit can move in one turn
+  [SyncVar]
+  public int attackBase;          // The minimum damage this unit can inflict on attack -- Damage = (attackSpread * random) + attackBase - enemy.armor
+  [SyncVar]
+  public int attackSpread;        // A random value between 0 and attackSpread (inclusive) is added to each attack
+  [SyncVar]
+  public int minRange;            // Minimum number of tiles away that this unit's attacks can reach
+  [SyncVar]
+  public int maxRange;            // Maximum number of tiles away that this unit's attacks can reach -- An enemy unit must be within [minRange, maxRange] to be a valid target
+  [SyncVar]
+  public int armor;               // The amount by which we reduce the damage of incoming attacks
+  [SyncVar]
+  public int cost;                // The cost of purchasing this unit -- only applies to the DM when building the map
+  [SyncVar]
+  public int regen;               // The amount of health this unit regenerates each turn
+
+
+  [Space(10)]
+  [Header("Inventory")]
+  [SerializeField]
   public Inventory inventory;     // The inventory of items this unit has -- Only heroes should have one!
 
   // Animation vars
@@ -46,6 +78,9 @@ public class Unit : MonoBehaviour
   public Transform Target;        // The next tile we want to walk to
 
   // Audio
+  [Space(10)]
+  [Header("Audio Sources")]
+  [SerializeField]
   public AudioSource source;
   public List<AudioClip> ownerSelectLines = new List<AudioClip>();
   public List<AudioClip> enemySelectLines = new List<AudioClip>();
@@ -61,12 +96,25 @@ public class Unit : MonoBehaviour
   // Dialog strings
   public List<string> selectLines = new List<string>();  // Lines this unit can say when selected (by its owner)
 
+  public Point StMech
+  {
+    get
+    {
+      return stMech;
+    }
+
+    set
+    {
+      stMech = value;
+    }
+  }
+
   // Use this for initialization
   void Start()
   {
     // Grab current Game object
     game = GameObject.Find("GameManager").GetComponent<Game>();
-    model = this.transform.FindChild("Model");
+    model = this.transform;
 
     if (model != null)
       animator = model.GetComponent<Animator>();
@@ -74,7 +122,7 @@ public class Unit : MonoBehaviour
     // Initialize path + movement
     path = new Stack<Tile>();
     this.canMove = false;
-    this.canAct = false;
+    this.canMove = false;
 
     // If a hero, add inventory
     if (this.team == 0)
@@ -87,6 +135,12 @@ public class Unit : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
+
+    bool S = isServer;
+    bool L = isLocalPlayer;
+    bool C = isClient;
+
+
     // Move towards destination if we have one
     if (path != null && path.Count > 0)
     {
@@ -150,11 +204,6 @@ public class Unit : MonoBehaviour
 
   }
 
-  void OnMouseEnter()
-  {
-
-  }
-
   public bool canAttack(Unit other)
   {
     // We can't attack something that doesn't exist
@@ -188,6 +237,7 @@ public class Unit : MonoBehaviour
     canMove = false;
     removeHighlights();
   }
+
 
   public void getAttacked(int damage, Unit other)
   {
@@ -357,9 +407,10 @@ public class Unit : MonoBehaviour
 
     if (gameObject.GetComponentInChildren<Light>() != null)
       gameObject.GetComponentInChildren<Light>().intensity = 1;
-
+    /*
     if (gameObject.GetComponent<StateMachine>() != null)
       gameObject.GetComponent<StateMachine>().moveOnce = true;
+    */
   }
 
   public virtual void endTurn()
@@ -467,9 +518,9 @@ public class Unit : MonoBehaviour
       return moveSpeed + inventory.getBonusSpeed();
     }
   }
-  public void playSelectedAudio()
+  public void playSelectedAudio(int selTeam)
   {
-    if (game.currentPlayer.team == team)
+    if (selTeam == team)
     {
       if (ownerSelectLines.Count > 0)
         source.PlayOneShot(ownerSelectLines[Random.Range(0, ownerSelectLines.Count)], randomVolRange());
@@ -497,8 +548,11 @@ public class Unit : MonoBehaviour
 
   public void setStMech(Point x)
   {
-    stMech = x;
+    StMech = x;
   }
 
-
+  public void AnimateAttack(Unit enemy)
+  {
+    target = enemy;
+  }
 }

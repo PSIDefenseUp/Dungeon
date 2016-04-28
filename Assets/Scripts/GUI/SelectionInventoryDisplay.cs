@@ -5,27 +5,27 @@ using System.Collections;
 public class SelectionInventoryDisplay : MonoBehaviour
 {
     private Game game;
-
-    private Cursor cursor;
     private GameObject inventoryDisplay;
     private Inventory inventory;
 
+    
     public Sprite occupiedSlot;
     public Sprite emptySlot;
+    public networkPlayerScript myPlayer;
+    public Cursor cursor;
 
-	// Use this for initialization
-	void Start ()
+  // Use this for initialization
+  void Start ()
     {
         game = GameObject.Find("GameManager").GetComponent<Game>();
-        cursor = GameObject.Find("Cursor").GetComponent<Cursor>();
         inventoryDisplay = GameObject.Find("SelectionInventoryDisplay");
     }
 	
 	// Update is called once per frame
 	void Update ()
-    {
-        // Draw inventory display if we have a hero selected
-        if (game.currentPlayerIndex == 0 && cursor.getSelection() != null && cursor.getSelection().team == 0)
+    { 
+        // Draw inventory display if you are have a hero selected and have a hero selected
+        if (myPlayer.myPlayerInfo.team == 1 && cursor.getSelection() != null && cursor.getSelection().team == 0)
         {
             inventoryDisplay.SetActive(true);
 
@@ -71,4 +71,10 @@ public class SelectionInventoryDisplay : MonoBehaviour
     {
         inventory.tooltip(i);
     }
+    
+    public void SetCursor(Cursor x)
+    {
+        cursor = x;
+    }
+
 }

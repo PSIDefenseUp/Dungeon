@@ -5,6 +5,7 @@ public class HealthBarDisplay : MonoBehaviour
 {
     private Game game;
 
+    public networkPlayerScript myPlayer;
     public Texture red;
     public Texture green;
     public Texture black;
@@ -52,7 +53,7 @@ public class HealthBarDisplay : MonoBehaviour
             GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, pos2.x - pos.x, healthBarHeight), black);
 
             // Draw health depending on the currently acting player
-            if(game.currentPlayer.team == u.team)
+            if(myPlayer.myPlayerInfo.team == u.team)
                 GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, (pos2.x - pos.x) * (u.currentHealth / (float)u.maxHealth), healthBarHeight), green);
             else
                 GUI.DrawTexture(new Rect(pos.x, Screen.height - pos.y, (pos2.x - pos.x) * (u.currentHealth / (float)u.maxHealth), healthBarHeight), red);

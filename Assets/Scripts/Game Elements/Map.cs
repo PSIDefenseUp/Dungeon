@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections.Generic;
 using System.Collections;
 
-public class Map : MonoBehaviour
+public class Map : NetworkBehaviour
 {
     private Game game;          // Reference to game object
     private Rect bounds;        // The boundaries of the map (top left and bottom right)
@@ -23,18 +24,13 @@ public class Map : MonoBehaviour
     void Start()
     {
         // Grab game management object
-        game = GameObject.Find("GameManager").GetComponent<Game>();
+       // game = GameObject.Find("GameManager").GetComponent<Game>();
 
         // Load Map
         loadMapFromScene(); 
         updateOccupy();      
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     void OnGUI()
     {
@@ -181,9 +177,6 @@ public class Map : MonoBehaviour
     // Returns the unit at (p.x, p.y)
     public Unit getUnit(Point p)
     {
-        if (p == null)
-            return null;
-
         return units[p.x, p.y];
     }
 
@@ -292,7 +285,7 @@ public class Map : MonoBehaviour
 
  private void updateAllAIList()
   {
-
+    /*
     foreach( var x in unitList)
     {
       StateMachine stateMech = x.GetComponent<StateMachine>();
@@ -303,6 +296,7 @@ public class Map : MonoBehaviour
         stateMech.updateEnemyList();
       }
     }
+    */
   }
   public void updateOccupy()
   {

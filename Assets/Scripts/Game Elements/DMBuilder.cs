@@ -26,11 +26,11 @@ public class DMBuilder : MonoBehaviour
             // If Q is pressed, try to build a unit on the current space
             if(Input.GetKeyDown(KeyCode.Q))
             {
-                if (canBuild(spawnable, game.cursor.getPosition()))
-                {
-                    Unit u = Instantiate(spawnable);
-                    buildUnit(u, game.cursor.getPosition());
-                }
+                    if (canBuild(spawnable, game.cursor.getPosition()))
+                    {
+                      Unit u = Instantiate(spawnable);
+                      buildUnit(u, game.cursor.getPosition());
+                    }
             }
         }
 	}

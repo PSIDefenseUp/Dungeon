@@ -6,28 +6,26 @@ using System.Collections.Generic;
 public class DMBuildDisplay : MonoBehaviour
 {
     private Game game;
-    private GameObject buildDisplay;
-    private Cursor cursor;
     private static Unit placing;
 
-    private Text goldText;
-
-    public List<Unit> placeable;
     public int gold;
+    public List<Unit> placeable;
+
+    public Cursor cursor;
+    public Text goldText;
+    public GameObject buildDisplay;
+   
 
     // Use this for initialization
     void Start ()
     {
         game = GameObject.Find("GameManager").GetComponent<Game>();
-        cursor = GameObject.Find("Cursor").GetComponent<Cursor>();
-        buildDisplay = GameObject.Find("DMBuildDisplay");
-        goldText = GameObject.Find("DMGold").GetComponent<Text>();
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        buildDisplay.SetActive(game.building == true);
+        buildDisplay.SetActive(game.building == true && cursor.netPlayer.myPlayerInfo.team == 1);
 
         // If we're placing a unit
         if(placing != null)
@@ -97,5 +95,10 @@ public class DMBuildDisplay : MonoBehaviour
     {
         game.map.addUnit(p, u);
         u.transform.position = game.map.getTile(p).transform.position + new Vector3(0, 1, 0);
+    }
+
+    public void SetCursor(Cursor x)
+    {
+        cursor = x;
     }
 }

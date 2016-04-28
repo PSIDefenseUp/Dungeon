@@ -4,7 +4,7 @@ using System.Collections;
 
 public class SelectionInfoDisplay : MonoBehaviour
 {
-    private Cursor cursor; // Cursor whose selection info we will be displaying
+    public Cursor cursor;           // Cursor whose selection info we will be displaying
     private GameObject panel;
     private CanvasGroup panelGroup;
 
@@ -22,8 +22,6 @@ public class SelectionInfoDisplay : MonoBehaviour
     
 	void Start ()
     {
-        cursor = GameObject.Find("Cursor").GetComponent<Cursor>();
-
         panel = GameObject.Find("SelectionInfoPanel");
         panelGroup = panel.GetComponent<CanvasGroup>();
 
@@ -43,14 +41,18 @@ public class SelectionInfoDisplay : MonoBehaviour
 	
 	void Update ()
     {
+      if (cursor)
+      {
         unit = cursor.getSelection();
+      }
 
         panelGroup.alpha = (unit == null ? 0 : 1);        
 
         if (unit == null)
             return;
 
-        nameText.text = "Selected: " + unit.name;
+
+        nameText.text =  unit.name;
 
         health.text = "HP: " + unit.currentHealth + " / " + unit.maxHealth;
         regen.text = "Regen: " + unit.getRegen();

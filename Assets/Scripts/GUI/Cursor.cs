@@ -1,124 +1,149 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.Networking;
+using UnityEngine.UI;
 
-public class Cursor : MonoBehaviour
+public class Cursor :NetworkBehaviour
 {
-    private Point position;    // The current position of the cursor
-    private Game game;         // Reference to the current Game object   
 
+    private Point position;    // The current position of the cursor
+    private Game game;         // Reference to the current Game object
+    private SelectionInventoryDisplay selectInv; 
+    private DMBuildDisplay dmDisplay;
     private int selMyUnit = Animator.StringToHash("selectMyUnit");
     private int selEnUnit = Animator.StringToHash("selectEnemyUnit");
+    private GameObject cursorObj;
+
+    // 
+    public networkPlayerScript netPlayer;
 
     // The spotlight for the selected unit
-    private Light spotlight;
+    public Light spotlight;
     
     // The Tile under our cursor
     private Transform currentTile;
 
     // The selected unit (if we have made a selection)
-    private Unit selectedUnit;
+    public Unit selectedUnit;
 
-    // Animation variables
-    private float spinSpeed = 360; // Degrees per second to spin around
-    private float spinWait = .5f; // Seconds to wait between spins
-    private float spinWaitProgress = 0; // How far we are in our current wait
-    private bool spinning = false; // Are we spinning or waiting?    
-
-    // Use this for initialization
+   
     void Start()
     {
-        // Grab Game object from scene
-        game = GameObject.Find("GameManager").GetComponent<Game>();
-        spotlight = GameObject.Find("Spotlight").GetComponent<Light>();
-    }
+    // Grab Game object from scene
+    if (netPlayer != null)
+      game = netPlayer.game;
 
-    // Update is called once per frame
-    void Update()
-    {     
-        // Don't allow for selections if we're placing a unit
-        if(DMBuildDisplay.isPlacing())
-        {
-            selectUnit(null);
-            animate();
-            return;
-        }
+    if (netPlayer != null)
+      spotlight = netPlayer.spotL;
 
-        // On mouse left click, select the unit at the current location
-        if (Input.GetMouseButtonDown(0))
-        {          
-            // Select Unit
-            selectUnit(game.map.getUnit(position));
+    cursorObj = this.transform.GetChild(2).gameObject;
 
-                //play IsHighlighted in mecanin if unit selected is yours (and exists)
-                if (selectedUnit != null)
-                {
-                        selectedUnit.playSelectedAudio();
+    if (netPlayer.isLocalPlayer)
+      cursorObj.GetComponent<CursorSpin>().cursorColor(Color.white);
+  }
 
-                    if (selectedUnit.animator)
-                    {
-                        if (game.currentPlayer.team == selectedUnit.team)
-                            selectedUnit.animator.SetTrigger(selMyUnit);
-                        else
-                            selectedUnit.animator.SetTrigger(selEnUnit);
-                    }                    
-                }
-        }
+  // Update is called once per frame
+  void Update()
+  {
+    syncCursorObj();
 
-        // On mouse right click, if we have a unit selected, move the unit to the cursor's location or attack the unit there if in range
-        if (Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayerIndex)
-        {
-            // If we clicked on a unit, see if we can interact with it
-            if (selectedUnit.canInteract(game.map.getUnit(position)))
-            {
-                selectedUnit.interact(game.map.getUnit(position));
-            }
-            else if (selectedUnit.canAttack(game.map.getUnit(position)))
-            {
-                selectedUnit.attack(game.map.getUnit(position));
-            }
+    bool S = isServer;
+    bool C = isClient;
+    bool L = isLocalPlayer;
 
-            // If we clicked on an empty space, try to move there
-            if (selectedUnit.canReach(position) && selectedUnit.canMove)
-                selectedUnit.moveTo(position);
+    if (!isLocalPlayer)
+      return;
 
-            // Dim the light on a unit that can't do anything more this turn
-            if(!(selectedUnit.canMove || selectedUnit.canAct))
-                selectedUnit.gameObject.GetComponentInChildren<Light>().intensity = 0;
-        }       
+    if (game == null && netPlayer != null)
+      game = netPlayer.game;
 
-        animate();
-    }
+    if (spotlight == null && netPlayer != null)
+      spotlight = netPlayer.spotL;
 
-    private void animate()
+    // Don't allow for selections if we're placing a unit
+    if (DMBuildDisplay.isPlacing())
     {
-        if (spinning)
-        {
-            // When spinning, check to see when we've spun the whole way around (90 degrees)
+       selectUnit(null);
+       return;
+    }
 
-            if (transform.rotation.eulerAngles.y + (spinSpeed * Time.deltaTime) >= 90)
-            {
-                // If we reach 90 degrees this frame, stay at 90 degrees and start waiting until next spin
-                transform.rotation = Quaternion.AngleAxis(0, new Vector3(0, 1, 0));
-                spinning = false;
-            }
-            else
-            {
-                // If we should keep spinning, SPIN
-                transform.Rotate(new Vector3(0, 1, 0), spinSpeed * Time.deltaTime);
-            }
-        }
-        else
-        {
-            // When not spinning, advance through the wait time
-            spinWaitProgress += Time.deltaTime;
 
-            // If our wait time is over, start spinning again
-            if (spinWaitProgress >= spinWait)
-            {
-                spinWaitProgress = 0;
-                spinning = true;
-            }
-        }
+    // On mouse left click, select the unit at the current location
+    if (Input.GetMouseButtonDown(0))
+         {          
+             // Select Unit
+             selectUnit(game.map.getUnit(position));
+
+                 //play IsHighlighted in mecanin if unit selected is yours (and exists)
+                 if (selectedUnit != null)
+                 {
+                         selectedUnit.playSelectedAudio(netPlayer.myPlayerInfo.team);
+
+                     if (selectedUnit.animator)
+                     {
+                         if (netPlayer.myPlayerInfo.team == selectedUnit.team)
+                             selectedUnit.animator.SetTrigger(selMyUnit);
+                         else
+                             selectedUnit.animator.SetTrigger(selEnUnit);
+                     }                    
+                 }
+         }
+
+         // On mouse right click, if we have a unit selected, move the unit to the cursor's location or attack the unit there if in range
+         if (Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayerIndex)
+         {
+              var other = game.map.getUnit(position);
+             // If we clicked on a unit, see if we can interact with it
+             if (selectedUnit.canInteract(other))
+             {
+                 CmdInteract(selectedUnit.position, position);
+             }
+             else if (selectedUnit.canAttack(other))
+             {
+                 CmdAttack(selectedUnit.position, position);
+             }
+
+             
+
+             // If we clicked on an empty space, try to move there
+             if (selectedUnit.canReach(position) && selectedUnit.canMove)
+             {
+                  if(!isServer)
+                  {
+                    CmdMoveUnit(selectedUnit.position, position);
+                    selectedUnit.moveTo(position);
+                  }
+                  else
+                  {   
+                     RpcMoveUnit(selectedUnit.position, position);
+                     selectedUnit.moveTo(position); 
+                  }
+             }
+
+
+             // Dim the light on a unit that can't do anything more this turn
+             if(!(selectedUnit.canMove || selectedUnit.canAct))
+                 selectedUnit.gameObject.GetComponentInChildren<Light>().intensity = 0;
+         }         
+  }
+
+  public Point getPosition()
+  {
+        return position;
+  }
+  public Unit getSelection()
+  {
+        return this.selectedUnit;
+  }
+
+    public void setCurrentTile(Transform t)
+    {
+        this.currentTile = t;
+
+        // Set our grid position
+        this.position = t.GetComponent<Tile>().getPosition();
+
+        // Float our cursor above the selected tile
+        transform.position = t.transform.position + new Vector3(0, 1, 0);
     }
 
     public void selectUnit(Unit u)
@@ -134,20 +159,20 @@ public class Cursor : MonoBehaviour
         {
             
             // If selected by its owner, make the unit say something
-            if(selectedUnit.owner == game.currentPlayerIndex)
+            if(selectedUnit.owner == netPlayer.myPlayerInfo.team)
             {
-                DialogDisplay.speak(selectedUnit, selectedUnit.getSelectLine());
+            //    DialogDisplay.speak(selectedUnit, selectedUnit.getSelectLine());
             }
 
             // Update reachable, highlight if the unit can move and is owned by the current player
-            if (selectedUnit.canMove && selectedUnit.owner == game.currentPlayerIndex)
+            if (selectedUnit.canMove && selectedUnit.owner == netPlayer.myPlayerInfo.team)
             {
                 selectedUnit.pathfinder.updateReachable(selectedUnit);
                 selectedUnit.highlightReachable();
             }
             
             // Highlight interactable tiles if the unit can act and is owned by the current player
-            if(selectedUnit.canAct && selectedUnit.owner == game.currentPlayerIndex)
+            if(selectedUnit.canAct && selectedUnit.owner == netPlayer.myPlayerInfo.team)
             {
                 selectedUnit.highlightInteractable();
             }
@@ -164,24 +189,80 @@ public class Cursor : MonoBehaviour
         }
     }
 
-    public Unit getSelection()
+    private void syncCursorObj()
     {
-        return this.selectedUnit;
+      cursorObj.transform.position = this.transform.position;
     }
 
-    public void setCurrentTile(Transform t)
-    {
-        this.currentTile = t;
+  [ClientRpc]
+  public void RpcMoveUnit(Point unit, Point p)
+  {
+    Unit x = game.map.getUnit(unit);
 
-        // Set our grid position
-        this.position = t.GetComponent<Tile>().getPosition();
+    if (x == null)
+      return;
 
-        // Float our cursor above the selected tile
-        transform.position = t.transform.position + new Vector3(0, 1, 0);
-    }
-    
-    public Point getPosition()
-    {
-        return position;
-    }    
+    x.pathfinder.updateReachable(x);
+    x.moveTo(p);
+  }
+
+  [Command]
+  public void CmdInteract(Point unit, Point P)
+  {
+    Unit me = game.map.getUnit(unit);
+
+    if (me == null)
+      return;
+
+    Unit other = game.map.getUnit(P);
+
+    if (other == null)
+      return;
+    me.interact(other);
+  }
+  [Command]
+  public void CmdAttack(Point unit, Point P)
+  {
+    Unit Me = game.map.getUnit(unit);
+
+    if (Me == null)
+      return;
+
+    Unit other = game.map.getUnit(P);
+
+    if (other == null)
+      return;
+
+    Me.attack(other);
+    RpcAttack(unit, P);
+  }
+
+  [ClientRpc]
+  public void RpcAttack(Point unit, Point enemy)
+  {
+    Unit Me = game.map.getUnit(unit);
+
+    if (Me == null)
+      return;
+
+    Unit other = game.map.getUnit(enemy);
+
+    if (other == null)
+      return;
+
+    Me.AnimateAttack(other);
+
+  }
+
+  [Command]
+  public void CmdMoveUnit(Point unit, Point p)
+  {
+    Unit x = game.map.getUnit(unit);
+
+    if (x == null)
+      return;
+
+    x.pathfinder.updateReachable(x);
+    x.moveTo(p);
+  }
 }
