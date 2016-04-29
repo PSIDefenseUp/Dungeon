@@ -48,7 +48,7 @@ public class Interactable : Unit
             }
 
             game.currentPlayer.keyCount--;
-            DialogDisplay.speak(other, "No more gate, but they key is lost with it.");
+            DialogDisplay.speak(other, "No more gate, but the key is lost with it.");
         }
         else if (this.tag.Equals("Chest"))
         {
