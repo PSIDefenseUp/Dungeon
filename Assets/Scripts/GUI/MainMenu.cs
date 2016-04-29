@@ -5,15 +5,6 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    //private Text introTextObj;
-    //private string introText;
-    //private float charsPerSecond = 22;
-    //private bool intro = true;
-    //private float progress = 0;
-
-    //public Texture bgMenu;
-    //public Texture bgBlack;
-
     private float fadeTime = 1.0f;    // How long should each image take to fade in/out?
     private float displayTime = 9f;  // How long do we display each intro image between fading?
     private int introProgress = 0;  // Which intro image are we showing?
@@ -45,24 +36,6 @@ public class MainMenu : MonoBehaviour
 
         currentState = state.FADEIN;
         currentTexture = intro1;
-
-        /*
-        introTextObj = GameObject.Find("IntroText").GetComponent<Text>();
-        introText = @"I met a traveller from an antique land
-Who said: ''Two vast and trunkless legs of stone
-Stand in the desert. Near them, on the sand,
-Half sunk, a shattered visage lies, whose frown,
-And wrinkled lip, and sneer of cold command,
-Tell that its sculptor well those passions read
-Which yet survive, stamped on these lifeless things,
-The hand that mocked them and the heart that fed:
-And on the pedestal these words appear:
-'My name is Ozymandias, king of kings:
-Look on my works, ye Mighty, and despair!'
-Nothing beside remains. Round the decay
-Of that colossal wreck, boundless and bare
-The lone and level sands stretch far away.''";
-        */
     }
 	
 	// Update is called once per frame
@@ -71,8 +44,8 @@ The lone and level sands stretch far away.''";
         if (loadScreen.isActiveAndEnabled)
             return;
 
-            // Get correct intro image
-            switch (introProgress)
+        // Get correct intro image
+        switch (introProgress)
         {
             case 0: currentTexture = intro1; break;
             case 1: currentTexture = intro2; break;
@@ -132,7 +105,7 @@ The lone and level sands stretch far away.''";
                     case state.TITLE:
                         currentAlpha = 0;
                         loadScreen.gameObject.SetActive(true);
-                        loadScreen.loadScene("Level1ty");
+                        loadScreen.loadScene("Level1Network");
                         break;
 
                     default:
@@ -148,19 +121,6 @@ The lone and level sands stretch far away.''";
     {
         GUI.color = new Color(1, 1, 1, currentAlpha);
 
-        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), currentTexture);
-
-        /*
-        if (intro)
-        {
-            //GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), bgBlack);
-            introTextObj.text = introText.Substring(0, (int)progress);
-        }
-        else
-        {
-            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), bgMenu);
-            introTextObj.text = "";
-        }
-        */        
+        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), currentTexture);        
     }
 }

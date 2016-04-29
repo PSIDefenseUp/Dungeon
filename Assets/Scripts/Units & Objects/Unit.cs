@@ -244,6 +244,7 @@ public class Unit : NetworkBehaviour
 
     if (currentHealth <= 0)
     {
+      currentHealth = 0;
       dead = true;
       game.map.removeUnit(this);
     }

@@ -127,13 +127,10 @@ public class Map : NetworkBehaviour
         addUnit(p.x, p.y, u);
     }
 
-  public void addUnit(Point p, Unit u, Vector3 T)
+    public void addUnit(Point p, Unit u, Vector3 T)
   {
-      addUnit(p.x, p.y, u);
-    
+      addUnit(p.x, p.y, u);    
   }
-
-
 
   public void addUnit(int x, int y, Unit u)
     {
