@@ -135,10 +135,13 @@ public class Map : NetworkBehaviour
     }
 
     public void  removeUnit(Unit u)
-    {
-        
+    {        
         unitList.Remove(u);
         units[u.getPosition().x, u.getPosition().y] = null;
+
+        // Remove spotlight attached to the unit if there is one
+        if (u.GetComponentInChildren<Light>() != null)
+            u.GetComponentInChildren<Light>().gameObject.transform.parent = null;
 
         if (u.animator)
         {
