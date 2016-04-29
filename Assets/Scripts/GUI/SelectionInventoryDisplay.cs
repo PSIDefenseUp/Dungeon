@@ -25,7 +25,7 @@ public class SelectionInventoryDisplay : MonoBehaviour
 	void Update ()
     { 
         // Draw inventory display if you are have a hero selected and have a hero selected
-        if (myPlayer.myPlayerInfo.team == 1 && cursor.getSelection() != null && cursor.getSelection().team == 0)
+        if (myPlayer.myPlayerInfo.team == 0 && cursor.getSelection() != null && cursor.getSelection().team == 0)
         {
             inventoryDisplay.SetActive(true);
 

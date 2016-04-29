@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -32,6 +33,8 @@ public class Unit : NetworkBehaviour
   public bool canAct;             // Does this unit still have its turn action?
   [SyncVar]
   private bool atk;               // to force better animation when a person attacks i flag attack then play attack animation after unit stop moving
+  [SyncVar]
+  private bool dead;
 
   [SyncVar]
   [Space(10)]
@@ -130,15 +133,16 @@ public class Unit : NetworkBehaviour
       this.inventory = new Inventory();
     }
     source = GetComponent<AudioSource>();
+    dead = false;
   }
 
   // Update is called once per frame
   void Update()
   {
 
-    bool S = isServer;
-    bool L = isLocalPlayer;
-    bool C = isClient;
+    //bool S = isServer;
+    //bool L = isLocalPlayer;
+    //bool C = isClient;
 
 
     // Move towards destination if we have one
@@ -185,23 +189,9 @@ public class Unit : NetworkBehaviour
       animator.SetBool(isWalkingHash, false);
       game.map.updateOccupy();
     }
-
-    // if im done moving and i have been flagged to attack do so
-    if (atk && target != null && path.Count <= 0)
-    {
-      source.PlayOneShot(AttackSound, randomVolRange());
-      // turn toward unit
-      setTarget(target.transform);
-      turnUnit();
-
-      // run mecanim attack animation
-      animator.SetTrigger(toAttackHash);
-
-      // Reduce HP of targetted unit
-      target.getAttacked(getAttackBase() + Random.Range(0, attackSpread + 1) - target.getArmor(), this);
-      atk = false;
-    }
-
+    Attack();
+    if (dead)
+     StartCoroutine(death(1.5f));
   }
 
   public bool canAttack(Unit other)
@@ -237,6 +227,11 @@ public class Unit : NetworkBehaviour
     canMove = false;
     removeHighlights();
   }
+  public void AnimateAttack(Unit enemy)
+  {
+    target = enemy;
+    removeHighlights();
+  }
 
 
   public void getAttacked(int damage, Unit other)
@@ -248,13 +243,16 @@ public class Unit : NetworkBehaviour
     this.currentHealth -= damage;
 
     if (currentHealth <= 0)
+    {
+      dead = true;
       game.map.removeUnit(this);
+    }
   }
 
   public bool canInteract(Unit other)
   {
     // Don't let the DM interact with anything
-    if (game.playerList[this.owner].team == 1)
+    if (this.team == 1)
       return false;
 
     // We can't interact with something that doesn't exist
@@ -401,6 +399,10 @@ public class Unit : NetworkBehaviour
   {
     // To be called on the start of its owner's turn
     // Allows the unit to act and move again, and brings back its light
+
+    if (canMove && canAct)
+      return;
+
     canMove = true;
     canAct = true;
     this.heal(getRegen());
@@ -422,18 +424,39 @@ public class Unit : NetworkBehaviour
       gameObject.GetComponentInChildren<Light>().intensity = 0;
 
     // if for some reason you can still move or act change that
-    if(canMove == true) { canMove = false; }
-    if(canAct == true) { canAct = false; }
+    canMove = false; 
+     canAct = false; 
 
     // If this unit was in the middle of moving at the end of the turn, just put it right at its destination
+   // Stack<Tile> temp =  new Stack<Tile>(path);
+
     if (path != null)
-    {
+    { 
       while (path.Count > 0)
       {
         Target = path.Pop().transform;
         turnUnit();
         transform.position = Target.position + new Vector3(0, 1, 0);
       }
+    }
+  }
+
+  public void Attack()
+  {
+    // if im done moving and i have been flagged to attack do so
+    if (atk && target != null && path.Count <= 0)
+    {
+      source.PlayOneShot(AttackSound, randomVolRange());
+      // turn toward unit
+      setTarget(target.transform);
+      turnUnit();
+
+      // run mecanim attack animation
+      animator.SetTrigger(toAttackHash);
+
+      // Reduce HP of targetted unit
+      target.getAttacked(getAttackBase() + Random.Range(0, attackSpread + 1) - target.getArmor(), this);
+      atk = false;
     }
   }
 
@@ -555,8 +578,11 @@ public class Unit : NetworkBehaviour
     StMech = x;
   }
 
-  public void AnimateAttack(Unit enemy)
+  IEnumerator death(float x)
   {
-    target = enemy;
+    yield return new WaitForSeconds(x);
+
+    if (this)
+      game.map.removeUnit(this);
   }
 }

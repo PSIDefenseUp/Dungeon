@@ -11,6 +11,7 @@ public class Map : NetworkBehaviour
     public Tile[,] tiles;      // Array containing all the tiles on the map
     public Unit[,] units;      // Array containing all the units on the map
     public List<Unit> unitList; // List of all units on the map
+    public DMBuildDisplay DMBuild;
 
     public Texture collide;
     public Texture noCollide;
@@ -126,7 +127,15 @@ public class Map : NetworkBehaviour
         addUnit(p.x, p.y, u);
     }
 
-    public void addUnit(int x, int y, Unit u)
+  public void addUnit(Point p, Unit u, Vector3 T)
+  {
+      addUnit(p.x, p.y, u);
+    
+  }
+
+
+
+  public void addUnit(int x, int y, Unit u)
     {
         u.setPosition(x, y);
         units[x, y] = u;
@@ -149,7 +158,7 @@ public class Map : NetworkBehaviour
             StartCoroutine(wait(1.5f, u));
         }
         else
-            Destroy(u.gameObject);
+           Destroy(u.gameObject);
 
 
         updateAllAIList();
@@ -158,7 +167,11 @@ public class Map : NetworkBehaviour
   IEnumerator wait(float x, Unit u)
   {
     yield return new WaitForSeconds(x);
-    Destroy(u.gameObject);
+
+      RpcDeatroy(u.gameObject);
+
+    if (u.gameObject != null)
+      Destroy(u.gameObject);
   }
     // Returns the tile at (p.x, p.y)
     public Tile getTile(Point p)
@@ -326,5 +339,12 @@ public class Map : NetworkBehaviour
       }
     }
 
+  }
+
+  [ClientRpc]
+  public void RpcDeatroy(GameObject unit)
+  {
+    if(unit != null)
+      Destroy(unit);
   }
 }//end Class

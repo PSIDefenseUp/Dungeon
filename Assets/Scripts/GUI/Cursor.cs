@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
@@ -12,6 +13,7 @@ public class Cursor :NetworkBehaviour
     private int selMyUnit = Animator.StringToHash("selectMyUnit");
     private int selEnUnit = Animator.StringToHash("selectEnemyUnit");
     private GameObject cursorObj;
+    private List<Unit> placeable;
 
     // 
     public networkPlayerScript netPlayer;
@@ -39,6 +41,8 @@ public class Cursor :NetworkBehaviour
 
     if (netPlayer.isLocalPlayer)
       cursorObj.GetComponent<CursorSpin>().cursorColor(Color.white);
+
+    placeable = GetComponent<DMBuildDisplay>().placeable;
   }
 
   // Update is called once per frame
@@ -92,6 +96,7 @@ public class Cursor :NetworkBehaviour
          if (Input.GetMouseButtonDown(1) && selectedUnit != null && selectedUnit.owner == game.currentPlayer.team)
          {
               var other = game.map.getUnit(position);
+
              // If we clicked on a unit, see if we can interact with it
              if (selectedUnit.canInteract(other))
              {
@@ -280,5 +285,25 @@ public class Cursor :NetworkBehaviour
 
     x.pathfinder.updateReachable(x);
     x.moveTo(p);
+  }
+
+  [ClientRpc]
+  public void RpcBuild(int x, Point p, Vector3 transform)
+  {
+    var unit = Instantiate(placeable[x]);
+
+    unit.transform.position = transform;
+    game.map.addUnit(p, unit);
+
+  }
+
+  [Command]
+  public void CmdBuild(int x, Point p, Vector3 transform)
+  {
+    var unit = Instantiate(placeable[x]);
+
+    unit.transform.position = transform;
+    game.map.addUnit(p, unit);
+
   }
 }

@@ -228,15 +228,14 @@ public class networkPlayerScript : NetworkBehaviour {
   }
 
   [Command]
-  void CmdAdvanceTurn()
-  {
-    game.advanceTurn();
-  }
-
-  [Command]
   void CmdChangeCursorName(GameObject c, string name)
   {
     c.name = name + " - Cursor";
+  }
+  [Command]
+  void CmdAdvanceTurn()
+  {
+    game.advanceTurn();
   }
   //-------------------------------------------------------------------------------------
   //Server - code that runs on server 

@@ -53,6 +53,7 @@ public class Game : NetworkBehaviour
     public bool gameStart;
     [SyncVar]
     public bool HUD;
+  private bool Debugging = true;
 
 
     // Use this for initialization
@@ -126,15 +127,37 @@ public class Game : NetworkBehaviour
             building = false;
             GameObject.Find("DMGold").GetComponent<Text>().gameObject.SetActive(false);
             RpcClearDMGoldText();
-            RpcTellClientToAdvance();
+            foreach (Unit u in map.getUnitList())
+            {
+                if (u.owner == currentPlayer.team)
+                {
+                  u.refresh();
+                }
+                else
+                {
+                  u.endTurn();
+                }
+            }
             return;
         }
 
-        // Change current player
-        currentPlayerIndex++;
-        currentPlayerIndex %= playerList.Count;
-        currentPlayer = playerList[currentPlayerIndex];
-        RpcTellClientToAdvance();
+
+      // Change current player
+      currentPlayerIndex++;
+      currentPlayerIndex %= playerList.Count;
+      currentPlayer = playerList[currentPlayerIndex];
+
+      foreach (Unit u in map.getUnitList())
+      {
+        if (u.owner == currentPlayer.team)
+        {
+          u.refresh();
+        }
+        else
+        {
+          u.endTurn();
+        }
+      }
     }
 
     public void checkGameEnd()
@@ -172,36 +195,26 @@ public class Game : NetworkBehaviour
   //Server
   //-------------------------------------------------------------------------------------
   [ClientRpc]
-  public void RpcTellClientToAdvance()
-  {
-    cursor.selectUnit(null);
-    clientAdvance();
-  }
-  [ClientRpc]
   public void RpcClearDMGoldText()
   {
     //GameObject.Find("DMGold").GetComponent<Text>().gameObject.SetActive(false);
   }
 
-  //-------------------------------------------------------------------------------------
-  //Client
-  //-------------------------------------------------------------------------------------
-  [Client]
-  public void clientAdvance()
+  [ClientRpc]
+  public void RpcClientEnd()
   {
-    // Give all of this player's units the ability to move and act again
     foreach (Unit u in map.getUnitList())
     {
-      if (u.owner == currentPlayer.team)
-      {
-        u.refresh();
-      }
-      else
+      if (u.owner != currentPlayer.team)
       {
         u.endTurn();
       }
     }
   }
+
+  //-------------------------------------------------------------------------------------
+  //Client
+  //-------------------------------------------------------------------------------------
   [Client]
   public void addPlayer(player p)
   {

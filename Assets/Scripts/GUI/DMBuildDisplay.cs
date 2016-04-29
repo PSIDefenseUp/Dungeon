@@ -1,14 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
-public class DMBuildDisplay : MonoBehaviour
+public class DMBuildDisplay : NetworkBehaviour
 {
     private Game game;
     private static Unit placing;
-
+    [SyncVar]
     public int gold;
+    
+    [SyncVar]
+    public int BuildingUnit;
+
     public List<Unit> placeable;
 
     public Cursor cursor;
@@ -20,6 +25,7 @@ public class DMBuildDisplay : MonoBehaviour
     void Start ()
     {
         game = GameObject.Find("GameManager").GetComponent<Game>();
+        cursor = GetComponent<Cursor>();
     }
 	
 	// Update is called once per frame
@@ -70,6 +76,7 @@ public class DMBuildDisplay : MonoBehaviour
             Destroy(placing.gameObject);
 
         placing = Instantiate(placeable[i]);
+        BuildingUnit = i;
     }
 
     public static bool isPlacing()
@@ -88,13 +95,23 @@ public class DMBuildDisplay : MonoBehaviour
     void buildUnit(Unit u, Point p)
     {
         gold -= u.cost;
-        spawnUnit(u, p);
-    }
 
+        spawnUnit(u, p);
+
+    }
     public void spawnUnit(Unit u, Point p)
     {
-        game.map.addUnit(p, u);
-        u.transform.position = game.map.getTile(p).transform.position + new Vector3(0, 1, 0);
+        
+        if (isServer && isLocalPlayer)
+        {
+          Destroy(placing.gameObject);
+          cursor.RpcBuild(BuildingUnit, p, game.map.getTile(p).transform.position + new Vector3(0, 1, 0));
+        }
+       else if(isLocalPlayer) 
+        {
+          cursor.CmdBuild(BuildingUnit, p, game.map.getTile(p).transform.position + new Vector3(0, 1, 0));
+          game.map.addUnit(p, u);
+        }
     }
 
     public void SetCursor(Cursor x)
