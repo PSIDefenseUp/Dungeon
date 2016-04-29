@@ -33,8 +33,11 @@ public class DMBuildDisplay : NetworkBehaviour
     {
         buildDisplay.SetActive(game.building == true && cursor.netPlayer.myPlayerInfo.team == 1);
 
-        // If we're placing a unit
-        if(placing != null)
+    if (!isLocalPlayer)
+      return;
+
+    // If we're placing a unit
+    if (placing != null)
         {
             // Show a preview of the unit we're placing on the cursor
             placing.transform.position = cursor.transform.position;            
